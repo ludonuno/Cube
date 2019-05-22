@@ -3,18 +3,18 @@ import { Jumbotron } from 'react-bootstrap'
 
 import Navbar from './CustomNavbar'
 
-class Series extends Component {
+class Celebrities extends Component {
     state = {  }
     render() { 
         return ( 
             <React.Fragment>
                 <Navbar/>
                 <Jumbotron>
-                    Series
+                    Pessoas
                 </Jumbotron>
             </React.Fragment>    
         );
     }
 }
  
-export default Series;
+export default Celebrities;

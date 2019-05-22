@@ -1,21 +1,20 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import { Jumbotron } from 'react-bootstrap'
 
 import Navbar from './CustomNavbar'
 
-class Pessoas extends Component {
+class Games extends Component {
     state = {  }
     render() { 
         return ( 
             <React.Fragment>
                 <Navbar/>
                 <Jumbotron>
-                    Pessoas
+                    Jogos
                 </Jumbotron>
-            </React.Fragment>    
-        );
+            </React.Fragment>
+         );
     }
 }
  
-export default Pessoas;
+export default Games;

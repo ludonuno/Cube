@@ -1,10 +1,41 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom'
+import { Switch } from 'react-router'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+
 import './index.css';
-import App from './App';
+
+import Home from './components/Home'
+
+import Movies from './components/Movies'
+import Books from './components/Books'
+import Series from './components/Series'
+import Games from './components/Games'
+import Celebrities from './components/Celebrities'
+import User from './components/User'
+import NoMatch from './components/NoMatch'
+
+
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const Root = () => {
+    return (
+        <Router>
+            <Switch>
+                <Route exact path="/" component={ Home } />
+                <Route path="/movies" component={ Movies } />
+                <Route path="/books" component={ Books } />
+                <Route path="/series" component={ Series } />
+                <Route path="/games" component={ Games } />
+                <Route path="/celebrities" component={ Celebrities } />
+                <Route path="/user" component={ User } />
+                <Route component={NoMatch}/>
+            </Switch>
+        </Router>
+    )
+}
+
+render(<Root />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

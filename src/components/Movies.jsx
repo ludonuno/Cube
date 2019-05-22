@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import { Jumbotron } from 'react-bootstrap'
 
 import Navbar from './CustomNavbar'
 
-class Filmes extends Component {
+class Movies extends Component {
     state = {  }
     render() { 
         return ( 
@@ -18,4 +17,4 @@ class Filmes extends Component {
     }
 }
  
-export default Filmes;
+export default Movies;
