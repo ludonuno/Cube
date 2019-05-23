@@ -4,19 +4,19 @@ import { Create } from '../../scripts/api'
 
 import Navbar from '../CustomNavbar'
 
-class UserCreate extends Component {
+class BookCreate extends Component {
 
     constructor(props) {
         super(props);
-        this.CreateUser = this.CreateUser.bind(this)
+        this.CreateBook = this.CreateBook.bind(this)
     }
     
-    CreateUser = (event) => {
+    CreateBook = (event) => {
         event.preventDefault()
 
         if(this.password.value === this.repeatPassword.value) {
             let insertData = [
-                { table: 'User', fieldData: [ 
+                { table: 'Book', fieldData: [ 
                     {field: 'name', data: this.name.value},
                     {field: 'email', data: this.email.value},
                     {field: 'password', data: this.password.value}
@@ -34,25 +34,29 @@ class UserCreate extends Component {
             <React.Fragment>
                 <Navbar/>
                 <Container>
-                <Form onSubmit={this.CreateUser}>
-                    <h1>Create User</h1>
+                <Form onSubmit={this.CreateBook}>
+                    <h1>Create Book</h1>
 
                     <Form.Group>
                         <Form.Label>Name</Form.Label>
                         <Form.Control type="text" placeholder="Name" ref={(FormControl) => {this.name = FormControl}} required/>
                     </Form.Group>
+
                     <Form.Group>
                         <Form.Label>Email address</Form.Label>
                         <Form.Control type="email" placeholder="Enter email" ref={(FormControl) => {this.email = FormControl}} required/>
                     </Form.Group>
+
                     <Form.Group>
                         <Form.Label>Password</Form.Label>
                         <Form.Control type="password" placeholder="Password" ref={(FormControl) => {this.password = FormControl}} required/>
-                    </Form.Group>                    
+                    </Form.Group>
+                    
                     <Form.Group>
                         <Form.Label>Repeat password</Form.Label>
                         <Form.Control type="password" placeholder="Repeat password" ref={(FormControl) => {this.repeatPassword = FormControl}} required/>
                     </Form.Group>
+
                     <Button variant="primary" type="submit">
                         Submit
                     </Button>
@@ -64,4 +68,4 @@ class UserCreate extends Component {
 }
  
 
-export default UserCreate;
+export default BookCreate;
