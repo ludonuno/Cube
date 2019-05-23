@@ -6,15 +6,13 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import './index.css';
 
 import Home from './components/Home'
-
 import Movies from './components/Movies'
 import Books from './components/Books'
 import Series from './components/Series'
 import Games from './components/Games'
 import Celebrities from './components/Celebrities'
-import User from './components/User'
+import User from './components/User/User'
 import NoMatch from './components/NoMatch'
-
 
 import * as serviceWorker from './serviceWorker';
 

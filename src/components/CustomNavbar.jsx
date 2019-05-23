@@ -21,9 +21,9 @@ class CustomNavbar extends Component {
             ]
             
             // Get the results 
-            Get(whereToSearch, (data) => {
-                if(data.result) {
-                    console.log(data)
+            Get(whereToSearch, (res) => {
+                if(res.result) {
+                    console.log(res)
                 } else {
                     console.log('Não foram encontrados quais quer registos nas tabelas pedidas')
                 }
@@ -43,12 +43,12 @@ class CustomNavbar extends Component {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" className="text-left"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
-                        <Nav.Link href="/series">Series</Nav.Link>
-                        <Nav.Link href="/books">Books</Nav.Link>
-                        <Nav.Link href="/movies">Movies</Nav.Link>
-                        <Nav.Link href="/games">Games</Nav.Link>
-                        <Nav.Link href="/celebrities">Celebrities</Nav.Link>
-                        <Nav.Link href="/user">User</Nav.Link>
+                        <Nav.Link href="/series/create">Create Series</Nav.Link>
+                        <Nav.Link href="/books/create">Create Books</Nav.Link>
+                        <Nav.Link href="/movies/create">Create Movies</Nav.Link>
+                        <Nav.Link href="/games/create">Create Games</Nav.Link>
+                        <Nav.Link href="/celebrities/create">Create Celebrities</Nav.Link>
+                        <Nav.Link href="/user/create">Create user</Nav.Link>
                         <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                             <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>

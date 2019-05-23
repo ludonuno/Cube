@@ -24,26 +24,24 @@ const Get = (searchData, callback) => {
 }
 
 const Create = (insertData, callback) => {
-    let arrayResult = []
-    let numberOfObjects = 0
-
     console.log(insertData)
 
-    // searchData.forEach(element => {
+    insertData.forEach(element => {
 
-    //     let table = element.table
-    //     let fieldsData = ''
+        let table = element.table
+        let fieldsData = ''
+        let multipleParams = 0
 
-    //     element.fieldData.forEach(d => {
-    //         fieldsData += `${d.field}=${d.data}`
-    //     })
-
-    //     request.create(`${url}/${table}?${fieldsData}`, (error, response, body) => {
-    //         arrayResult[numberOfObjects] = JSON.parse(body)
-    //         numberOfObjects++
-    //         if(numberOfObjects === searchData.length) callback(arrayResult)
-    //     })
-    // })
+        element.fieldData.forEach(d => {
+            if(multipleParams) fieldsData += '&'
+            fieldsData += `${d.field}=${d.data}`
+            multipleParams++
+        })
+        console.log(`${url}/${table}?${fieldsData}`)
+        request.post(`${url}/${table}?${fieldsData}`, (error, response, body) => {
+            callback(JSON.parse(body))
+        })
+    })
 }
 
 module.exports = {
