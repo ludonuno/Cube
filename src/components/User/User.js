@@ -7,7 +7,6 @@ import UserPage from './UserPage'
 import NoMatch from '../NoMatch'
 
 class User extends Component {
-
     render() { 
         return ( 
             <Router>

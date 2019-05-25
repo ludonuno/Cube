@@ -44,10 +44,10 @@ class CustomNavbar extends Component {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         <Nav.Link href="/series/create">Create Series</Nav.Link>
-                        <Nav.Link href="/books/create">Create Books</Nav.Link>
-                        <Nav.Link href="/movies/create">Create Movies</Nav.Link>
-                        <Nav.Link href="/games/create">Create Games</Nav.Link>
-                        <Nav.Link href="/celebrities/create">Create Celebrities</Nav.Link>
+                        <Nav.Link href="/book/create">Create Books</Nav.Link>
+                        <Nav.Link href="/movie/create">Create Movies</Nav.Link>
+                        <Nav.Link href="/game/create">Create Games</Nav.Link>
+                        <Nav.Link href="/celebrity/create">Create Celebrities</Nav.Link>
                         <Nav.Link href="/user/create">Create user</Nav.Link>
                         <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                             <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
