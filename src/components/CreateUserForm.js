@@ -1,20 +1,27 @@
 import React, { Component } from 'react';
 import { Container, Form, Button } from 'react-bootstrap'
-import { getBase64, getImage } from '../../scripts/utils'
-import { Create } from '../../scripts/api'
+import { Create } from '../scripts/api'
 
-import Navbar from '../CustomNavbar'
+import Alert from './utils/Alert'
+import Navbar from './CustomNavbar'
 
-class UserCreate extends Component {
+class CreateUserForm extends Component {
 
     constructor(props) {
         super(props);
         this.CreateUser = this.CreateUser.bind(this)
+        this.state = {
+            inserted: {
+                hasInserted: false,
+                message: '',
+                variant: ''
+            }
+        }
     }
     
     CreateUser = (event) => {
         event.preventDefault()
-
+        //name, password, email, photo, birthday, description
         //Imagens só podem ser adicionadas no update
         if(this.password.value === this.repeatPassword.value) {
             let insertData = [
@@ -24,9 +31,33 @@ class UserCreate extends Component {
                     {field: 'password', data: this.password.value}
                 ] }
             ]
+            
+            let inserted = {...this.state.inserted}
+            inserted = {
+                visible: true,
+                message: 'A ligar ao servidor...',
+                variant: 'info'
+            }
+            this.setState({ inserted })
 
             Create(insertData, (res) => {
-                console.log(res)
+                if(res.error) {
+                    let inserted = {...this.state.inserted}
+                    inserted = {
+                        visible: true,
+                        message: 'Não foi possivel inserir o registo.',
+                        variant: 'danger'
+                    }
+                    this.setState({ inserted })
+                } else {
+                    let inserted = {...this.state.inserted}
+                    inserted = {
+                        visible: true,
+                        message: 'Registo inserido com sucesso',
+                        variant: 'success'
+                    }
+                    this.setState({ inserted })
+                }
             })
         }
     }
@@ -36,9 +67,9 @@ class UserCreate extends Component {
             <React.Fragment>
                 <Navbar/>
                 <Container>
+                <h3>Create User</h3>
+                <Alert variant={this.state.inserted.variant} message={this.state.inserted.message} visible={this.state.inserted.visible} />
                 <Form onSubmit={this.CreateUser}>
-                    <h1>Create User</h1>
-
                     <Form.Group>
                         <Form.Label>Name</Form.Label>
                         <Form.Control type="text" placeholder="Name" ref={(name) => {this.name = name}} required/>
@@ -68,4 +99,4 @@ class UserCreate extends Component {
 }
  
 
-export default UserCreate;
+export default CreateUserForm;

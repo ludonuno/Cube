@@ -1,20 +1,19 @@
 import React, { Component } from 'react'
 import { Jumbotron } from 'react-bootstrap'
 
-import Navbar from '../CustomNavbar'
+import Navbar from './CustomNavbar'
 
-class Celebrity extends Component {
-    state = {  }
+class Book extends Component {
     render() { 
         return ( 
             <React.Fragment>
                 <Navbar/>
                 <Jumbotron>
-                    Pessoas
+                    Book
                 </Jumbotron>
             </React.Fragment>    
         );
     }
 }
  
-export default Celebrity;
+export default Book;

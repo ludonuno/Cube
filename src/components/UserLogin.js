@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import { Container } from 'react-bootstrap'
 
-import Navbar from '../CustomNavbar'
+import Navbar from './CustomNavbar'
 
-class UserPage extends Component {
-   
+class UserLogin extends Component {
     render() { 
         return ( 
             <React.Fragment>
                 <Navbar/>
                 <Container>
-                    UserPage
+                    UserLogin
                 </Container>
             </React.Fragment>
         );
@@ -18,4 +17,4 @@ class UserPage extends Component {
 }
  
 
-export default UserPage;
+export default UserLogin;

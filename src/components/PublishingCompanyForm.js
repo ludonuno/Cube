@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import { Container, Form, Button } from 'react-bootstrap'
-import { Create } from '../../../scripts/api'
-import Alert from '../../utils/Alert'
+import { Create } from '../scripts/api'
+import Alert from './utils/Alert'
 
-class publishingCompany extends Component {
-    state = {
-    }
+class PublishingCompanyForm extends Component {
     constructor(props) {
         super(props);
-        this.publishingCompany = this.publishingCompany.bind(this)
+        this.Add = this.Add.bind(this)
+        this.state = {
+            inserted: {
+                hasInserted: false,
+                message: '',
+                variant: ''
+            }
+        }
     }
     
-    publishingCompany = (event) => {
+    Add = (event) => {
         event.preventDefault()
+        //userEmail, userPassword, name
         let insertData = [
             { table: 'PublishingCompany', fieldData: [ 
                 {field: 'userEmail', data: this.userEmail.value},
@@ -20,19 +26,44 @@ class publishingCompany extends Component {
                 {field: 'name', data: this.name.value}
             ] }
         ]
+        
+        let inserted = {...this.inserted}
+        inserted = {
+            visible: true,
+            message: 'A ligar ao servidor...',
+            variant: 'info'
+        }
+        this.setState({ inserted })
+
         Create(insertData, (res) => {
-            console.log(res)
+            if(res.error) {
+                let inserted = {...this.inserted}
+                inserted = {
+                    visible: true,
+                    message: `${res.error}`,
+                    variant: 'danger'
+                }
+                this.setState({ inserted })
+            } else {
+                let inserted = {...this.inserted}
+                inserted = {
+                    visible: true,
+                    message: `${res.result.message}`,
+                    variant: 'success'
+                }
+                this.setState({ inserted })
+                this.props.GetPublisherList()
+            }
         })
     }
-    
+
     render() { 
         return ( 
             <React.Fragment>
                 <Container>
-                    <Form onSubmit={this.publishingCompany}>
-                        <h1>Create Publishing Company</h1>
-                        <Alert variant="warning" message="Registo inserido com sucesso" />
-
+                    <h3>Create Publishing Company</h3>
+                    <Alert variant={this.state.inserted.variant} message={this.state.inserted.message} visible={this.state.inserted.visible} />
+                    <Form onSubmit={this.Add}>
                         <Form.Group>
                             <Form.Label>Email address</Form.Label>
                             <Form.Control type="email" placeholder="Enter email" ref={(email) => {this.userEmail = email}} required/>
@@ -59,4 +90,4 @@ class publishingCompany extends Component {
 }
  
 
-export default publishingCompany;
+export default PublishingCompanyForm;

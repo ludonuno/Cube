@@ -2,46 +2,68 @@ const request = require('request');
 
 const url = 'https://ludonuno-cube-api.herokuapp.com/API'
 
-const Get = (searchData, callback) => {
-    let arrayResult = []
-    let numberOfObjects = 0
 
-    searchData.forEach(element => {
-
-        let table = element.table
-        let fieldsData = ''
-
-        element.fieldData.forEach(d => {
-            fieldsData += `${d.field}=${d.data}`
-        })
-
-        request.get(`${url}/${table}?${fieldsData}`, (error, response, body) => {
-            arrayResult[numberOfObjects] = JSON.parse(body)
-            numberOfObjects++
-            if(numberOfObjects === searchData.length) callback(arrayResult)
-        })
-    })
+const HandleGetData = (data, callback) => {
+    return new Promise((resolve, reject) => {
+       let fieldsData = ''
+        let table = data[0].table
+        if(data[0].fieldData) {
+            data[0].fieldData.forEach(d => {
+                fieldsData += `${d.field}=${d.data}`
+            })
+            resolve(`${url}/${table}?${fieldsData}`)
+        } else {
+            resolve(`${url}/${table}`)
+        }
+    }).then(
+        resolve => callback(resolve),
+        reject => callback(undefined)
+    )
 }
 
-const Create = (insertData, callback) => {
-    console.log(insertData)
+const Get = (searchData, callback) => {
+    return new Promise((resolve, reject) => {
+        HandleGetData(searchData, (res) => {
+            request.get(res, (error, response, body) => {
+                resolve(JSON.parse(body))
+            })
+        })
+    }).then(
+        resolve => callback(resolve),
+        reject => callback(undefined)
+    )
+}
 
-    insertData.forEach(element => {
-
-        let table = element.table
+const HandleCreateData = (data, callback) => {
+    return new Promise((resolve, reject) => {
+        let table = data[0].table
         let fieldsData = ''
         let multipleParams = 0
-
-        element.fieldData.forEach(d => {
+        data[0].fieldData.forEach(d => {
             if(multipleParams) fieldsData += '&'
             fieldsData += `${d.field}=${d.data}`
             multipleParams++
         })
         console.log(`${url}/${table}?${fieldsData}`)
-        request.post(`${url}/${table}?${fieldsData}`, (error, response, body) => {
-            callback(JSON.parse(body))
+        resolve(`${url}/${table}?${fieldsData}`)
+    }).then(
+        resolve => callback(resolve),
+        reject => callback(reject)
+    )
+}
+
+const Create = (insertData, callback) => {
+    console.log(insertData)
+    return new Promise((resolve, reject) => {
+        HandleCreateData(insertData, (res) => {
+            request.post(res, (error, response, body) => {
+                resolve(JSON.parse(body))
+            })
         })
-    })
+    }).then(
+        resolve => callback(resolve),
+        reject => callback(undefined)
+    )
 }
 
 module.exports = {

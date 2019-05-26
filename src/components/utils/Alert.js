@@ -1,14 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Alert as AlertBootstrap } from 'react-bootstrap'
 
 const Alert = (props) => {
-    return ( 
-        <React.Fragment>
-            <AlertBootstrap variant={props.variant}>
-                {props.message}
-            </AlertBootstrap>
-        </React.Fragment>
-    )
+    if(props.visible) {
+        return ( 
+            <React.Fragment>
+                <AlertBootstrap variant={props.variant}>
+                    {props.message}
+                </AlertBootstrap>
+            </React.Fragment>
+        )
+    } else {
+        return null
+    }
 }
  
 
