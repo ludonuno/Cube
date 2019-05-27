@@ -8,8 +8,11 @@ const HandleGetData = (data, callback) => {
        let fieldsData = ''
         let table = data[0].table
         if(data[0].fieldData) {
+            let multipleParams = 0
             data[0].fieldData.forEach(d => {
+                if(multipleParams) fieldsData += '&'
                 fieldsData += `${d.field}=${d.data}`
+                multipleParams++
             })
             resolve(`${url}/${table}?${fieldsData}`)
         } else {
@@ -44,7 +47,6 @@ const HandleCreateData = (data, callback) => {
             fieldsData += `${d.field}=${d.data}`
             multipleParams++
         })
-        console.log(`${url}/${table}?${fieldsData}`)
         resolve(`${url}/${table}?${fieldsData}`)
     }).then(
         resolve => callback(resolve),
@@ -53,7 +55,6 @@ const HandleCreateData = (data, callback) => {
 }
 
 const Create = (insertData, callback) => {
-    console.log(insertData)
     return new Promise((resolve, reject) => {
         HandleCreateData(insertData, (res) => {
             request.post(res, (error, response, body) => {

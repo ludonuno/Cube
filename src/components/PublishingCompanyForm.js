@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Form, Button } from 'react-bootstrap'
+import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
 import { Create } from '../scripts/api'
 import Alert from './utils/Alert'
 
@@ -64,21 +64,40 @@ class PublishingCompanyForm extends Component {
                     <h3>Create Publishing Company</h3>
                     <Alert variant={this.state.inserted.variant} message={this.state.inserted.message} visible={this.state.inserted.visible} />
                     <Form onSubmit={this.Add}>
-                        <Form.Group>
-                            <Form.Label>Email address</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" ref={(email) => {this.userEmail = email}} required/>
-                        </Form.Group>
-
-                        <Form.Group>
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" ref={(password) => {this.userPassword = password}} required/>
-                        </Form.Group>
-                        
-                        <Form.Group>
-                            <Form.Label>Name</Form.Label>
-                            <Form.Control type="text" placeholder="Name" ref={(name) => {this.name = name}} required/>
-                        </Form.Group>
-
+                        <Row>
+                            <Col xs={12} lg={6}>
+                                <Form.Group>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Prepend>
+                                            <InputGroup.Text>E-mail</InputGroup.Text>
+                                        </InputGroup.Prepend>
+                                        <Form.Control type="email" autoComplete="username" ref={(email) => {this.userEmail = email}} required/>
+                                    </InputGroup>
+                                </Form.Group>
+                            </Col>
+                            <Col xs={12} lg={6}>
+                                <Form.Group>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Prepend>
+                                            <InputGroup.Text>Password</InputGroup.Text>
+                                        </InputGroup.Prepend>
+                                        <Form.Control type="password" autoComplete="current-password" ref={(password) => {this.userPassword = password}} required/>
+                                    </InputGroup>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Form.Group>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Prepend>
+                                            <InputGroup.Text>Name</InputGroup.Text>
+                                        </InputGroup.Prepend>
+                                        <Form.Control type="text" ref={(name) => {this.name = name}} required/>
+                                    </InputGroup>
+                                </Form.Group>
+                            </Col>
+                        </Row>
                         <Button variant="primary" type="submit">
                             Submit
                         </Button>

@@ -6,7 +6,6 @@ import Alert from './utils/Alert'
 import Navbar from './CustomNavbar'
 
 class CreateUserForm extends Component {
-
     constructor(props) {
         super(props);
         this.CreateUser = this.CreateUser.bind(this)
@@ -21,7 +20,7 @@ class CreateUserForm extends Component {
     
     CreateUser = (event) => {
         event.preventDefault()
-        //name, password, email, photo, birthday, description
+        //name, password, email, birthday, description
         //Imagens só podem ser adicionadas no update
         if(this.password.value === this.repeatPassword.value) {
             let insertData = [
@@ -62,6 +61,7 @@ class CreateUserForm extends Component {
         }
     }
 
+
     render() { 
         return ( 
             <React.Fragment>
@@ -72,19 +72,19 @@ class CreateUserForm extends Component {
                 <Form onSubmit={this.CreateUser}>
                     <Form.Group>
                         <Form.Label>Name</Form.Label>
-                        <Form.Control type="text" placeholder="Name" ref={(name) => {this.name = name}} required/>
+                        <Form.Control type="text" placeholder="Name" ref={(input) => {this.name = input}} required/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email" placeholder="Enter email" ref={(email) => {this.email = email}} required/>
+                        <Form.Control type="email" placeholder="Enter email" ref={(input) => {this.email = input}} required/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" ref={(password) => {this.password = password}} required/>
+                        <Form.Control type="password" placeholder="Password" ref={(input) => {this.password = input}} required/>
                     </Form.Group>                    
                     <Form.Group>
                         <Form.Label>Repeat password</Form.Label>
-                        <Form.Control type="password" placeholder="Repeat password" ref={(repeatPassword) => {this.repeatPassword = repeatPassword}} required/>
+                        <Form.Control type="password" placeholder="Repeat password" ref={(input) => {this.repeatPassword = input}} required/>
                     </Form.Group>
 
                     <Button variant="primary" type="submit">

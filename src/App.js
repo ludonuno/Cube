@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Home from './components/Home'
 import Movie from './components/Movie'
 import Book from './components/Book'
-import CreateBookForm from './components/CreateBookForm'
+import CreateBook from './components/CreateBook'
 // import BookPage from './components/Book/BookPage'
 import Series from './components/Series'
 import Game from './components/Game'
@@ -41,7 +41,7 @@ class App extends Component {
                 <Switch>
                     <Route exact path="/" render={ (props) => <Home {...props} /> } />
                     <Route path="/movie" render={ (props) => <Movie {...props} /> } />
-                    <Route path="/book/create" render={ (props) => <CreateBookForm {...props} /> } />
+                    <Route path="/book/create" render={ (props) => <CreateBook {...props} /> } />
                     <Route path="/book" render={ (props) => <Book {...props} /> } />
                     {/* <Route path="/book/:id" component={ BookPage } /> */}
 
