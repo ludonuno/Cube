@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form, InputGroup } from 'react-bootstrap'
-import Alert from './utils/Alert'
+import Alert from '../utils/Alert'
 
 const SagaComboBox = (props) => {
     if (props.list[0]) {
@@ -14,7 +14,7 @@ const SagaComboBox = (props) => {
                     <InputGroup.Prepend>
                         <InputGroup.Text>Lista de Sagas</InputGroup.Text>
                     </InputGroup.Prepend>
-                    <Form.Control as="select" onChange={props.SetSagaValue} required>
+                    <Form.Control as="select" onChange={props.onChange} required>
                         {options}
                     </Form.Control>
                 </InputGroup>

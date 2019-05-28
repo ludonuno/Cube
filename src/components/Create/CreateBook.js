@@ -1,46 +1,44 @@
 import React, { Component } from 'react';
 import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
-import { Create, Get } from '../scripts/api'
-
-import Alert from './utils/Alert'
-
-import Navbar from './CustomNavbar'
+import { Create, Get } from '../../scripts/api'
+import Alert from '../utils/Alert'
+import Navbar from '../CustomNavbar'
 import PublishingCompanyForm from './PublishingCompanyForm'
 import PublishingCompanyComboBox from './PublishingCompanyComboBox'
 import SagaForm from './SagaForm'
 import SagaComboBox from './SagaComboBox'
 
 class CreateBook extends Component {
-
     constructor(props) {
         super(props);
+        this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddBook = this.AddBook.bind(this)
+        this.SetPublishingCompany = this.SetPublishingCompany.bind(this)
+        this.SetSaga = this.SetSaga.bind(this)
         this.GetPublisherList = this.GetPublisherList.bind(this)
         this.GetSagaList = this.GetSagaList.bind(this)
         this.state = {
-            inserted: { hasInserted: false, message: '', variant: '' },
+            alert: { visible: false, message: '', variant: '' },
             publishingCompanyList: [],
             sagaList: [],
             publishingCompanyId: undefined,
             sagaId: undefined
         }
     }
-    
+
+    ChangeAlert(visible, message, variant) {
+        let alert = {...this.state.alert}
+        alert = { visible: visible, message: message, variant: variant}
+        this.setState({ alert })
+    }
+
     AddBook = (event) => {
         event.preventDefault()
-        //userEmail, userPassword, title, releaseDate, synopsis, publishingCompanyId, sagaId,
-        if(this.userEmail && this.userPassword && this.state.sagaList[0] && this.state.publishingCompanyList[0]) {
-            console.log(this.userEmail.value)
-            console.log(this.userPassword.value)
-            console.log(this.title.value)
-            console.log(this.releaseDate.value)
-            console.log(this.synopsis.value)
-            console.log(this.state.sagaId)
-            console.log(this.state.publishingCompanyId)
+        if(this.state.sagaList[0] && this.state.publishingCompanyList[0]) {
             let insertData = [
                 { table: 'Book', fieldData: [ 
-                    {field: 'userEmail', data: this.userEmail.value},       // estes dados devem vir da autenticação
-                    {field: 'userPassword', data: this.userPassword.value}, // estes dados devem vir da autenticação
+                    {field: 'userEmail', data: this.userEmail.value},
+                    {field: 'userPassword', data: this.userPassword.value},
                     {field: 'title', data: this.title.value},
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'synopsis', data: this.synopsis.value},
@@ -48,37 +46,26 @@ class CreateBook extends Component {
                     {field: 'publishingCompanyId', data: this.state.publishingCompanyId ? this.state.publishingCompanyId : 1}
                 ] }
             ]
-    
-            let inserted = {...this.state.inserted}
-            inserted = { visible: true, message: 'A ligar ao servidor...', variant: 'info'}
-            this.setState({ inserted })
-    
+            this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res) => {
                 if(res.error) {
-                    let inserted = {...this.state.inserted}
-                    inserted = { visible: true, message: `${res.error}`, variant: 'danger' }
-                    this.setState({ inserted })
+                    this.ChangeAlert(true, res.error, 'danger')
                 } else {
-                    let inserted = {...this.state.inserted}
-                    inserted = { visible: true, message: `${res.result.message}`, variant: 'success' }
-                    this.setState({ inserted })
+                    this.ChangeAlert(true, res.result.message, 'success')
                 }
             })
         } else {
-            let inserted = {...this.state.inserted}
-            inserted = { visible: true, message: 'Campos em falta', variant: 'danger'}
-            this.setState({ inserted })
-            console.log(this.state.sagaList[0], this.state.publishingCompanyList[0])
+            this.ChangeAlert(true, 'Campos em falta', 'warning')
         }
     }
 
-    SetPublishingCompanyValue = (event) => {
+    SetPublishingCompany = (event) => {
         let publishingCompanyId = {...this.state.publishingCompanyId}
         publishingCompanyId = Number(event.target.value)
         this.setState({ publishingCompanyId })
     }
 
-    SetSagaValue = (event) => {
+    SetSaga = (event) => {
         let sagaId = {...this.state.sagaId}
         sagaId = Number(event.target.value)
         this.setState({ sagaId })
@@ -115,13 +102,13 @@ class CreateBook extends Component {
         return ( 
             <React.Fragment>
                 <Navbar/>
-                <PublishingCompanyForm GetPublisherList={this.GetPublisherList} />
+                <PublishingCompanyForm onSubmit={this.GetPublisherList} />
                 <hr/>
-                <SagaForm GetSagaList={this.GetSagaList} />
+                <SagaForm onSubmit={this.GetSagaList} />
                 <hr/>
                 <Container>
                     <h3>Create Book</h3>
-                    <Alert variant={this.state.inserted.variant} message={this.state.inserted.message} visible={this.state.inserted.visible} />
+                    <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                     <Form onSubmit={this.AddBook}>
                         <Row>
                             <Col xs={12} lg={6}>
@@ -174,21 +161,21 @@ class CreateBook extends Component {
                                 <Form.Group>
                                     <InputGroup>
                                         <InputGroup.Prepend>
-                                            <InputGroup.Text>Sinopse</InputGroup.Text>
+                                            <InputGroup.Text>Synopsis</InputGroup.Text>
                                         </InputGroup.Prepend>
-                                        <Form.Control as="textarea" rows="3" className="noresize" ref={(input) => {this.synopsis = input}}/>
+                                        <Form.Control as="textarea" rows="2" className="noresize" ref={(input) => {this.synopsis = input}}/>
                                     </InputGroup>
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Row>
                             <Col>
-                                <PublishingCompanyComboBox list={this.state.publishingCompanyList} SetPublishingCompanyValue={this.SetPublishingCompanyValue} />
+                                <PublishingCompanyComboBox list={this.state.publishingCompanyList} onChange={this.SetPublishingCompany} />
                             </Col>
                         </Row>
                         <Row>
                             <Col>
-                                <SagaComboBox list={this.state.sagaList} SetSagaValue={this.SetSagaValue} />
+                                <SagaComboBox list={this.state.sagaList} onChange={this.SetSaga} />
                             </Col>
                         </Row>
                         <Row>

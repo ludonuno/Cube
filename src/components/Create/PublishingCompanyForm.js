@@ -1,24 +1,26 @@
 import React, { Component } from 'react';
 import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
-import { Create } from '../scripts/api'
-import Alert from './utils/Alert'
+import { Create } from '../../scripts/api'
+import Alert from '../utils/Alert'
 
 class PublishingCompanyForm extends Component {
     constructor(props) {
         super(props);
-        this.Add = this.Add.bind(this)
+        this.ChangeAlert = this.ChangeAlert.bind(this)
+        this.AddPublishingCompany = this.AddPublishingCompany.bind(this)
         this.state = {
-            inserted: {
-                hasInserted: false,
-                message: '',
-                variant: ''
-            }
+            alert: { visible: false, message: '', variant: '' }
         }
     }
-    
-    Add = (event) => {
+
+    ChangeAlert(visible, message, variant) {
+        let alert = {...this.state.alert}
+        alert = { visible: visible, message: message, variant: variant}
+        this.setState({ alert })
+    }
+
+    AddPublishingCompany = (event) => {
         event.preventDefault()
-        //userEmail, userPassword, name
         let insertData = [
             { table: 'PublishingCompany', fieldData: [ 
                 {field: 'userEmail', data: this.userEmail.value},
@@ -26,33 +28,13 @@ class PublishingCompanyForm extends Component {
                 {field: 'name', data: this.name.value}
             ] }
         ]
-        
-        let inserted = {...this.inserted}
-        inserted = {
-            visible: true,
-            message: 'A ligar ao servidor...',
-            variant: 'info'
-        }
-        this.setState({ inserted })
-
+        this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
         Create(insertData, (res) => {
             if(res.error) {
-                let inserted = {...this.inserted}
-                inserted = {
-                    visible: true,
-                    message: `${res.error}`,
-                    variant: 'danger'
-                }
-                this.setState({ inserted })
+                this.ChangeAlert(true, res.error, 'danger')
             } else {
-                let inserted = {...this.inserted}
-                inserted = {
-                    visible: true,
-                    message: `${res.result.message}`,
-                    variant: 'success'
-                }
-                this.setState({ inserted })
-                this.props.GetPublisherList()
+                this.ChangeAlert(true, res.result.message, 'success')
+                this.props.onSubmit()
             }
         })
     }
@@ -63,7 +45,7 @@ class PublishingCompanyForm extends Component {
                 <Container>
                     <h3>Create Publishing Company</h3>
                     <Alert variant={this.state.inserted.variant} message={this.state.inserted.message} visible={this.state.inserted.visible} />
-                    <Form onSubmit={this.Add}>
+                    <Form onSubmit={this.AddPublishingCompany}>
                         <Row>
                             <Col xs={12} lg={6}>
                                 <Form.Group>

@@ -1,58 +1,41 @@
 import React, { Component } from 'react';
 import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
-import { Create } from '../scripts/api'
-import Alert from './utils/Alert'
+import { Create } from '../../scripts/api'
+import Alert from '../utils/Alert'
 
 class SagaForm extends Component {
     constructor(props) {
         super(props);
-        this.Add = this.Add.bind(this)
+        this.ChangeAlert = this.ChangeAlert.bind(this)
+        this.AddSaga = this.AddSaga.bind(this)
         this.state = {
-            inserted: {
-                hasInserted: false,
-                message: '',
-                variant: ''
-            }
+            alert: { visible: false, message: '', variant: '' }
         }
     }
     
-    Add = (event) => {
+    ChangeAlert(visible, message, variant) {
+        let alert = {...this.state.alert}
+        alert = { visible: visible, message: message, variant: variant}
+        this.setState({ alert })
+    }
+
+    AddSaga = (event) => {
         event.preventDefault()
-        //userEmail, userPassword, name, description
         let insertData = [
             { table: 'Saga', fieldData: [ 
                 {field: 'userEmail', data: this.userEmail.value},
                 {field: 'userPassword', data: this.userPassword.value},
-                {field: 'name', data: this.name.value}
+                {field: 'name', data: this.name.value},
+                {field: 'description', data: this.description.value}
             ] }
         ]
-        
-        let inserted = {...this.inserted}
-        inserted = {
-            visible: true,
-            message: 'A ligar ao servidor...',
-            variant: 'info'
-        }
-        this.setState({ inserted })
-
+        this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
         Create(insertData, (res) => {
             if(res.error) {
-                let inserted = {...this.inserted}
-                inserted = {
-                    visible: true,
-                    message: `${res.error}`,
-                    variant: 'danger'
-                }
-                this.setState({ inserted })
+                this.ChangeAlert(true, res.error, 'danger')
             } else {
-                let inserted = {...this.inserted}
-                inserted = {
-                    visible: true,
-                    message: `${res.result.message}`,
-                    variant: 'success'
-                }
-                this.setState({ inserted })
-                this.props.GetSagaList()
+                this.ChangeAlert(true, res.result.message, 'success')
+                this.props.onSubmit()
             }
         })
     }
@@ -62,8 +45,8 @@ class SagaForm extends Component {
             <React.Fragment>
                 <Container>
                     <h3>Create Saga</h3>
-                    <Alert variant={this.state.inserted.variant} message={this.state.inserted.message} visible={this.state.inserted.visible} />
-                    <Form onSubmit={this.Add}>
+                    <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
+                    <Form onSubmit={this.AddSaga}>
                         <Row>
                             <Col xs={12} lg={6}>
                                 <Form.Group>
@@ -98,9 +81,23 @@ class SagaForm extends Component {
                                 </Form.Group>
                             </Col>
                         </Row>
-                        <Button variant="primary" type="submit">
-                            Submit
-                        </Button>
+                        <Row>
+                            <Col>
+                                <Form.Group>
+                                    <InputGroup>
+                                        <InputGroup.Prepend>
+                                            <InputGroup.Text>Description</InputGroup.Text>
+                                        </InputGroup.Prepend>
+                                        <Form.Control as="textarea" rows="2" className="noresize" ref={(input) => {this.description = input}}/>
+                                    </InputGroup>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Button variant="primary" type="submit">Submit</Button>
+                            </Col>
+                        </Row>
                     </Form>
                 </Container>
             </React.Fragment>
