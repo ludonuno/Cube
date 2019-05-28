@@ -50,9 +50,9 @@ class App extends Component {
                     <Route path="/celebrity" render={ (props) => <Celebrity {...props} /> } />
 
                     <Route path="/user/create" render={ (props) => <CreateUserForm {...props} /> } />
-                    <Route path="/user/login" render={ (props) => <UserLogin {...props} logIn={this.props.logIn} /> } />
-                    <Route path="/user/:id" render={ (props) => <UserPage {...props} logOut={this.props.logOut} /> } />
-                    <Route path="/user" render={ (props) => <User {...props} logIn={this.logIn} logOut={this.logOut} /> }/>
+                    <Route path="/user/login" render={ (props) => <UserLogin {...props} /> } />
+                    <Route path="/user/:id" render={ (props) => <UserPage {...props} /> } />
+                    <Route path="/user" render={ (props) => <User {...props} /> }/>
 
                     <Route render={NoMatch}/>
                 </Switch>

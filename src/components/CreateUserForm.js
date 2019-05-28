@@ -5,7 +5,7 @@ import { Create } from '../scripts/api'
 import Alert from './utils/Alert'
 import Navbar from './CustomNavbar'
 
-class CreateUserForm extends Component {
+class CreateUser extends Component {
     constructor(props) {
         super(props);
         this.CreateUser = this.CreateUser.bind(this)
@@ -99,4 +99,4 @@ class CreateUserForm extends Component {
 }
  
 
-export default CreateUserForm;
+export default CreateUser;

@@ -14,7 +14,7 @@ const SagaCb = (props) => {
                     <InputGroup.Prepend>
                         <InputGroup.Text>Lista de Editoras</InputGroup.Text>
                     </InputGroup.Prepend>
-                    <Form.Control as="select" onChange={props.ChangePublisherValue} required>
+                    <Form.Control as="select" onChange={props.SetPublishingCompanyValue} required>
                         {options}
                     </Form.Control>
                 </InputGroup>

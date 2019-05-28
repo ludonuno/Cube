@@ -14,7 +14,7 @@ const SagaComboBox = (props) => {
                     <InputGroup.Prepend>
                         <InputGroup.Text>Lista de Sagas</InputGroup.Text>
                     </InputGroup.Prepend>
-                    <Form.Control as="select" onChange={props.ChangeSagaValue} required>
+                    <Form.Control as="select" onChange={props.SetSagaValue} required>
                         {options}
                     </Form.Control>
                 </InputGroup>
