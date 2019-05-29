@@ -4,7 +4,12 @@ import { Jumbotron } from 'react-bootstrap'
 import Navbar from './CustomNavbar'
 
 class Home extends Component {
-    state = {  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: JSON.parse(localStorage.getItem('user'))
+        }
+    }
     render() { 
         return (
             <React.Fragment>

@@ -1,18 +1,19 @@
 import React from 'react'
 import { Form, InputGroup } from 'react-bootstrap'
-import Alert from '../utils/Alert'
+import Alert from './Alert'
+import { ReplaceComa } from '../../scripts/utils'
 
-const SagaComboBox = (props) => {
+const SagaCb = (props) => {
     if (props.list[0]) {
         let options = []
         props.list.forEach((element) => {
-            options.push(<option key={element.id} value={element.id}>{element.name}</option>)
+            options.push(<option key={element.id} value={element.id}>{element.name ? ReplaceComa(element.name) : ReplaceComa(element.rate)}</option>)
         })
         return (
             <Form.Group>
                 <InputGroup className="mb-3">
                     <InputGroup.Prepend>
-                        <InputGroup.Text>Lista de Sagas</InputGroup.Text>
+                        <InputGroup.Text>{props.header}</InputGroup.Text>
                     </InputGroup.Prepend>
                     <Form.Control as="select" onChange={props.onChange} required>
                         {options}
@@ -20,6 +21,6 @@ const SagaComboBox = (props) => {
                 </InputGroup>
             </Form.Group>
         )
-    } else return (<Alert visible={true} variant={'danger'} message={'Não existem sagas, adicione uma.'} />)
+    } else return (<Alert visible={true} variant={'danger'} message={`Não existem ${props.header}, adicione uma.`} />)
 }
-export default SagaComboBox;
+export default SagaCb;

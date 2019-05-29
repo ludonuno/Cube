@@ -3,41 +3,43 @@ import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
 import { Create, Get } from '../../scripts/api'
 
 import Alert from '../utils/Alert'
+import ComboBox from '../utils/ComboBox'
 
 import Navbar from '../CustomNavbar'
-import PublishingCompanyForm from './PublishingCompanyForm'
-import PublishingCompanyComboBox from './PublishingCompanyComboBox'
+
+import ParentAdvisoryForm from './ParentAdvisoryForm'
 import SagaForm from './SagaForm'
-import SagaComboBox from './SagaComboBox'
-
 //TODO: atualizar
-class CreateBook extends Component {
-
+class CreateSeries extends Component {
     constructor(props) {
         super(props);
-        this.AddBook = this.AddBook.bind(this)
+        this.ChangeAlert = this.ChangeAlert.bind(this)
+        this.AddSeries = this.AddSeries.bind(this)
+        
+        this.SetPublishingCompany = this.SetPublishingCompany.bind(this)
+        this.SetSaga = this.SetSaga.bind(this)
+        
         this.GetPublisherList = this.GetPublisherList.bind(this)
         this.GetSagaList = this.GetSagaList.bind(this)
         this.state = {
-            inserted: { hasInserted: false, message: '', variant: '' },
-            publishingCompanyList: [],
+            user: JSON.parse(localStorage.getItem('user')),
+            alert: { visible: false, message: '', variant: '' },
+            parentAdvisoryList: [],
             sagaList: [],
-            publishingCompanyId: undefined,
+            parentAdvisoryId: undefined,
             sagaId: undefined
         }
     }
-    
-    AddBook = (event) => {
+
+    ChangeAlert(visible, message, variant) {
+        let alert = {...this.state.alert}
+        alert = { visible: visible, message: message, variant: variant}
+        this.setState({ alert })
+    }
+
+    AddSeries = (event) => {
         event.preventDefault()
-        //userEmail, userPassword, title, releaseDate, synopsis, publishingCompanyId, sagaId,
-        if(this.userEmail && this.userPassword && this.state.sagaList[0] && this.state.publishingCompanyList[0]) {
-            console.log(this.userEmail.value)
-            console.log(this.userPassword.value)
-            console.log(this.title.value)
-            console.log(this.releaseDate.value)
-            console.log(this.synopsis.value)
-            console.log(this.state.sagaId)
-            console.log(this.state.publishingCompanyId)
+        if(this.state.sagaList[0] && this.state.publishingCompanyList[0]) {
             let insertData = [
                 { table: 'Book', fieldData: [ 
                     {field: 'userEmail', data: this.userEmail.value},       // estes dados devem vir da autenticação
@@ -49,49 +51,38 @@ class CreateBook extends Component {
                     {field: 'publishingCompanyId', data: this.state.publishingCompanyId ? this.state.publishingCompanyId : 1}
                 ] }
             ]
-    
-            let inserted = {...this.state.inserted}
-            inserted = { visible: true, message: 'A ligar ao servidor...', variant: 'info'}
-            this.setState({ inserted })
-    
+            this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res) => {
                 if(res.error) {
-                    let inserted = {...this.state.inserted}
-                    inserted = { visible: true, message: `${res.error}`, variant: 'danger' }
-                    this.setState({ inserted })
+                    this.ChangeAlert(true, res.error, 'danger')
                 } else {
-                    let inserted = {...this.state.inserted}
-                    inserted = { visible: true, message: `${res.result.message}`, variant: 'success' }
-                    this.setState({ inserted })
+                    this.ChangeAlert(true, res.result.message, 'success')
                 }
             })
         } else {
-            let inserted = {...this.state.inserted}
-            inserted = { visible: true, message: 'Campos em falta', variant: 'danger'}
-            this.setState({ inserted })
-            console.log(this.state.sagaList[0], this.state.publishingCompanyList[0])
+            this.ChangeAlert(true, 'Campos em falta', 'warning')
         }
     }
 
-    SetPublishingCompanyValue = (event) => {
-        let publishingCompanyId = {...this.state.publishingCompanyId}
-        publishingCompanyId = Number(event.target.value)
-        this.setState({ publishingCompanyId })
+    SetParentAdvisory = (event) => {
+        let parentAdvisoryId = {...this.state.parentAdvisoryId}
+        parentAdvisoryId = Number(event.target.value)
+        this.setState({ parentAdvisoryId })
     }
 
-    SetSagaValue = (event) => {
+    SetSaga = (event) => {
         let sagaId = {...this.state.sagaId}
         sagaId = Number(event.target.value)
         this.setState({ sagaId })
     }
     
-    GetPublisherList = () => {
-        let searchData = [ { table: 'PublishingCompany', fieldData: undefined } ]
+    GetParentAdvisoryList = () => {
+        let searchData = [ { table: 'ParentAdvisory', fieldData: undefined } ]
         Get(searchData,(res) => {
             if(res.result) {
-                let publishingCompanyList = [...this.state.publishingCompanyList]
-                publishingCompanyList = res.result
-                this.setState({ publishingCompanyList })
+                let parentAdvisoryList = [...this.state.parentAdvisoryList]
+                parentAdvisoryList = res.result
+                this.setState({ parentAdvisoryList })
             }  
         })
     }
@@ -108,7 +99,7 @@ class CreateBook extends Component {
     }
 
     componentDidMount() {
-        this.GetPublisherList()
+        this.GetParentAdvisoryList()
         this.GetSagaList()
     }
 
@@ -116,14 +107,14 @@ class CreateBook extends Component {
         return ( 
             <React.Fragment>
                 <Navbar/>
-                <PublishingCompanyForm GetPublisherList={this.GetPublisherList} />
+                <ParentAdvisoryForm onSubmit={this.GetParentAdvisoryList} />
                 <hr/>
-                <SagaForm GetSagaList={this.GetSagaList} />
+                <SagaForm onSubmit={this.GetSagaList} />
                 <hr/>
                 <Container>
-                    <h3>Create Book</h3>
-                    <Alert variant={this.state.inserted.variant} message={this.state.inserted.message} visible={this.state.inserted.visible} />
-                    <Form onSubmit={this.AddBook}>
+                    <h3>Create Series</h3>
+                    <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
+                    <Form onSubmit={this.AddSeries}>
                         <Row>
                             <Col xs={12} lg={6}>
                                 <Form.Group>
@@ -175,7 +166,7 @@ class CreateBook extends Component {
                                 <Form.Group>
                                     <InputGroup>
                                         <InputGroup.Prepend>
-                                            <InputGroup.Text>Sinopse</InputGroup.Text>
+                                            <InputGroup.Text>Synopsis</InputGroup.Text>
                                         </InputGroup.Prepend>
                                         <Form.Control as="textarea" rows="3" className="noresize" ref={(input) => {this.synopsis = input}}/>
                                     </InputGroup>
@@ -184,12 +175,12 @@ class CreateBook extends Component {
                         </Row>
                         <Row>
                             <Col>
-                                <PublishingCompanyComboBox list={this.state.publishingCompanyList} SetPublishingCompanyValue={this.SetPublishingCompanyValue} />
+                                <ComboBox header={'Parent Advisory'} list={this.state.parentAdvisoryList} onChange={this.SetParentAdvisory} />
                             </Col>
                         </Row>
                         <Row>
                             <Col>
-                                <SagaComboBox list={this.state.sagaList} SetSagaValue={this.SetSagaValue} />
+                                <ComboBox header={'Saga'} list={this.state.sagaList} onChange={this.SetSaga} />
                             </Col>
                         </Row>
                         <Row>
@@ -205,4 +196,4 @@ class CreateBook extends Component {
     }
 }
  
-export default CreateBook;
+export default CreateSeries;

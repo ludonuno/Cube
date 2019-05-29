@@ -1,23 +1,28 @@
 import React, { Component } from 'react';
 import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
 import { Create, Get } from '../../scripts/api'
+
 import Alert from '../utils/Alert'
+import ComboBox from '../utils/ComboBox'
+
 import Navbar from '../CustomNavbar'
+
 import ParentAdvisoryForm from './ParentAdvisoryForm'
-import ParentAdvisoryComboBox from './ParentAdvisoryComboBox'
 import SagaForm from './SagaForm'
-import SagaComboBox from './SagaComboBox'
 
 class CreateMovie extends Component {
     constructor(props) {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddMovie = this.AddMovie.bind(this)
+        
         this.SetParentAdvisory = this.SetParentAdvisory.bind(this)
         this.SetSaga = this.SetSaga.bind(this)
+
         this.GetParentAdvisoryList = this.GetParentAdvisoryList.bind(this)
         this.GetSagaList = this.GetSagaList.bind(this)
         this.state = {
+            user: JSON.parse(localStorage.getItem('user')),
             alert: { visible: false, message: '', variant: '' },
             parentAdvisoryList: [],
             sagaList: [],
@@ -34,7 +39,7 @@ class CreateMovie extends Component {
 
     AddMovie = (event) => {
         event.preventDefault()
-        if(this.state.sagaList[0] && this.state.publishingCompanyList[0]) {
+        if(this.state.sagaList[0] && this.state.parentAdvisoryList[0]) {
             let insertData = [
                 { table: 'Movie', fieldData: [ 
                     {field: 'userEmail', data: this.userEmail.value},
@@ -181,12 +186,12 @@ class CreateMovie extends Component {
                         </Row>
                         <Row>
                             <Col>
-                                <ParentAdvisoryComboBox list={this.state.parentAdvisoryList} onChange={this.SetParentAdvisoryValue} />
+                                <ComboBox header={'Parent Advisory'} list={this.state.parentAdvisoryList} onChange={this.SetParentAdvisoryValue} />
                             </Col>
                         </Row>
                         <Row>
                             <Col>
-                                <SagaComboBox list={this.state.sagaList} onChange={this.SetSagaValue} />
+                                <ComboBox header={'Saga'} list={this.state.sagaList} onChange={this.SetSagaValue} />
                             </Col>
                         </Row>
                         <Row>

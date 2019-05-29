@@ -11,6 +11,7 @@ class CreateBook extends Component {
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddCelebrity = this.AddCelebrity.bind(this)
         this.state = {
+            user: JSON.parse(localStorage.getItem('user')),
             alert: { visible: false, message: '', variant: '' }
         }
     }

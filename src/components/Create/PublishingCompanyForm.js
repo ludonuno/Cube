@@ -9,6 +9,7 @@ class PublishingCompanyForm extends Component {
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddPublishingCompany = this.AddPublishingCompany.bind(this)
         this.state = {
+            user: JSON.parse(localStorage.getItem('user')),
             alert: { visible: false, message: '', variant: '' }
         }
     }
@@ -44,7 +45,7 @@ class PublishingCompanyForm extends Component {
             <React.Fragment>
                 <Container>
                     <h3>Create Publishing Company</h3>
-                    <Alert variant={this.state.inserted.variant} message={this.state.inserted.message} visible={this.state.inserted.visible} />
+                    <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                     <Form onSubmit={this.AddPublishingCompany}>
                         <Row>
                             <Col xs={12} lg={6}>

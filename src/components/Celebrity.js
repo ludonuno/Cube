@@ -4,11 +4,16 @@ import { Jumbotron } from 'react-bootstrap'
 import Navbar from './CustomNavbar'
 
 class Celebrity extends Component {
-    state = {  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: JSON.parse(localStorage.getItem('user'))
+        }
+    }
     render() { 
         return ( 
             <React.Fragment>
-                <Navbar/>
+                <Navbar />
                 <Jumbotron>
                     Celebrity
                 </Jumbotron>

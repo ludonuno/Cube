@@ -4,10 +4,17 @@ import { Container } from 'react-bootstrap'
 import Navbar from './CustomNavbar'
 
 class UserPage extends Component {
-    render() { 
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: JSON.parse(localStorage.getItem('user'))
+        }
+    }
+    render() {            
+        localStorage.removeItem('user')
         return ( 
             <React.Fragment>
-                <Navbar/>
+                <Navbar />
                 <Container>
                     UserPage
                 </Container>

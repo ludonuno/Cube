@@ -11,6 +11,7 @@ class CreateUser extends Component {
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddUser = this.AddUser.bind(this)
         this.state = {
+            user: JSON.parse(localStorage.getItem('user')),
             alert: { visible: false, message: '', variant: '' }
         }
     }

@@ -3,95 +3,132 @@ import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
 import { Create, Get } from '../../scripts/api'
 
 import Alert from '../utils/Alert'
-
+import ComboBox from '../utils/ComboBox'
 import Navbar from '../CustomNavbar'
-import PublishingCompanyForm from './PublishingCompanyForm'
-import PublishingCompanyComboBox from './PublishingCompanyComboBox'
+
+import EngineForm from './EngineForm'
+import ParentAdvisoryForm from './ParentAdvisoryForm'
+import CompanyForm from './CompanyForm'
 import SagaForm from './SagaForm'
-import SagaComboBox from './SagaComboBox'
 
 //TODO: atualizar
-class CreateBook extends Component {
-
+class CreateGame extends Component {
     constructor(props) {
         super(props);
-        this.AddBook = this.AddBook.bind(this)
-        this.GetPublisherList = this.GetPublisherList.bind(this)
+        this.ChangeAlert = this.ChangeAlert.bind(this)
+        this.AddGame = this.AddGame.bind(this)
+        
+        this.SetEngine = this.SetEngine.bind(this)
+        this.SetParentAdvisory = this.SetParentAdvisory.bind(this)
+        this.SetCompany = this.SetCompany.bind(this)
+        this.SetSaga = this.SetSaga.bind(this)
+
+        this.GetEngineList = this.GetEngineList.bind(this)        
+        this.GetParentAdvisoryList = this.GetParentAdvisoryList.bind(this)        
+        this.GetCompanyList = this.GetCompanyList.bind(this)        
         this.GetSagaList = this.GetSagaList.bind(this)
         this.state = {
-            inserted: { hasInserted: false, message: '', variant: '' },
-            publishingCompanyList: [],
+            user: JSON.parse(localStorage.getItem('user')),
+            alert: { visible: false, message: '', variant: '' },
+            engineList: [],
+            parentAdvisoryList: [],
+            companyList: [],
             sagaList: [],
-            publishingCompanyId: undefined,
+            engineId: undefined,
+            parentAdvisoryId: undefined,
+            companyId: undefined,
             sagaId: undefined
         }
     }
-    
-    AddBook = (event) => {
+
+    ChangeAlert(visible, message, variant) {
+        let alert = {...this.state.alert}
+        alert = { visible: visible, message: message, variant: variant}
+        this.setState({ alert })
+    }
+
+    AddGame = (event) => {
         event.preventDefault()
-        //userEmail, userPassword, title, releaseDate, synopsis, publishingCompanyId, sagaId,
-        if(this.userEmail && this.userPassword && this.state.sagaList[0] && this.state.publishingCompanyList[0]) {
-            console.log(this.userEmail.value)
-            console.log(this.userPassword.value)
-            console.log(this.title.value)
-            console.log(this.releaseDate.value)
-            console.log(this.synopsis.value)
-            console.log(this.state.sagaId)
-            console.log(this.state.publishingCompanyId)
+        if(this.state.engineList[0] && this.state.parentAdvisoryList[0] && this.state.companyList[0] && this.state.sagaList[0]) {
             let insertData = [
-                { table: 'Book', fieldData: [ 
-                    {field: 'userEmail', data: this.userEmail.value},       // estes dados devem vir da autenticação
-                    {field: 'userPassword', data: this.userPassword.value}, // estes dados devem vir da autenticação
+                { table: 'Game', fieldData: [ 
+                    {field: 'userEmail', data: this.userEmail.value},
+                    {field: 'userPassword', data: this.userPassword.value},
                     {field: 'title', data: this.title.value},
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'synopsis', data: this.synopsis.value},
-                    {field: 'sagaId', data: this.state.sagaId ? this.state.sagaId : 1},
-                    {field: 'publishingCompanyId', data: this.state.publishingCompanyId ? this.state.publishingCompanyId : 1}
+                    {field: 'engineId', data: this.state.engineId ? this.state.engineId : 1},
+                    {field: 'parentAdvisoryId', data: this.state.parentAdvisoryId ? this.state.parentAdvisoryId : 1},
+                    {field: 'publicadorId', data: this.state.companyId ? this.state.companyId : 1}, //Tem nome diferente porque na base de dados este campo refere-se a quem publicou o jogo
+                    {field: 'sagaId', data: this.state.sagaId ? this.state.sagaId : 1}
                 ] }
             ]
-    
-            let inserted = {...this.state.inserted}
-            inserted = { visible: true, message: 'A ligar ao servidor...', variant: 'info'}
-            this.setState({ inserted })
-    
+            this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res) => {
                 if(res.error) {
-                    let inserted = {...this.state.inserted}
-                    inserted = { visible: true, message: `${res.error}`, variant: 'danger' }
-                    this.setState({ inserted })
+                    this.ChangeAlert(true, res.error, 'danger')
                 } else {
-                    let inserted = {...this.state.inserted}
-                    inserted = { visible: true, message: `${res.result.message}`, variant: 'success' }
-                    this.setState({ inserted })
+                    this.ChangeAlert(true, res.result.message, 'success')
                 }
             })
         } else {
-            let inserted = {...this.state.inserted}
-            inserted = { visible: true, message: 'Campos em falta', variant: 'danger'}
-            this.setState({ inserted })
-            console.log(this.state.sagaList[0], this.state.publishingCompanyList[0])
+            this.ChangeAlert(true, 'Campos em falta', 'warning')
         }
     }
 
-    SetPublishingCompanyValue = (event) => {
-        let publishingCompanyId = {...this.state.publishingCompanyId}
-        publishingCompanyId = Number(event.target.value)
-        this.setState({ publishingCompanyId })
+    SetEngine = (event) => {
+        let engineId = {...this.state.engineId}
+        engineId = Number(event.target.value)
+        this.setState({ engineId })
     }
 
-    SetSagaValue = (event) => {
+    SetParentAdvisory = (event) => {
+        let parentAdvisoryId = {...this.state.parentAdvisoryId}
+        parentAdvisoryId = Number(event.target.value)
+        this.setState({ parentAdvisoryId })
+    }
+
+    SetCompany = (event) => {
+        let companyId = {...this.state.companyId}
+        companyId = Number(event.target.value)
+        this.setState({ companyId })
+    }
+
+    SetSaga = (event) => {
         let sagaId = {...this.state.sagaId}
         sagaId = Number(event.target.value)
         this.setState({ sagaId })
     }
-    
-    GetPublisherList = () => {
-        let searchData = [ { table: 'PublishingCompany', fieldData: undefined } ]
+
+    GetEngineList = () => {
+        let searchData = [ { table: 'Engine', fieldData: undefined } ]
         Get(searchData,(res) => {
             if(res.result) {
-                let publishingCompanyList = [...this.state.publishingCompanyList]
-                publishingCompanyList = res.result
-                this.setState({ publishingCompanyList })
+                let engineList = [...this.state.engineList]
+                engineList = res.result
+                this.setState({ engineList })
+            }  
+        })
+    }
+
+    GetParentAdvisoryList = () => {
+        let searchData = [ { table: 'ParentAdvisory', fieldData: undefined } ]
+        Get(searchData,(res) => {
+            if(res.result) {
+                let parentAdvisoryList = [...this.state.parentAdvisoryList]
+                parentAdvisoryList = res.result
+                this.setState({ parentAdvisoryList })
+            }  
+        })
+    }
+
+    GetCompanyList = () => {
+        let searchData = [ { table: 'Company', fieldData: undefined } ]
+        Get(searchData,(res) => {
+            if(res.result) {
+                let companyList = [...this.state.companyList]
+                companyList = res.result
+                this.setState({ companyList })
             }  
         })
     }
@@ -108,22 +145,28 @@ class CreateBook extends Component {
     }
 
     componentDidMount() {
-        this.GetPublisherList()
+        this.GetEngineList()
+        this.GetParentAdvisoryList()
+        this.GetCompanyList()
         this.GetSagaList()
     }
 
     render() {
         return ( 
             <React.Fragment>
-                <Navbar/>
-                <PublishingCompanyForm GetPublisherList={this.GetPublisherList} />
+                <Navbar />
+                <EngineForm onSubmit={this.GetEngineList} />
                 <hr/>
-                <SagaForm GetSagaList={this.GetSagaList} />
+                <ParentAdvisoryForm onSubmit={this.GetParentAdvisoryList} />
+                <hr/>
+                <CompanyForm onSubmit={this.GetCompanyList} />
+                <hr/>
+                <SagaForm onSubmit={this.GetSagaList} />
                 <hr/>
                 <Container>
-                    <h3>Create Book</h3>
-                    <Alert variant={this.state.inserted.variant} message={this.state.inserted.message} visible={this.state.inserted.visible} />
-                    <Form onSubmit={this.AddBook}>
+                    <h3>Create Series</h3>
+                    <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
+                    <Form onSubmit={this.AddGame}>
                         <Row>
                             <Col xs={12} lg={6}>
                                 <Form.Group>
@@ -175,21 +218,31 @@ class CreateBook extends Component {
                                 <Form.Group>
                                     <InputGroup>
                                         <InputGroup.Prepend>
-                                            <InputGroup.Text>Sinopse</InputGroup.Text>
+                                            <InputGroup.Text>Synopsis</InputGroup.Text>
                                         </InputGroup.Prepend>
-                                        <Form.Control as="textarea" rows="3" className="noresize" ref={(input) => {this.synopsis = input}}/>
+                                        <Form.Control as="textarea" rows="2" className="noresize" ref={(input) => {this.synopsis = input}}/>
                                     </InputGroup>
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Row>
                             <Col>
-                                <PublishingCompanyComboBox list={this.state.publishingCompanyList} SetPublishingCompanyValue={this.SetPublishingCompanyValue} />
+                                <ComboBox header={'Engine'} list={this.state.engineList} onChange={this.SetEngine} />
                             </Col>
                         </Row>
                         <Row>
                             <Col>
-                                <SagaComboBox list={this.state.sagaList} SetSagaValue={this.SetSagaValue} />
+                                <ComboBox header={'Parent Advisory'} list={this.state.parentAdvisoryList} onChange={this.SetParentAdvisory} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <ComboBox header={'Company'} list={this.state.companyList} onChange={this.SetCompany} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <ComboBox header={'Saga'} list={this.state.sagaList} onChange={this.SetSaga} />
                             </Col>
                         </Row>
                         <Row>
@@ -205,4 +258,4 @@ class CreateBook extends Component {
     }
 }
  
-export default CreateBook;
+export default CreateGame;

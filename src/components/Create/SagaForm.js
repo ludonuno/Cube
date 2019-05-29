@@ -9,6 +9,7 @@ class SagaForm extends Component {
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddSaga = this.AddSaga.bind(this)
         this.state = {
+            user: JSON.parse(localStorage.getItem('user')),
             alert: { visible: false, message: '', variant: '' }
         }
     }

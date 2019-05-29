@@ -1,23 +1,28 @@
 import React, { Component } from 'react';
 import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
 import { Create, Get } from '../../scripts/api'
+
 import Alert from '../utils/Alert'
+import ComboBox from '../utils/ComboBox'
+
 import Navbar from '../CustomNavbar'
+
 import PublishingCompanyForm from './PublishingCompanyForm'
-import PublishingCompanyComboBox from './PublishingCompanyComboBox'
 import SagaForm from './SagaForm'
-import SagaComboBox from './SagaComboBox'
 
 class CreateBook extends Component {
     constructor(props) {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddBook = this.AddBook.bind(this)
+
         this.SetPublishingCompany = this.SetPublishingCompany.bind(this)
         this.SetSaga = this.SetSaga.bind(this)
+
         this.GetPublisherList = this.GetPublisherList.bind(this)
         this.GetSagaList = this.GetSagaList.bind(this)
         this.state = {
+            user: JSON.parse(localStorage.getItem('user')),
             alert: { visible: false, message: '', variant: '' },
             publishingCompanyList: [],
             sagaList: [],
@@ -170,12 +175,12 @@ class CreateBook extends Component {
                         </Row>
                         <Row>
                             <Col>
-                                <PublishingCompanyComboBox list={this.state.publishingCompanyList} onChange={this.SetPublishingCompany} />
+                                <ComboBox header={'Publishing Company'} list={this.state.publishingCompanyList} onChange={this.SetPublishingCompany} />
                             </Col>
                         </Row>
                         <Row>
                             <Col>
-                                <SagaComboBox list={this.state.sagaList} onChange={this.SetSaga} />
+                                <ComboBox header={'Saga'} list={this.state.sagaList} onChange={this.SetSaga} />
                             </Col>
                         </Row>
                         <Row>

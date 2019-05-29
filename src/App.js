@@ -26,49 +26,32 @@ import UserPage from './components/UserPage'
 
 import NoMatch from './components/NoMatch'
 
+
 class App extends Component {
     constructor() {
         super()
-        this.logIn = this.logIn.bind(this)
-        this.logOut = this.logOut.bind(this)
-        this.state = {
-            user: undefined,
-        }
+        this.state = { }
     }
-
-    logIn(user) {
-        this.setState({ session: user })
-    }
-
-    logOut() {
-        this.setState({ session: undefined })
-    }
-
-    render() { 
+    //TODO: redirect to Root if user isn't login
+    render() {
         return (
             <Router>
                 <Switch>
-                    <Route exact path="/" render={ (props) => <Home {...props} /> } />
-
-                    <Route path="/movie/create" render={ (props) => <CreateMovie {...props} /> } />
-                    <Route path="/movie" render={ (props) => <Movie {...props} /> } />
-
-                    <Route path="/book/create" render={ (props) => <CreateBook {...props} /> } />
-                    <Route path="/book" render={ (props) => <Book {...props} /> } />
-
-                    <Route path="/series/create" render={ (props) => <CreateSeries {...props} /> } />
-                    <Route path="/series" render={ (props) => <Series {...props} /> } />
-
-                    <Route path="/game/create" render={ (props) => <CreateGame {...props} /> } />
-                    <Route path="/game" render={ (props) => <Game {...props} /> } />
-                    
-                    <Route path="/celebrity/create" render={ (props) => <CreateCelebrity {...props} /> } />
-                    <Route path="/celebrity" render={ (props) => <Celebrity {...props} /> } />
-
-                    <Route path="/user/create" render={ (props) => <CreateUserForm {...props} /> } />
+                    <Route exact path="/" render={ (props) => <Home {...props}  /> } />
+                    <Route path="/movie/create" render={ (props) => <CreateMovie {...props}  /> } />
+                    <Route path="/movie" render={ (props) => <Movie {...props}  /> } />
+                    <Route path="/book/create" render={ (props) => <CreateBook {...props}  /> } />
+                    <Route path="/book" render={ (props) => <Book {...props}  /> } />
+                    <Route path="/series/create" render={ (props) => <CreateSeries {...props}  /> } />
+                    <Route path="/series" render={ (props) => <Series {...props}  /> } />
+                    <Route path="/game/create" render={ (props) => <CreateGame {...props}  /> } />
+                    <Route path="/game" render={ (props) => <Game {...props}  /> } />                    
+                    <Route path="/celebrity/create" render={ (props) => <CreateCelebrity {...props}  /> } />
+                    <Route path="/celebrity" render={ (props) => <Celebrity {...props}  /> } />
+                    <Route path="/user/create" render={ (props) => <CreateUserForm {...props}  /> } />
                     <Route path="/user/login" render={ (props) => <UserLogin {...props} /> } />
-                    <Route path="/user/:id" render={ (props) => <UserPage {...props} /> } />
-                    <Route path="/user" render={ (props) => <User {...props} /> }/>
+                    <Route path="/user/:id" render={ (props) => <UserPage {...props}  /> } />
+                    <Route path="/user" render={ (props) => <User {...props}  /> }/>
 
                     <Route render={NoMatch}/>
                 </Switch>

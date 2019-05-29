@@ -9,7 +9,8 @@ class ParentAdvisoryForm extends Component {
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddParentAdvisory = this.AddParentAdvisory.bind(this)
         this.state = {
-            alert: { visible: false, message: '', variant: '' },
+            user: JSON.parse(localStorage.getItem('user')),
+            alert: { visible: false, message: '', variant: '' }
         }
     }
     

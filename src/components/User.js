@@ -4,10 +4,16 @@ import { Container } from 'react-bootstrap'
 import Navbar from './CustomNavbar'
 
 class User extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: JSON.parse(localStorage.getItem('user'))
+        }
+    }
     render() {
         return ( 
             <React.Fragment>
-                <Navbar/>
+                <Navbar />
                 <Container>
                     User
                 </Container>

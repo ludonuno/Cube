@@ -1,55 +1,52 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom'
 import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
-import { Get } from '../scripts/api'
-import Alert from './utils/Alert'
+import { Create } from '../../scripts/api'
+import Alert from '../utils/Alert'
 
-import Navbar from './CustomNavbar'
-
-class UserLogin extends Component {
+class EngineForm extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.LoginUser = this.LoginUser.bind(this)
+        this.AddEngine = this.AddEngine.bind(this)
         this.state = {
             user: JSON.parse(localStorage.getItem('user')),
             alert: { visible: false, message: '', variant: '' }
         }
     }
-
+    
     ChangeAlert(visible, message, variant) {
         let alert = {...this.state.alert}
         alert = { visible: visible, message: message, variant: variant}
         this.setState({ alert })
     }
 
-    LoginUser = (event) => {
+    AddEngine = (event) => {
         event.preventDefault()
-        let userInfo = [
-            { table: 'UserAutentication', fieldData: [ 
+        let insertData = [
+            { table: 'Engine', fieldData: [ 
                 {field: 'userEmail', data: this.userEmail.value},
-                {field: 'userPassword', data: this.userPassword.value}
+                {field: 'userPassword', data: this.userPassword.value},
+                {field: 'name', data: this.name.value}
             ] }
         ]
         this.ChangeAlert(true, 'A ligar ao servidor...', 'info')
-        Get(userInfo,(res) => {
+        Create(insertData, (res) => {
             if(res.error) {
-                this.ChangeAlert(true, res.error, 'danger')
+                this.ChangeAlert(true, `${res.error}`, 'danger')
             } else {
-                localStorage.setItem('user', JSON.stringify(res.result))
-                this.props.history.push('/')
+                this.ChangeAlert(true, `${res.result.message}`, 'success')
+                this.props.onSubmit()
             }
         })
     }
-      
-    render() {
+
+    render() { 
         return ( 
             <React.Fragment>
-                <Navbar />
                 <Container>
-                    <h3>UserLogin</h3>
+                    <h3>Create Engine</h3>
                     <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
-                    <Form onSubmit={this.LoginUser}>
+                    <Form onSubmit={this.AddEngine}>
                         <Row>
                             <Col xs={12} lg={6}>
                                 <Form.Group>
@@ -74,6 +71,18 @@ class UserLogin extends Component {
                         </Row>
                         <Row>
                             <Col>
+                                <Form.Group>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Prepend>
+                                            <InputGroup.Text>Name</InputGroup.Text>
+                                        </InputGroup.Prepend>
+                                        <Form.Control type="text" ref={(input) => {this.name = input}} required/>
+                                    </InputGroup>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
                                 <Button variant="primary" type="submit">Submit</Button>
                             </Col>
                         </Row>
@@ -83,6 +92,4 @@ class UserLogin extends Component {
         );
     }
 }
- 
-
-export default withRouter(UserLogin);
+export default EngineForm;
