@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
+import { Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
 import { Create, Get } from '../../scripts/api'
-import { Redirect } from 'react-router-dom'
 
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/ComboBox'
 
-import Navbar from '../CustomNavbar'
-
-import ParentAdvisoryForm from './ParentAdvisoryForm'
-import SagaForm from './SagaForm'
+import ParentAdvisoryForm from './SecondaryForms/ParentAdvisoryForm'
+import SagaForm from './SecondaryForms/SagaForm'
 //TODO: atualizar
 class CreateSeries extends Component {
     constructor(props) {
@@ -17,13 +14,13 @@ class CreateSeries extends Component {
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddSeries = this.AddSeries.bind(this)
         
-        this.SetPublishingCompany = this.SetPublishingCompany.bind(this)
+        this.SetParentAdvisory = this.SetParentAdvisory.bind(this)
         this.SetSaga = this.SetSaga.bind(this)
         
-        this.GetPublisherList = this.GetPublisherList.bind(this)
+        this.GetParentAdvisoryList = this.GetParentAdvisoryList.bind(this)
         this.GetSagaList = this.GetSagaList.bind(this)
         this.state = {
-            user: JSON.parse(localStorage.getItem('user'))[0],
+            user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },
             parentAdvisoryList: [],
             sagaList: [],
@@ -40,16 +37,16 @@ class CreateSeries extends Component {
 
     AddSeries = (event) => {
         event.preventDefault()
-        if(this.state.sagaList[0] && this.state.publishingCompanyList[0]) {
+        if(this.state.sagaList[0] && this.state.parentAdvisoryList[0]) {
             let insertData = [
-                { table: 'Book', fieldData: [ 
+                { table: 'Series', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
                     {field: 'title', data: this.title.value},
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'synopsis', data: this.synopsis.value},
                     {field: 'sagaId', data: this.state.sagaId ? this.state.sagaId : 1},
-                    {field: 'publishingCompanyId', data: this.state.publishingCompanyId ? this.state.publishingCompanyId : 1}
+                    {field: 'parentAdvisoryId', data: this.state.parentAdvisoryId ? this.state.parentAdvisoryId : 1}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -57,6 +54,7 @@ class CreateSeries extends Component {
                 if(res.error) {
                     this.ChangeAlert(true, res.error, 'danger')
                 } else {
+                    this.formRef.reset()
                     this.ChangeAlert(true, res.result.message, 'success')
                 }
             })
@@ -105,74 +103,67 @@ class CreateSeries extends Component {
     }
 
     render() {
-        if(!this.state.user) {
-            return (<Redirect to='/noMatch' />)
-        }
         return ( 
             <React.Fragment>
-                <Navbar/>
                 <ParentAdvisoryForm onSubmit={this.GetParentAdvisoryList} />
                 <hr/>
                 <SagaForm onSubmit={this.GetSagaList} />
                 <hr/>
-                <Container>
-                    <h3>Create Series</h3>
-                    <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
-                    <Form onSubmit={this.AddSeries}>
-                        <Row>
-                            <Col>
-                                <Form.Group>
-                                    <InputGroup>
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>Title</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control type="text" ref={(input) => {this.title = input}} required/>
-                                    </InputGroup>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Form.Group>
-                                    <InputGroup>
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>Release date</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control type="date" ref={(input) => {this.releaseDate = input}} required/>
-                                    </InputGroup>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Form.Group>
-                                    <InputGroup>
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>Synopsis</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control as="textarea" rows="3" className="noresize" ref={(input) => {this.synopsis = input}}/>
-                                    </InputGroup>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <ComboBox header={'Parent Advisory'} list={this.state.parentAdvisoryList} onChange={this.SetParentAdvisory} />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <ComboBox header={'Saga'} list={this.state.sagaList} onChange={this.SetSaga} />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Button variant="primary" type="submit" block>Submit</Button>
-                            </Col>
-                        </Row>
-                    </Form>
-                </Container>
-                <br />
+                <h3>Create Series</h3>
+                <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
+                <Form onSubmit={this.AddSeries} ref={(form) => this.formRef = form}>
+                    <Row>
+                        <Col>
+                            <Form.Group>
+                                <InputGroup>
+                                    <InputGroup.Prepend>
+                                        <InputGroup.Text>Title</InputGroup.Text>
+                                    </InputGroup.Prepend>
+                                    <Form.Control type="text" ref={(input) => {this.title = input}} required/>
+                                </InputGroup>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Form.Group>
+                                <InputGroup>
+                                    <InputGroup.Prepend>
+                                        <InputGroup.Text>Release date</InputGroup.Text>
+                                    </InputGroup.Prepend>
+                                    <Form.Control type="date" ref={(input) => {this.releaseDate = input}} required/>
+                                </InputGroup>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Form.Group>
+                                <InputGroup>
+                                    <InputGroup.Prepend>
+                                        <InputGroup.Text>Synopsis</InputGroup.Text>
+                                    </InputGroup.Prepend>
+                                    <Form.Control as="textarea" rows="3" className="noresize" ref={(input) => {this.synopsis = input}}/>
+                                </InputGroup>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <ComboBox header={'Parent Advisory'} list={this.state.parentAdvisoryList} onChange={this.SetParentAdvisory} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <ComboBox header={'Saga'} list={this.state.sagaList} onChange={this.SetSaga} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Button variant="primary" type="submit" block>Submit</Button>
+                        </Col>
+                    </Row>
+                </Form>
             </React.Fragment>
         );
     }

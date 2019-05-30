@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
-import { Create } from '../../scripts/api'
-import { withRouter } from 'react-router-dom'
+import { Create } from '../scripts/api'
 
-import Alert from '../utils/Alert'
-import Navbar from '../CustomNavbar'
+import Alert from './utils/Alert'
+import Navbar from './CustomNavbar'
 
-class CreateUser extends Component {
+class UserCreate extends Component {
     constructor(props) {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddUser = this.AddUser.bind(this)
         this.state = {
-            user: JSON.parse(localStorage.getItem('user'))[0],
+            user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' }
         }
     }
@@ -49,7 +48,7 @@ class CreateUser extends Component {
     render() {
         return ( 
             <React.Fragment>
-                <Navbar/>
+                <Navbar props={this.props}/>
                 <Container>
                     <h3>Create User</h3>
                     <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
@@ -135,4 +134,4 @@ class CreateUser extends Component {
 }
  
 
-export default CreateUser;
+export default UserCreate;

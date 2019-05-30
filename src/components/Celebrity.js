@@ -7,13 +7,13 @@ class Celebrity extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: JSON.parse(localStorage.getItem('user'))[0],
+            user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined
         }
     }
     render() { 
         return ( 
             <React.Fragment>
-                <Navbar />
+                <Navbar props={this.props}/>
                 <Jumbotron>
                     Celebrity
                 </Jumbotron>

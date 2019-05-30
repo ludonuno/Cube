@@ -5,25 +5,23 @@ class CustomNavbar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: JSON.parse(localStorage.getItem('user'))[0],
+            user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined
         }
     }
 
-    componentDidMount() {
-        console.log(this.state.user)
+    logOut = () => {
+        localStorage.removeItem('user')
+        this.props.props.history.push('/')
     }
-    
+
     UserFields = () => {
         if(this.state.user) {
             return (
                 <NavDropdown title={this.state.user.name} id="basic-nav-dropdown">
-                    <NavDropdown.Item href="/series/create">Create Series</NavDropdown.Item>
-                    <NavDropdown.Item href="/book/create">Create Book</NavDropdown.Item>
-                    <NavDropdown.Item href="/movie/create">Create Movie</NavDropdown.Item>
-                    <NavDropdown.Item href="/game/create">Create Game</NavDropdown.Item>
-                    <NavDropdown.Item href="/celebrity/create">Create Celebrity</NavDropdown.Item>
+                    <NavDropdown.Item href="/user/page">Perfil</NavDropdown.Item>
+                    <this.CanUserEdit />
                     <NavDropdown.Divider />
-                    <NavDropdown.Item href="#">#</NavDropdown.Item>
+                    <NavDropdown.Item onClick={this.logOut}>Logout</NavDropdown.Item>
                 </NavDropdown>
             )
         } else {
@@ -35,29 +33,28 @@ class CustomNavbar extends Component {
         }
     }
     
-    UserNavbar = () => {
-        if(this.state.user) {
-            return (
-                <NavDropdown title="Create" id="basic-nav-dropdown">
-                    <NavDropdown.Item href="/series/create">Create Series</NavDropdown.Item>
-                    <NavDropdown.Item href="/book/create">Create Book</NavDropdown.Item>
-                    <NavDropdown.Item href="/movie/create">Create Movie</NavDropdown.Item>
-                    <NavDropdown.Item href="/game/create">Create Game</NavDropdown.Item>
-                    <NavDropdown.Item href="/celebrity/create">Create Celebrity</NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item href="#">#</NavDropdown.Item>
-                </NavDropdown>
-            )
+    CanUserEdit = () => {
+        if(this.state.user.canedit) {
+            return (<NavDropdown.Item href="/create">Create</NavDropdown.Item>)
         } else {
             return (null)
         }
         
     }
 
+    CustomNavbarBrand = () => {
+        if(!this.state.user) {
+            return (<Navbar.Brand href="/">Cube</Navbar.Brand>)
+        } else {
+            let firstName = String(this.state.user.name).substr(0, String(this.state.user.name).indexOf(" "))
+            return (<Navbar.Brand href="/">Bem vindo(a) {firstName}</Navbar.Brand>)
+        }
+    }
+
     render() {
         return ( 
             <Navbar bg="light" expand="lg">
-                <Navbar.Brand href="/">Cube</Navbar.Brand>
+                <this.CustomNavbarBrand />
                 <Navbar.Toggle aria-controls="basic-navbar-nav" className="text-left"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
@@ -65,7 +62,6 @@ class CustomNavbar extends Component {
                         <Nav.Link href="/book">Book</Nav.Link>
                         <Nav.Link href="/movie">Movie</Nav.Link>
                         <Nav.Link href="/game">Game</Nav.Link>
-                        <this.UserNavbar />
                     </Nav>
                     <div>
                         <this.UserFields />

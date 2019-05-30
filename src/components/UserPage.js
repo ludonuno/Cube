@@ -8,16 +8,17 @@ class UserPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: JSON.parse(localStorage.getItem('user'))[0]
+            user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined
         }
     }
     render() { 
         if(!this.state.user) {
             return (<Redirect to='/user/login' />)
         }
+        console.log(this.props.location.pathname)
         return ( 
             <React.Fragment>
-                <Navbar />
+                <Navbar props={this.props}/>
                 <Container>
                     UserPage
                 </Container>

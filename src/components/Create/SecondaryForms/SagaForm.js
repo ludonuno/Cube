@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
-import { Create } from '../../scripts/api'
-import Alert from '../utils/Alert'
+import { Create } from '../../../scripts/api'
+import Alert from '../../utils/Alert'
 
-class CreateBook extends Component {
-
+class SagaForm extends Component {
     constructor(props) {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddCelebrity = this.AddCelebrity.bind(this)
+        this.AddSaga = this.AddSaga.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' }
@@ -21,15 +20,14 @@ class CreateBook extends Component {
         this.setState({ alert })
     }
 
-    AddCelebrity = (event) => {
+    AddSaga = (event) => {
         event.preventDefault()
         let insertData = [
-            { table: 'Celebrity', fieldData: [ 
+            { table: 'Saga', fieldData: [ 
                 {field: 'userEmail', data: this.state.user.email},
                 {field: 'userPassword', data: this.state.user.password},
                 {field: 'name', data: this.name.value},
-                {field: 'birthday', data: this.birthday.value},
-                {field: 'biography', data: this.biography.value}
+                {field: 'description', data: this.description.value}
             ] }
         ]
         this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -39,6 +37,7 @@ class CreateBook extends Component {
             } else {
                 this.formRef.reset()
                 this.ChangeAlert(true, res.result.message, 'success')
+                this.props.onSubmit()
             }
         })
     }
@@ -46,42 +45,30 @@ class CreateBook extends Component {
     render() {
         return ( 
             <React.Fragment>
-                <h3>Create Celebrity</h3>
+                <h3>Create Saga</h3>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
-                <Form onSubmit={this.AddCelebrity} ref={(form) => this.formRef = form}>
+                <Form onSubmit={this.AddSaga} ref={(form) => this.formRef = form}>
                     <Row>
-                        <Col xs={4} lg={2}>
-                            <Form.Group>
-                                <InputGroup.Text>Name</InputGroup.Text>
-                            </Form.Group>
-                        </Col>
                         <Col>
                             <Form.Group>
-                                <Form.Control type="text" ref={(input) => {this.name = input}} required/>
+                                <InputGroup className="mb-3">
+                                    <InputGroup.Prepend>
+                                        <InputGroup.Text>Name</InputGroup.Text>
+                                    </InputGroup.Prepend>
+                                    <Form.Control type="text" ref={(name) => {this.name = name}} required/>
+                                </InputGroup>
                             </Form.Group>
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={4} lg={2}>
-                            <Form.Group>
-                                <InputGroup.Text>Birthday</InputGroup.Text>
-                            </Form.Group>
-                        </Col>
                         <Col>
                             <Form.Group>
-                                <Form.Control type="date" ref={(input) => {this.birthday = input}} />
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs={4} lg={2}>
-                            <Form.Group>
-                                <InputGroup.Text>Biography</InputGroup.Text>
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group>
-                                <Form.Control as="textarea" rows="3" className="noresize" ref={(input) => {this.biography = input}}/>
+                                <InputGroup>
+                                    <InputGroup.Prepend>
+                                        <InputGroup.Text>Description</InputGroup.Text>
+                                    </InputGroup.Prepend>
+                                    <Form.Control as="textarea" rows="2" className="noresize" ref={(input) => {this.description = input}}/>
+                                </InputGroup>
                             </Form.Group>
                         </Col>
                     </Row>
@@ -96,4 +83,5 @@ class CreateBook extends Component {
     }
 }
  
-export default CreateBook;
+
+export default SagaForm;

@@ -12,7 +12,7 @@ class UserLogin extends Component {
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.LoginUser = this.LoginUser.bind(this)
         this.state = {
-            user: JSON.parse(localStorage.getItem('user'))[0],
+            user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' }
         }
     }
@@ -45,7 +45,7 @@ class UserLogin extends Component {
     render() {
         return ( 
             <React.Fragment>
-                <Navbar />
+                <Navbar props={this.props}/>
                 <Container>
                     <h3>UserLogin</h3>
                     <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />

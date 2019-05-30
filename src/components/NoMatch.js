@@ -7,14 +7,14 @@ class NoMatch extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: JSON.parse(localStorage.getItem('user'))[0],
+            user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined
         }
     }
     state = {  }
     render() { 
         return ( 
             <React.Fragment>
-                <Navbar />
+                <Navbar props={this.props}/>
                 <Jumbotron>
                     No Match
                 </Jumbotron>
