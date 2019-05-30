@@ -5,7 +5,7 @@ class CustomNavbar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: JSON.parse(localStorage.getItem('user'))
+            user: JSON.parse(localStorage.getItem('user'))[0],
         }
     }
 
@@ -16,7 +16,15 @@ class CustomNavbar extends Component {
     UserFields = () => {
         if(this.state.user) {
             return (
-                <div>User Fields</div>
+                <NavDropdown title={this.state.user.name} id="basic-nav-dropdown">
+                    <NavDropdown.Item href="/series/create">Create Series</NavDropdown.Item>
+                    <NavDropdown.Item href="/book/create">Create Book</NavDropdown.Item>
+                    <NavDropdown.Item href="/movie/create">Create Movie</NavDropdown.Item>
+                    <NavDropdown.Item href="/game/create">Create Game</NavDropdown.Item>
+                    <NavDropdown.Item href="/celebrity/create">Create Celebrity</NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item href="#">#</NavDropdown.Item>
+                </NavDropdown>
             )
         } else {
             return (
@@ -36,7 +44,6 @@ class CustomNavbar extends Component {
                     <NavDropdown.Item href="/movie/create">Create Movie</NavDropdown.Item>
                     <NavDropdown.Item href="/game/create">Create Game</NavDropdown.Item>
                     <NavDropdown.Item href="/celebrity/create">Create Celebrity</NavDropdown.Item>
-                    <NavDropdown.Item href="/user/create">Create User</NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="#">#</NavDropdown.Item>
                 </NavDropdown>

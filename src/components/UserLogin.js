@@ -12,7 +12,7 @@ class UserLogin extends Component {
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.LoginUser = this.LoginUser.bind(this)
         this.state = {
-            user: JSON.parse(localStorage.getItem('user')),
+            user: JSON.parse(localStorage.getItem('user'))[0],
             alert: { visible: false, message: '', variant: '' }
         }
     }

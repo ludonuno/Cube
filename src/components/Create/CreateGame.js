@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
 import { Create, Get } from '../../scripts/api'
+import { Redirect } from 'react-router-dom'
 
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/ComboBox'
@@ -28,7 +29,7 @@ class CreateGame extends Component {
         this.GetCompanyList = this.GetCompanyList.bind(this)        
         this.GetSagaList = this.GetSagaList.bind(this)
         this.state = {
-            user: JSON.parse(localStorage.getItem('user')),
+            user: JSON.parse(localStorage.getItem('user'))[0],
             alert: { visible: false, message: '', variant: '' },
             engineList: [],
             parentAdvisoryList: [],
@@ -52,8 +53,8 @@ class CreateGame extends Component {
         if(this.state.engineList[0] && this.state.parentAdvisoryList[0] && this.state.companyList[0] && this.state.sagaList[0]) {
             let insertData = [
                 { table: 'Game', fieldData: [ 
-                    {field: 'userEmail', data: this.userEmail.value},
-                    {field: 'userPassword', data: this.userPassword.value},
+                    {field: 'userEmail', data: this.state.user.email},
+                    {field: 'userPassword', data: this.state.user.password},
                     {field: 'title', data: this.title.value},
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'synopsis', data: this.synopsis.value},
@@ -152,6 +153,9 @@ class CreateGame extends Component {
     }
 
     render() {
+        if(!this.state.user) {
+            return (<Redirect to='/noMatch' />)
+        }
         return ( 
             <React.Fragment>
                 <Navbar />
@@ -167,28 +171,6 @@ class CreateGame extends Component {
                     <h3>Create Series</h3>
                     <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                     <Form onSubmit={this.AddGame}>
-                        <Row>
-                            <Col xs={12} lg={6}>
-                                <Form.Group>
-                                    <InputGroup>
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>E-mail</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control type="email" autoComplete="username" ref={(input) => {this.userEmail = input}} required/>
-                                    </InputGroup>
-                                </Form.Group>
-                            </Col>
-                            <Col xs={12} lg={6}>
-                                <Form.Group>
-                                    <InputGroup>
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>Password</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control type="password" autoComplete="current-password" ref={(input) => {this.userPassword = input}} required/>
-                                    </InputGroup>
-                                </Form.Group>
-                            </Col>
-                        </Row>
                         <Row>
                             <Col>
                                 <Form.Group>
@@ -247,7 +229,7 @@ class CreateGame extends Component {
                         </Row>
                         <Row>
                             <Col>
-                                <Button variant="primary" type="submit">Submit</Button>
+                                <Button variant="primary" type="submit" block>Submit</Button>
                             </Col>
                         </Row>
                     </Form>

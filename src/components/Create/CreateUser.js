@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
+import { withRouter } from 'react-router-dom'
 
 import Alert from '../utils/Alert'
 import Navbar from '../CustomNavbar'
@@ -11,7 +12,7 @@ class CreateUser extends Component {
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddUser = this.AddUser.bind(this)
         this.state = {
-            user: JSON.parse(localStorage.getItem('user')),
+            user: JSON.parse(localStorage.getItem('user'))[0],
             alert: { visible: false, message: '', variant: '' }
         }
     }
@@ -39,13 +40,13 @@ class CreateUser extends Component {
                 if(res.error) {
                     this.ChangeAlert(true, res.error, 'danger')
                 } else {
-                    this.ChangeAlert(true, res.result.message, 'success')
+                    this.props.history.push('/user/login')
                 }
             })
         }
     }
 
-    render() { 
+    render() {
         return ( 
             <React.Fragment>
                 <Navbar/>
@@ -123,7 +124,7 @@ class CreateUser extends Component {
                         </Row>
                         <Row>
                             <Col>
-                                <Button variant="primary" type="submit">Submit</Button>
+                                <Button variant="primary" type="submit" block>Submit</Button>
                             </Col>
                         </Row>
                     </Form>

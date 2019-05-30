@@ -19,8 +19,7 @@ import CreateGame from './components/Create/CreateGame'
 import Celebrity from './components/Celebrity'
 import CreateCelebrity from './components/Create/CreateCelebrity'
 
-import User from './components/User'
-import CreateUserForm from './components/Create/CreateUserForm'
+import UserCreate from './components/Create/CreateUser'
 import UserLogin from './components/UserLogin'
 import UserPage from './components/UserPage'
 
@@ -48,11 +47,10 @@ class App extends Component {
                     <Route path="/game" render={ (props) => <Game {...props}  /> } />                    
                     <Route path="/celebrity/create" render={ (props) => <CreateCelebrity {...props}  /> } />
                     <Route path="/celebrity" render={ (props) => <Celebrity {...props}  /> } />
-                    <Route path="/user/create" render={ (props) => <CreateUserForm {...props}  /> } />
+                    <Route path="/user/create" render={ (props) => <UserCreate {...props}  /> } />
                     <Route path="/user/login" render={ (props) => <UserLogin {...props} /> } />
-                    <Route path="/user/:id" render={ (props) => <UserPage {...props}  /> } />
-                    <Route path="/user" render={ (props) => <User {...props}  /> }/>
-
+                    <Route path="/user/page" render={ (props) => <UserPage {...props}  /> } />
+                    <Route path="/noMatch" render={(props) => <NoMatch {...props} />} />
                     <Route render={NoMatch}/>
                 </Switch>
             </Router>

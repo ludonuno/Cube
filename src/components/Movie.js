@@ -7,7 +7,7 @@ class Movie extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: JSON.parse(localStorage.getItem('user'))
+            user: JSON.parse(localStorage.getItem('user'))[0],
         }
     }
     render() { 

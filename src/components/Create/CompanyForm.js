@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
+import { Redirect } from 'react-router-dom'
 import Alert from '../utils/Alert'
 
 class CompanyForm extends Component {
@@ -9,7 +10,7 @@ class CompanyForm extends Component {
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddCompany = this.AddCompany.bind(this)
         this.state = {
-            user: JSON.parse(localStorage.getItem('user')),
+            user: JSON.parse(localStorage.getItem('user'))[0],
             alert: { visible: false, message: '', variant: '' }
         }
     }
@@ -24,8 +25,8 @@ class CompanyForm extends Component {
         event.preventDefault()
         let insertData = [
             { table: 'Company', fieldData: [ 
-                {field: 'userEmail', data: this.userEmail.value},
-                {field: 'userPassword', data: this.userPassword.value},
+                {field: 'userEmail', data: this.state.user.email},
+                {field: 'userPassword', data: this.state.user.password},
                 {field: 'name', data: this.name.value}
             ] }
         ]
@@ -41,34 +42,15 @@ class CompanyForm extends Component {
     }
 
     render() { 
+        if(!this.state.user) {
+            return (<Redirect to='/noMatch' />)
+        }
         return ( 
             <React.Fragment>
                 <Container>
                     <h3>Create Company</h3>
                     <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                     <Form onSubmit={this.AddCompany}>
-                        <Row>
-                            <Col xs={12} lg={6}>
-                                <Form.Group>
-                                    <InputGroup className="mb-3">
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>E-mail</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control type="email" autoComplete="username" ref={(input) => {this.userEmail = input}} required/>
-                                    </InputGroup>
-                                </Form.Group>
-                            </Col>
-                            <Col xs={12} lg={6}>
-                                <Form.Group>
-                                    <InputGroup className="mb-3">
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>Password</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control type="password" autoComplete="current-password" ref={(input) => {this.userPassword = input}} required/>
-                                    </InputGroup>
-                                </Form.Group>
-                            </Col>
-                        </Row>
                         <Row>
                             <Col>
                                 <Form.Group>
@@ -83,7 +65,7 @@ class CompanyForm extends Component {
                         </Row>
                         <Row>
                             <Col>
-                                <Button variant="primary" type="submit">Submit</Button>
+                                <Button variant="primary" type="submit" block>Submit</Button>
                             </Col>
                         </Row>
                     </Form>
