@@ -3,11 +3,11 @@ import { Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
 import { Create } from '../../../scripts/api'
 import Alert from '../../utils/Alert'
 
-class EngineForm extends Component {
+class CreateParentAdvisory extends Component {
     constructor(props) {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddEngine = this.AddEngine.bind(this)
+        this.AddParentAdvisory = this.AddParentAdvisory.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' }
@@ -20,13 +20,14 @@ class EngineForm extends Component {
         this.setState({ alert })
     }
 
-    AddEngine = (event) => {
+    AddParentAdvisory = (event) => {
         event.preventDefault()
         let insertData = [
-            { table: 'Engine', fieldData: [ 
+            { table: 'ParentAdvisory', fieldData: [ 
                 {field: 'userEmail', data: this.state.user.email},
                 {field: 'userPassword', data: this.state.user.password},
-                {field: 'name', data: this.name.value}
+                {field: 'rate', data: this.rate.value},
+                {field: 'description', data: this.description.value}
             ] }
         ]
         this.ChangeAlert(true, 'A ligar ao servidor...', 'info')
@@ -44,17 +45,29 @@ class EngineForm extends Component {
     render() {
         return ( 
             <React.Fragment>
-                <h3>Create Engine</h3>
+                <h3>Create Parent Dvisory</h3>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
-                <Form onSubmit={this.AddEngine} ref={(form) => this.formRef = form}>
+                <Form onSubmit={this.AddParentAdvisory} ref={(form) => this.formRef = form}>
                     <Row>
                         <Col>
                             <Form.Group>
                                 <InputGroup className="mb-3">
                                     <InputGroup.Prepend>
-                                        <InputGroup.Text>Name</InputGroup.Text>
+                                        <InputGroup.Text>Rate</InputGroup.Text>
                                     </InputGroup.Prepend>
-                                    <Form.Control type="text" ref={(input) => {this.name = input}} required/>
+                                    <Form.Control type="text" ref={(name) => {this.rate = name}} required/>
+                                </InputGroup>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Form.Group>
+                                <InputGroup>
+                                    <InputGroup.Prepend>
+                                        <InputGroup.Text>Description</InputGroup.Text>
+                                    </InputGroup.Prepend>
+                                    <Form.Control as="textarea" rows="2" className="noresize" ref={(input) => {this.description = input}}/>
                                 </InputGroup>
                             </Form.Group>
                         </Col>
@@ -69,4 +82,4 @@ class EngineForm extends Component {
         );
     }
 }
-export default EngineForm;
+export default CreateParentAdvisory;

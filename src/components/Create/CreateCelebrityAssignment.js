@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Row, Col, Form, Button, InputGroup } from 'react-bootstrap'
 
 import Alert from '../utils/Alert'
-import AssignmentForm from './SecondaryForms/AssignmentForm'
+import CreateAssignment from './SecondaryForms/CreateAssignment'
 
-class CreateAssignment extends Component {
+class CreateCelebrityAssignment extends Component {
     constructor(props) {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
@@ -19,15 +19,39 @@ class CreateAssignment extends Component {
         this.setState({ alert })
     }
 
-    AddAssignment = () => {
-
+    AddAssignmentGame = () => {
+        // event.preventDefault()
+        // if(this.props.celebrityList[0] && this.props.AssignmentList[0] && this.props.gameList[0]) {
+        //     let insertData = [
+        //         { table: 'Series', fieldData: [ 
+        //             {field: 'userEmail', data: this.state.user.email},
+        //             {field: 'userPassword', data: this.state.user.password},
+        //             {field: 'title', data: this.title.value},
+        //             {field: 'releaseDate', data: this.releaseDate.value},
+        //             {field: 'synopsis', data: this.synopsis.value},
+        //             {field: 'sagaId', data: this.state.sagaId ? this.state.sagaId : 1},
+        //             {field: 'parentAdvisoryId', data: this.state.parentAdvisoryId ? this.state.parentAdvisoryId : 1}
+        //         ] }
+        //     ]
+        //     this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
+        //     Create(insertData, (res) => {
+        //         if(res.error) {
+        //             this.ChangeAlert(true, res.error, 'danger')
+        //         } else {
+        //             this.formRef.reset()
+        //             this.ChangeAlert(true, res.result.message, 'success')
+        //         }
+        //     })
+        // } else {
+        //     this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
+        // }
     }
 
     render() { 
         return ( 
             <React.Fragment>
                 <br/>
-                <AssignmentForm />
+                <CreateAssignment />
                 <h3>Create Celebrity</h3>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddAssignment} ref={(form) => this.formRef = form}>
@@ -78,4 +102,4 @@ class CreateAssignment extends Component {
     }
 }
  
-export default CreateAssignment;
+export default CreateCelebrityAssignment;

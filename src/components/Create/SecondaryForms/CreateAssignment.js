@@ -3,7 +3,7 @@ import { Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
 import { Create } from '../../../scripts/api'
 import Alert from '../../utils/Alert'
 
-class AssignmentForm extends Component {
+class CreateAssignment extends Component {
     constructor(props) {
         super(props);
         this.state = { 
@@ -75,4 +75,4 @@ class AssignmentForm extends Component {
     }
 }
  
-export default AssignmentForm;
+export default CreateAssignment;

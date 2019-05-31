@@ -3,11 +3,11 @@ import { Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
 import { Create } from '../../../scripts/api'
 import Alert from '../../utils/Alert'
 
-class SagaForm extends Component {
+class CreateCompany extends Component {
     constructor(props) {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddSaga = this.AddSaga.bind(this)
+        this.AddCompany = this.AddCompany.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' }
@@ -20,23 +20,22 @@ class SagaForm extends Component {
         this.setState({ alert })
     }
 
-    AddSaga = (event) => {
+    AddCompany = (event) => {
         event.preventDefault()
         let insertData = [
-            { table: 'Saga', fieldData: [ 
+            { table: 'Company', fieldData: [ 
                 {field: 'userEmail', data: this.state.user.email},
                 {field: 'userPassword', data: this.state.user.password},
-                {field: 'name', data: this.name.value},
-                {field: 'description', data: this.description.value}
+                {field: 'name', data: this.name.value}
             ] }
         ]
-        this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
+        this.ChangeAlert(true, 'A ligar ao servidor...', 'info')
         Create(insertData, (res) => {
             if(res.error) {
-                this.ChangeAlert(true, res.error, 'danger')
+                this.ChangeAlert(true, `${res.error}`, 'danger')
             } else {
                 this.formRef.reset()
-                this.ChangeAlert(true, res.result.message, 'success')
+                this.ChangeAlert(true, `${res.result.message}`, 'success')
                 this.props.onSubmit()
             }
         })
@@ -45,29 +44,17 @@ class SagaForm extends Component {
     render() {
         return ( 
             <React.Fragment>
-                <h3>Create Saga</h3>
+                <h3>Create Company</h3>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
-                <Form onSubmit={this.AddSaga} ref={(form) => this.formRef = form}>
+                <Form onSubmit={this.AddCompany} ref={(form) => this.formRef = form}>
                     <Row>
                         <Col>
                             <Form.Group>
                                 <InputGroup className="mb-3">
                                     <InputGroup.Prepend>
-                                        <InputGroup.Text>Name</InputGroup.Text>
+                                        <InputGroup.Text>name</InputGroup.Text>
                                     </InputGroup.Prepend>
-                                    <Form.Control type="text" ref={(name) => {this.name = name}} required/>
-                                </InputGroup>
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Form.Group>
-                                <InputGroup>
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Text>Description</InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <Form.Control as="textarea" rows="2" className="noresize" ref={(input) => {this.description = input}}/>
+                                    <Form.Control type="text" ref={(input) => {this.name = input}} required/>
                                 </InputGroup>
                             </Form.Group>
                         </Col>
@@ -79,9 +66,7 @@ class SagaForm extends Component {
                     </Row>
                 </Form>
             </React.Fragment>
-        );
+        )
     }
 }
- 
-
-export default SagaForm;
+export default CreateCompany;

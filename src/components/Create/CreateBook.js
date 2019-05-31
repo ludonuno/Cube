@@ -1,29 +1,20 @@
 import React, { Component } from 'react';
 import { Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
-import { Create, Get } from '../../scripts/api'
+import { Create } from '../../scripts/api'
 
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/ComboBox'
-
-import PublishingCompanyForm from './SecondaryForms/PublishingCompanyForm'
-import SagaForm from './SecondaryForms/SagaForm'
 
 class CreateBook extends Component {
     constructor(props) {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddBook = this.AddBook.bind(this)
-
         this.SetPublishingCompany = this.SetPublishingCompany.bind(this)
         this.SetSaga = this.SetSaga.bind(this)
-
-        this.GetPublisherList = this.GetPublisherList.bind(this)
-        this.GetSagaList = this.GetSagaList.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },
-            publishingCompanyList: [],
-            sagaList: [],
             publishingCompanyId: undefined,
             sagaId: undefined
         }
@@ -37,7 +28,7 @@ class CreateBook extends Component {
 
     AddBook = (event) => {
         event.preventDefault()
-        if(this.state.sagaList[0] && this.state.publishingCompanyList[0]) {
+        if(this.props.sagaList[0] && this.props.publishingCompanyList[0]) {
             let insertData = [
                 { table: 'Book', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
@@ -59,7 +50,7 @@ class CreateBook extends Component {
                 }
             })
         } else {
-            this.ChangeAlert(true, 'Campos em falta', 'warning')
+            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
         }
     }
 
@@ -74,41 +65,10 @@ class CreateBook extends Component {
         sagaId = Number(event.target.value)
         this.setState({ sagaId })
     }
-    
-    GetPublisherList = () => {
-        let searchData = [ { table: 'PublishingCompany', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                let publishingCompanyList = [...this.state.publishingCompanyList]
-                publishingCompanyList = res.result
-                this.setState({ publishingCompanyList })
-            }  
-        })
-    }
-
-    GetSagaList = () => {
-        let searchData = [ { table: 'Saga', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                let sagaList = [...this.state.sagaList]
-                sagaList = res.result
-                this.setState({ sagaList })
-            }  
-        })
-    }
-
-    componentDidMount() {
-        this.GetPublisherList()
-        this.GetSagaList()
-    }
 
     render() {
         return ( 
             <React.Fragment>
-                <PublishingCompanyForm onSubmit={this.GetPublisherList} />
-                <hr/>
-                <SagaForm onSubmit={this.GetSagaList} />
-                <hr/>
                 <h3>Create Book</h3>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddBook} ref={(form) => this.formRef = form}>
@@ -150,12 +110,12 @@ class CreateBook extends Component {
                     </Row>
                     <Row>
                         <Col>
-                            <ComboBox header={'Publishing Company'} list={this.state.publishingCompanyList} onChange={this.SetPublishingCompany} />
+                            <ComboBox header={'Publishing Company'} list={this.props.publishingCompanyList} onChange={this.SetPublishingCompany} />
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <ComboBox header={'Saga'} list={this.state.sagaList} onChange={this.SetSaga} />
+                            <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSaga} />
                         </Col>
                     </Row>
                     <Row>

@@ -1,29 +1,20 @@
 import React, { Component } from 'react';
 import { Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
-import { Create, Get } from '../../scripts/api'
+import { Create } from '../../scripts/api'
 
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/ComboBox'
-
-import ParentAdvisoryForm from './SecondaryForms/ParentAdvisoryForm'
-import SagaForm from './SecondaryForms/SagaForm'
 
 class CreateMovie extends Component {
     constructor(props) {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddMovie = this.AddMovie.bind(this)
-        
         this.SetParentAdvisory = this.SetParentAdvisory.bind(this)
         this.SetSaga = this.SetSaga.bind(this)
-
-        this.GetParentAdvisoryList = this.GetParentAdvisoryList.bind(this)
-        this.GetSagaList = this.GetSagaList.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },
-            parentAdvisoryList: [],
-            sagaList: [],
             parentAdvisoryId: undefined,
             sagaId: undefined
         }
@@ -37,7 +28,7 @@ class CreateMovie extends Component {
 
     AddMovie = (event) => {
         event.preventDefault()
-        if(this.state.sagaList[0] && this.state.parentAdvisoryList[0]) {
+        if(this.props.sagaList[0] && this.props.parentAdvisoryList[0]) {
             let insertData = [
                 { table: 'Movie', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
@@ -60,7 +51,7 @@ class CreateMovie extends Component {
                 }
             })
         } else {
-            this.ChangeAlert(true, 'Campos em falta', 'warning')
+            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
         }
     }
 
@@ -75,41 +66,10 @@ class CreateMovie extends Component {
         sagaId = Number(event.target.value)
         this.setState({ sagaId })
     }
-    
-    GetParentAdvisoryList = () => {
-        let searchData = [ { table: 'ParentAdvisory', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                let parentAdvisoryList = [...this.state.parentAdvisoryList]
-                parentAdvisoryList = res.result
-                this.setState({ parentAdvisoryList })
-            }  
-        })
-    }
-
-    GetSagaList = () => {
-        let searchData = [ { table: 'Saga', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                let sagaList = [...this.state.sagaList]
-                sagaList = res.result
-                this.setState({ sagaList })
-            }  
-        })
-    }
-
-    componentDidMount() {
-        this.GetParentAdvisoryList()
-        this.GetSagaList()
-    }
 
     render() {
         return ( 
             <React.Fragment>
-                <ParentAdvisoryForm onSubmit={this.GetParentAdvisoryList} />
-                <hr/>
-                <SagaForm onSubmit={this.GetSagaList} />
-                <hr/>
                 <h3>Create Movie</h3>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddMovie} ref={(form) => this.formRef = form}>
@@ -161,12 +121,12 @@ class CreateMovie extends Component {
                     </Row>
                     <Row>
                         <Col>
-                            <ComboBox header={'Parent Advisory'} list={this.state.parentAdvisoryList} onChange={this.SetParentAdvisoryValue} />
+                            <ComboBox header={'Parent Advisory'} list={this.props.parentAdvisoryList} onChange={this.SetParentAdvisoryValue} />
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <ComboBox header={'Saga'} list={this.state.sagaList} onChange={this.SetSagaValue} />
+                            <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSagaValue} />
                         </Col>
                     </Row>
                     <Row>

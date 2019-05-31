@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
 import { Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
-import { Create, Get } from '../../scripts/api'
+import { Create } from '../../scripts/api'
 
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/ComboBox'
-
-import EngineForm from './SecondaryForms/EngineForm'
-import ParentAdvisoryForm from './SecondaryForms/ParentAdvisoryForm'
-import CompanyForm from './SecondaryForms/CompanyForm'
-import SagaForm from './SecondaryForms/SagaForm'
 
 //TODO: atualizar
 class CreateGame extends Component {
@@ -16,23 +11,13 @@ class CreateGame extends Component {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
         this.AddGame = this.AddGame.bind(this)
-        
         this.SetEngine = this.SetEngine.bind(this)
         this.SetParentAdvisory = this.SetParentAdvisory.bind(this)
         this.SetCompany = this.SetCompany.bind(this)
         this.SetSaga = this.SetSaga.bind(this)
-
-        this.GetEngineList = this.GetEngineList.bind(this)        
-        this.GetParentAdvisoryList = this.GetParentAdvisoryList.bind(this)        
-        this.GetCompanyList = this.GetCompanyList.bind(this)        
-        this.GetSagaList = this.GetSagaList.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },
-            engineList: [],
-            parentAdvisoryList: [],
-            companyList: [],
-            sagaList: [],
             engineId: undefined,
             parentAdvisoryId: undefined,
             companyId: undefined,
@@ -48,7 +33,7 @@ class CreateGame extends Component {
 
     AddGame = (event) => {
         event.preventDefault()
-        if(this.state.engineList[0] && this.state.parentAdvisoryList[0] && this.state.companyList[0] && this.state.sagaList[0]) {
+        if(this.props.engineList[0] && this.props.parentAdvisoryList[0] && this.props.companyList[0] && this.props.sagaList[0]) {
             let insertData = [
                 { table: 'Game', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
@@ -72,7 +57,7 @@ class CreateGame extends Component {
                 }
             })
         } else {
-            this.ChangeAlert(true, 'Campos em falta', 'warning')
+            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
         }
     }
 
@@ -100,68 +85,9 @@ class CreateGame extends Component {
         this.setState({ sagaId })
     }
 
-    GetEngineList = () => {
-        let searchData = [ { table: 'Engine', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                let engineList = [...this.state.engineList]
-                engineList = res.result
-                this.setState({ engineList })
-            }  
-        })
-    }
-
-    GetParentAdvisoryList = () => {
-        let searchData = [ { table: 'ParentAdvisory', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                let parentAdvisoryList = [...this.state.parentAdvisoryList]
-                parentAdvisoryList = res.result
-                this.setState({ parentAdvisoryList })
-            }  
-        })
-    }
-
-    GetCompanyList = () => {
-        let searchData = [ { table: 'Company', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                let companyList = [...this.state.companyList]
-                companyList = res.result
-                this.setState({ companyList })
-            }  
-        })
-    }
-
-    GetSagaList = () => {
-        let searchData = [ { table: 'Saga', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                let sagaList = [...this.state.sagaList]
-                sagaList = res.result
-                this.setState({ sagaList })
-            }  
-        })
-    }
-
-    componentDidMount() {
-        this.GetEngineList()
-        this.GetParentAdvisoryList()
-        this.GetCompanyList()
-        this.GetSagaList()
-    }
-
     render() {
         return ( 
             <React.Fragment>
-                <EngineForm onSubmit={this.GetEngineList} />
-                <hr/>
-                <ParentAdvisoryForm onSubmit={this.GetParentAdvisoryList} />
-                <hr/>
-                <CompanyForm onSubmit={this.GetCompanyList} />
-                <hr/>
-                <SagaForm onSubmit={this.GetSagaList} />
-                <hr/>
                 <h3>Create Series</h3>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddGame} ref={(form) => this.formRef = form}>
@@ -203,22 +129,22 @@ class CreateGame extends Component {
                     </Row>
                     <Row>
                         <Col>
-                            <ComboBox header={'Engine'} list={this.state.engineList} onChange={this.SetEngine} />
+                            <ComboBox header={'Engine'} list={this.props.engineList} onChange={this.SetEngine} />
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <ComboBox header={'Parent Advisory'} list={this.state.parentAdvisoryList} onChange={this.SetParentAdvisory} />
+                            <ComboBox header={'Parent Advisory'} list={this.props.parentAdvisoryList} onChange={this.SetParentAdvisory} />
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <ComboBox header={'Company'} list={this.state.companyList} onChange={this.SetCompany} />
+                            <ComboBox header={'Company'} list={this.props.companyList} onChange={this.SetCompany} />
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <ComboBox header={'Saga'} list={this.state.sagaList} onChange={this.SetSaga} />
+                            <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSaga} />
                         </Col>
                     </Row>
                     <Row>
