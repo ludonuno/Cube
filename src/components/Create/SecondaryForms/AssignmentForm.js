@@ -3,30 +3,23 @@ import { Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
 import { Create } from '../../../scripts/api'
 import Alert from '../../utils/Alert'
 
-class CompanyForm extends Component {
+class AssignmentForm extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddCompany = this.AddCompany.bind(this)
-        this.state = {
+        this.state = { 
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' }
         }
     }
     
-    ChangeAlert(visible, message, variant) {
-        let alert = {...this.state.alert}
-        alert = { visible: visible, message: message, variant: variant}
-        this.setState({ alert })
-    }
-
-    AddCompany = (event) => {
+    AddAssignment = (event) => {
         event.preventDefault()
         let insertData = [
-            { table: 'Company', fieldData: [ 
+            { table: 'Assignment', fieldData: [ 
                 {field: 'userEmail', data: this.state.user.email},
                 {field: 'userPassword', data: this.state.user.password},
-                {field: 'name', data: this.name.value}
+                {field: 'assignment', data: this.assignment.value},
+                {field: 'description', data: this.description.value}
             ] }
         ]
         this.ChangeAlert(true, 'A ligar ao servidor...', 'info')
@@ -41,21 +34,33 @@ class CompanyForm extends Component {
         })
     }
 
-    render() {
+    render() { 
         return ( 
             <React.Fragment>
-                <h3>Create Company</h3>
+                <h3>Create Assignment</h3>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
-                <Form onSubmit={this.AddCompany} ref={(form) => this.formRef = form}>
-                    <Row>
+                <Form onSubmit={this.AddAssignment} ref={(form) => this.formRef = form}>
+                <Row>
+                        <Col xs={4} lg={2}>
+                            <Form.Group>
+                                <InputGroup.Text>Assignment</InputGroup.Text>
+                            </Form.Group>
+                        </Col>
                         <Col>
                             <Form.Group>
-                                <InputGroup className="mb-3">
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Text>name</InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <Form.Control type="text" ref={(input) => {this.name = input}} required/>
-                                </InputGroup>
+                                <Form.Control type="text" ref={(input) => {this.assignment = input}} required/>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={4} lg={2}>
+                            <Form.Group>
+                                <InputGroup.Text>Description</InputGroup.Text>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group>
+                                <Form.Control as="textarea" rows="3" className="noresize" ref={(input) => {this.description = input}}/>
                             </Form.Group>
                         </Col>
                     </Row>
@@ -69,4 +74,5 @@ class CompanyForm extends Component {
         )
     }
 }
-export default CompanyForm;
+ 
+export default AssignmentForm;

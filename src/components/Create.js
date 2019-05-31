@@ -8,6 +8,7 @@ import CreateGame from './Create/CreateGame'
 import CreateMovie from './Create/CreateMovie'
 import CreateSeries from './Create/CreateSeries'
 import CreateCelebrity from './Create/CreateCelebrity'
+import CreateAssignment from './Create/CreateAssignment'
 
 
 class Create extends Component {
@@ -33,7 +34,7 @@ class Create extends Component {
                         <Tab eventKey="movie" title="Movie"><CreateMovie /></Tab>
                         <Tab eventKey="series" title="Series"><CreateSeries /></Tab>
                         <Tab eventKey="celebrity" title="Celebrity"><CreateCelebrity /></Tab>
-                        {/* <Tab eventKey="celebrity" title="Celebrity"><CreateCelebrity /></Tab> */}
+                        <Tab eventKey="assignment" title="Assignment"><CreateAssignment /></Tab>
                     </Tabs>
                 </Container>
             </React.Fragment>
