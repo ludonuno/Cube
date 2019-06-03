@@ -6,6 +6,8 @@ import Alert from '../utils/Alert'
 class CreateAssignment extends Component {
     constructor(props) {
         super(props);
+        this.ChangeAlert = this.ChangeAlert.bind(this)
+        this.AddAssignment = this.AddAssignment.bind(this)
         this.state = { 
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' }
@@ -14,9 +16,6 @@ class CreateAssignment extends Component {
     
     ChangeAlert(visible, message, variant) {
         this.setState({ alert: { visible: visible, message: message, variant: variant} })
-        setTimeout(() => {
-            this.setState({ alert: { visible: !visible, message: message, variant: variant} })
-        }, 5000)
     }
 
     AddAssignment = (event) => {

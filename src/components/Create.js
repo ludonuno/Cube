@@ -7,10 +7,12 @@ import Navbar from './CustomNavbar'
 
 import CreateBook from './Create/CreateBook'
 import CreateCelebrity from './Create/CreateCelebrity'
-import CreateCelebrityAssignment from './Create/CreateCelebrityAssignment'
+import CreateRelateAssignment from './Create/CreateRelateAssignment'
 import CreateGame from './Create/CreateGame'
 import CreateMovie from './Create/CreateMovie'
 import CreateSeries from './Create/CreateSeries'
+import CreateSeason from './Create/CreateSeason'
+import CreateEpisode from './Create/CreateEpisode'
 
 import CreateAssignment from './Create/CreateAssignment'
 import CreateCompany from './Create/CreateCompany'
@@ -20,6 +22,9 @@ import CreatePublishingCompany from './Create/CreatePublishingCompany'
 import CreateSaga from './Create/CreateSaga'
 
 import CreateVideo from './Create/CreateVideo'
+import CreateGenres from './Create/CreateGenres'
+import CreateRelateGenres from './Create/CreateRelateGenres'
+import CreateDevelopers from './Create/CreateDevelopers'
 
 class Create extends Component {
     constructor(props) {
@@ -39,13 +44,17 @@ class Create extends Component {
             assignmentList: [],
             celebrityList: [],
             seriesList: [],
+            seasonList: [],
+            episodeList: [],
             movieList: [],
             bookList: [],
-            gameList: []
+            gameList: [],
+            genresList: []
         }
     }
+
     componentDidMount() {
-        this.GetPublisherList()
+        this.GetPublishingCompanyList()
         this.GetEngineList()
         this.GetCompanyList()
         this.GetParentAdvisoryList()
@@ -57,9 +66,10 @@ class Create extends Component {
         this.GetBookList()
         this.GetGameList()
         this.GetMovieList()
+        this.GetGenresList()
     }
 
-    GetPublisherList = () => {
+    GetPublishingCompanyList = () => {
         let searchData = [ { table: 'PublishingCompany', fieldData: undefined } ]
         Get(searchData,(res) => {
             if(res.result) this.setState({ publishingCompanyList: res.result })  
@@ -108,6 +118,15 @@ class Create extends Component {
             if(res.result) this.setState({ seriesList: res.result })  
         })
     }
+    GetSeasonList = (seriesId) => {
+        let searchData = [ { table: 'Season', fieldData: [
+            {field: 'seriesId', data: seriesId}
+        ] } ]
+        Get(searchData,(res) => {
+            console.log(res)
+            if(res.result) this.setState({ seasonList: res.result })  
+        })
+    }
     GetBookList = () => {
         let searchData = [ { table: 'Book', fieldData: undefined } ]
         Get(searchData,(res) => {
@@ -126,7 +145,12 @@ class Create extends Component {
             if(res.result) this.setState({ movieList: res.result })  
         })
     }
-
+    GetGenresList = () => {
+        let searchData = [ { table: 'Genres', fieldData: undefined } ]
+        Get(searchData,(res) => {
+            if(res.result) this.setState({ genresList: res.result })  
+        })
+    }
 
 
     render() { 
@@ -142,51 +166,55 @@ class Create extends Component {
                         <Tab eventKey="book" title="Livro"><CreateBook
                             publishingCompanyList={this.state.publishingCompanyList}
                             sagaList={this.state.sagaList}
-                            onSubmit={this.GetPublisherList}
+                            onSubmit={this.GetBookList}
                         /></Tab>
                         <Tab eventKey="game" title="Jogo"><CreateGame
                             engineList={this.state.engineList}
                             companyList={this.state.companyList}
                             parentAdvisoryList={this.state.parentAdvisoryList}
                             sagaList={this.state.sagaList}
-                            onSubmit={this.GetEngineList}
+                            onSubmit={this.GetGameList}
                         /></Tab>
                         <Tab eventKey="movie" title="Filme"><CreateMovie
                             parentAdvisoryList={this.state.parentAdvisoryList}
                             sagaList={this.state.sagaList}
-                            onSubmit={this.GetParentAdvisoryList}
+                            onSubmit={this.GetMovieList}
                         /></Tab>
                         <Tab eventKey="series" title="Séries"><CreateSeries
                             parentAdvisoryList={this.state.parentAdvisoryList}
                             sagaList={this.state.sagaList}
-                            onSubmit={this.GetParentAdvisoryList}
+                            onSubmit={this.GetSeriesList}
+                        /></Tab>
+                        <Tab eventKey="season" title="Temporada"><CreateSeason
+                            seriesList={this.state.seriesList}
+                        /></Tab>
+                        <Tab eventKey="episode" title="Episode"><CreateEpisode
+                            seriesList={this.state.seriesList}
+                            seasonList={this.state.seasonList}
+                            GetSeasonList={this.GetSeasonList}
                         /></Tab>
                         <Tab eventKey="parentAdvisory" title="Aconselhamento Parental"><CreateParentAdvisory
-                            parentAdvisoryList={this.state.parentAdvisoryList}
                             onSubmit={this.GetParentAdvisoryList}
                         /></Tab>
                         <Tab eventKey="company" title="Empresa"><CreateCompany
-                            companyList={this.state.companyList}
                             onSubmit={this.GetCompanyList}
                         /></Tab>
                         <Tab eventKey="engine" title="Engine"><CreateEngine
-                            engineList={this.state.engineList}
                             onSubmit={this.GetEngineList}
                         /></Tab>
                         <Tab eventKey="publishingCompany" title="Editora"><CreatePublishingCompany
-                            publishingCompanyList={this.state.publishingCompanyList}
-                            onSubmit={this.GetPublisherList}
+                            onSubmit={this.GetPublishingCompanyList}
                         /></Tab>
                         <Tab eventKey="saga" title="Saga"><CreateSaga
-                            sagaList={this.state.sagaList}
                             onSubmit={this.GetSagaList}
                         /></Tab>
-                        <Tab eventKey="celebrity" title="Celebridade"><CreateCelebrity/></Tab>
+                        <Tab eventKey="celebrity" title="Celebridade"><CreateCelebrity
+                            onSubmit={this.GetCelebrityList}
+                        /></Tab>
                         <Tab eventKey="assignment" title="Função"><CreateAssignment
-                            assignmentList={this.state.assignmentList}
                             onSubmit={this.GetAssignmentList}
                         /></Tab>
-                        <Tab eventKey="createCelebrityAssignment" title="Funções das Celebridades"><CreateCelebrityAssignment
+                        <Tab eventKey="createRelateAssignment" title="Funções das Celebridades"><CreateRelateAssignment
                             assignmentList={this.state.assignmentList}
                             celebrityList={this.state.celebrityList}
                             bookList={this.state.bookList}
@@ -199,6 +227,20 @@ class Create extends Component {
                             gameList={this.state.gameList}
                             movieList={this.state.movieList}
                             seriesList={this.state.seriesList}
+                        /></Tab>
+                        <Tab eventKey="genres" title="Géneros"><CreateGenres
+                            onSubmit={this.GetGenresList}
+                        /></Tab>
+                        <Tab eventKey="createRelateGenres" title="Associar Géneros"><CreateRelateGenres
+                            genresList={this.state.genresList}
+                            bookList={this.state.bookList}
+                            gameList={this.state.gameList}
+                            movieList={this.state.movieList}
+                            seriesList={this.state.seriesList}
+                        /></Tab>
+                        <Tab eventKey="developers" title="Desenvolvedores"><CreateDevelopers
+                            gameList={this.state.gameList}
+                            companyList={this.state.companyList}
                         /></Tab>
                     </Tabs>
                 </Container>

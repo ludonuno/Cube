@@ -3,11 +3,11 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
 import Alert from '../utils/Alert'
 
-class CreateEngine extends Component {
+class CreateGenres extends Component {
     constructor(props) {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddEngine = this.AddEngine.bind(this)
+        this.AddGenre = this.AddGenre.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' }
@@ -18,13 +18,13 @@ class CreateEngine extends Component {
         this.setState({ alert: { visible: visible, message: message, variant: variant} })
     }
 
-    AddEngine = (event) => {
+    AddGenre = (event) => {
         event.preventDefault()
         let insertData = [
-            { table: 'Engine', fieldData: [ 
+            { table: 'Genres', fieldData: [ 
                 {field: 'userEmail', data: this.state.user.email},
                 {field: 'userPassword', data: this.state.user.password},
-                {field: 'name', data: this.name.value}
+                {field: 'genre', data: this.genre.value}
             ] }
         ]
         this.ChangeAlert(true, 'A ligar ao servidor...', 'info')
@@ -44,11 +44,11 @@ class CreateEngine extends Component {
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
-                <Form onSubmit={this.AddEngine} ref={(form) => this.formRef = form}>
+                <Form onSubmit={this.AddGenre} ref={(form) => this.formRef = form}>
                     <Form.Group as={Row}> 
-                        <Form.Label column lg={12} xl={2}>Nome</Form.Label>
+                        <Form.Label column lg={12} xl={2}>Género</Form.Label>
                         <Col>
-                            <Form.Control type="text" ref={(input) => {this.name = input}} required/> 
+                            <Form.Control type="text" ref={(input) => {this.genre = input}} required/> 
                         </Col>
                     </Form.Group>
                     <Row>
@@ -61,4 +61,4 @@ class CreateEngine extends Component {
         );
     }
 }
-export default CreateEngine;
+export default CreateGenres;

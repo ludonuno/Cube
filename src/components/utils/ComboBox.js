@@ -12,7 +12,8 @@ const ComboBox = (props) => {
             show = element.rate ? ReplaceComa(element.rate) : show
             show = element.assignment ? ReplaceComa(element.assignment) : show
             show = element.title ? ReplaceComa(element.title) : show
-            options.push(<option key={element.id} value={element.id}>{show} {element.id}</option>)
+            show = element.genre ? ReplaceComa(element.genre) : show
+            options.push(<option key={element.id} value={element.id}>{show}</option>)
         })
         return (
             <Form.Group as={Row}> 

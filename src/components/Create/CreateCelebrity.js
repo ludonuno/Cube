@@ -3,6 +3,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
 import Alert from '../utils/Alert'
 
+//TODO: ADD RESET FORM
 class CreateBook extends Component {
 
     constructor(props) {
@@ -17,9 +18,6 @@ class CreateBook extends Component {
     
     ChangeAlert(visible, message, variant) {
         this.setState({ alert: { visible: visible, message: message, variant: variant} })
-        setTimeout(() => {
-            this.setState({ alert: { visible: !visible, message: message, variant: variant} })
-        }, 5000)
     }
 
     AddCelebrity = (event) => {
@@ -40,6 +38,7 @@ class CreateBook extends Component {
             } else {
                 this.formRef.reset()
                 this.ChangeAlert(true, res.result.message, 'success')
+                this.props.onSubmit()
             }
         })
     }

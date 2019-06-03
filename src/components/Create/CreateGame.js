@@ -14,6 +14,8 @@ class CreateGame extends Component {
         this.SetParentAdvisory = this.SetParentAdvisory.bind(this)
         this.SetCompany = this.SetCompany.bind(this)
         this.SetSaga = this.SetSaga.bind(this)
+        this.ResetForm = this.ResetForm.bind(this)
+
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },
@@ -26,9 +28,6 @@ class CreateGame extends Component {
 
     ChangeAlert(visible, message, variant) {
         this.setState({ alert: { visible: visible, message: message, variant: variant} })
-        setTimeout(() => {
-            this.setState({ alert: { visible: !visible, message: message, variant: variant} })
-        }, 5000)
     }
 
     AddGame = (event) => {
@@ -54,6 +53,7 @@ class CreateGame extends Component {
                 } else {
                     this.ResetForm()
                     this.ChangeAlert(true, res.result.message, 'success')
+                    this.props.onSubmit()
                 }
             })
         } else {

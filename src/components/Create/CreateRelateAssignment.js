@@ -5,10 +5,22 @@ import Alert from '../utils/Alert'
 import ComboBox from '../utils/ComboBox'
 
 //TODO: change api to return a more meaningfull message when the data is already in the database
-class CreateCelebrityAssignment extends Component {
+class CreateRelateAssignment extends Component {
     constructor(props) {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
+        this.AddAssignmentBook = this.AddAssignmentBook.bind(this)
+        this.AddAssignmentGame = this.AddAssignmentGame.bind(this)
+        this.AddAssignmentMovie = this.AddAssignmentMovie.bind(this)
+        this.AddAssignmentSeries = this.AddAssignmentSeries.bind(this)
+        this.SetAssignment = this.SetAssignment.bind(this)
+        this.SetCelebrity = this.SetCelebrity.bind(this)
+        this.SetBook = this.SetBook.bind(this)
+        this.SetGame = this.SetGame.bind(this)
+        this.SetMovie = this.SetMovie.bind(this)
+        this.SetSeries = this.SetSeries.bind(this)
+        this.ClickEvent = this.ClickEvent.bind(this)
+        this.ResetForm = this.ResetForm.bind(this)
         this.state = { 
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },
@@ -23,9 +35,6 @@ class CreateCelebrityAssignment extends Component {
 
     ChangeAlert(visible, message, variant) {
         this.setState({ alert: { visible: visible, message: message, variant: variant} })
-        setTimeout(() => {
-            this.setState({ alert: { visible: !visible, message: message, variant: variant} })
-        }, 5000)
     }
 
     AddAssignmentBook = (event) => {
@@ -40,14 +49,12 @@ class CreateCelebrityAssignment extends Component {
                     {field: 'bookId', data: this.state.bookId ? this.state.bookId : this.props.bookList[0].id},
                 ] }
             ]
-            console.log(insertData)
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res) => {
-                console.log(res)
                 if(res.error) {
                     this.ChangeAlert(true, res.error, 'danger')
                 } else {
-                    this.formRefBook.reset()
+                    this.ResetForm(true, false, false, false)
                     this.ChangeAlert(true, res.result.message, 'success')
                 }
             })
@@ -73,7 +80,7 @@ class CreateCelebrityAssignment extends Component {
                 if(res.error) {
                     this.ChangeAlert(true, res.error, 'danger')
                 } else {
-                    this.formRefGame.reset()
+                    this.ResetForm(false, true, false, false)
                     this.ChangeAlert(true, res.result.message, 'success')
                 }
             })
@@ -99,7 +106,7 @@ class CreateCelebrityAssignment extends Component {
                 if(res.error) {
                     this.ChangeAlert(true, res.error, 'danger')
                 } else {
-                    this.formRefMovie.reset()
+                    this.ResetForm(false, false, true, false)
                     this.ChangeAlert(true, res.result.message, 'success')
                 }
             })
@@ -125,7 +132,7 @@ class CreateCelebrityAssignment extends Component {
                 if(res.error) {
                     this.ChangeAlert(true, res.error, 'danger')
                 } else {
-                    this.formRefSeries.reset()
+                    this.ResetForm(false, false, false, true)
                     this.ChangeAlert(true, res.result.message, 'success')
                 }
             })
@@ -188,7 +195,7 @@ class CreateCelebrityAssignment extends Component {
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
-                <Accordion>
+                <Accordion defaultActiveKey="0">
                     <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="0"  id="accordionBook" ref={(accordiong) => this.accordiongPage = accordiong} onClick={this.ClickEvent}>
                             Adicionar uma celebridade a um Livro
@@ -271,4 +278,4 @@ class CreateCelebrityAssignment extends Component {
     }
 }
 
-export default CreateCelebrityAssignment;
+export default CreateRelateAssignment;

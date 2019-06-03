@@ -9,6 +9,16 @@ class CreateCelebrityAssignment extends Component {
     constructor(props) {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
+        this.AddVideoBook = this.AddVideoBook.bind(this)
+        this.AddVideoGame = this.AddVideoGame.bind(this)
+        this.AddVideoMovie = this.AddVideoMovie.bind(this)
+        this.AddVideoSeries = this.AddVideoSeries.bind(this)
+        this.SetBook = this.SetBook.bind(this)
+        this.SetGame = this.SetGame.bind(this)
+        this.SetMovie = this.SetMovie.bind(this)
+        this.SetSeries = this.SetSeries.bind(this)
+        this.ClickEvent = this.ClickEvent.bind(this)
+        this.ResetForm = this.ResetForm.bind(this)
         this.state = { 
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },
@@ -25,25 +35,21 @@ class CreateCelebrityAssignment extends Component {
 
     ChangeAlert(visible, message, variant) {
         this.setState({ alert: { visible: visible, message: message, variant: variant} })
-        setTimeout(() => {
-            this.setState({ alert: { visible: !visible, message: message, variant: variant} })
-        }, 5000)
     }
 
     AddVideoBook = (event) => {
         event.preventDefault()
-        if(this.props.celebrityList[0] && this.props.assignmentList[0] && this.props.bookList[0]) {
+        if(this.props.bookList[0]) {
             let insertData = [
-                { table: 'CelebrityAssignmentBook', fieldData: [ 
+                { table: 'VideoBook', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'link', data: this.link.value},
+                    {field: 'link', data: this.linkBook.value},
                     {field: 'bookId', data: this.state.bookId ? this.state.bookId : this.props.bookList[0].id},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res) => {
-                console.log(res)
                 if(res.error) {
                     this.ChangeAlert(true, res.error, 'danger')
                 } else {
@@ -58,12 +64,12 @@ class CreateCelebrityAssignment extends Component {
 
     AddVideoGame = (event) => {
         event.preventDefault()
-        if(this.props.celebrityList[0] && this.props.assignmentList[0] && this.props.gameList[0]) {
+        if(this.props.gameList[0]) {
             let insertData = [
-                { table: 'CelebrityAssignmentGame', fieldData: [ 
+                { table: 'VideoGame', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'link', data: this.link.value},
+                    {field: 'link', data: this.linkGame.value},
                     {field: 'gameId', data: this.state.gameId ? this.state.gameId : this.props.gameList[0].id},
                 ] }
             ]
@@ -83,12 +89,12 @@ class CreateCelebrityAssignment extends Component {
 
     AddVideoMovie = (event) => {
         event.preventDefault()
-        if(this.props.celebrityList[0] && this.props.assignmentList[0] && this.props.movieList[0]) {
+        if(this.props.movieList[0]) {
             let insertData = [
-                { table: 'CelebrityAssignmentMovie', fieldData: [ 
+                { table: 'VideoMovie', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'link', data: this.link.value},
+                    {field: 'link', data: this.linkMovie.value},
                     {field: 'movieId', data: this.state.movieId ? this.state.movieId : this.props.movieList[0].id},
                 ] }
             ]
@@ -108,12 +114,12 @@ class CreateCelebrityAssignment extends Component {
 
     AddVideoSeries = (event) => {
         event.preventDefault()
-        if(this.props.celebrityList[0] && this.props.assignmentList[0] && this.props.seriesList[0]) {
+        if(this.props.seriesList[0]) {
             let insertData = [
-                { table: 'CelebrityAssignmentSeries', fieldData: [ 
+                { table: 'VideoSeries', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'link', data: this.link.value},
+                    {field: 'link', data: this.linkSeries.value},
                     {field: 'seriesId', data: this.state.seriesId ? this.state.seriesId : this.props.seriesList[0].id},
                 ] }
             ]
@@ -216,7 +222,7 @@ class CreateCelebrityAssignment extends Component {
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
-                <Accordion>
+                <Accordion defaultActiveKey="0">
                     <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="0"  id="accordionBook" ref={(accordion) => this.accordionPage = accordion} onClick={this.ClickEvent}>
                             Adicionar um vídeo a um Livro
@@ -227,7 +233,7 @@ class CreateCelebrityAssignment extends Component {
                                     <Form.Group as={Row}> 
                                         <Form.Label column lg={12} xl={2}>Link do vídeo</Form.Label>
                                         <Col>
-                                            <Form.Control type="text" ref={(input) => {this.link = input}} required/>
+                                            <Form.Control type="text" ref={(input) => {this.linkBook = input}} required/>
                                         </Col>
                                     </Form.Group>
                                     <ComboBox header={'Livro'} list={this.props.bookList} onChange={this.SetBook} />
@@ -250,7 +256,7 @@ class CreateCelebrityAssignment extends Component {
                                     <Form.Group as={Row}> 
                                         <Form.Label column lg={12} xl={2}>Link do vídeo</Form.Label>
                                         <Col>
-                                            <Form.Control type="text" ref={(input) => {this.link = input}} required/>
+                                            <Form.Control type="text" ref={(input) => {this.linkGame = input}} required/>
                                         </Col>
                                     </Form.Group>
                                     <ComboBox header={'Jogo'} list={this.props.gameList} onChange={this.SetGame} />
@@ -273,7 +279,7 @@ class CreateCelebrityAssignment extends Component {
                                     <Form.Group as={Row}> 
                                         <Form.Label column lg={12} xl={2}>Link do vídeo</Form.Label>
                                         <Col>
-                                            <Form.Control type="text" ref={(input) => {this.link = input}} required/>
+                                            <Form.Control type="text" ref={(input) => {this.linkMovie = input}} required/>
                                         </Col>
                                     </Form.Group>
                                     <ComboBox header={'Filme'} list={this.props.movieList} onChange={this.SetMovie} />
@@ -296,7 +302,7 @@ class CreateCelebrityAssignment extends Component {
                                     <Form.Group as={Row}> 
                                         <Form.Label column lg={12} xl={2}>Link do vídeo</Form.Label>
                                         <Col>
-                                            <Form.Control type="text" ref={(input) => {this.link = input}} required/>
+                                            <Form.Control type="text" ref={(input) => {this.linkSeries = input}} required/>
                                         </Col>
                                     </Form.Group>
                                     <ComboBox header={'Séries'} list={this.props.seriesList} onChange={this.SetSeries} />

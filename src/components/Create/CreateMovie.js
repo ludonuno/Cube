@@ -12,6 +12,7 @@ class CreateMovie extends Component {
         this.AddMovie = this.AddMovie.bind(this)
         this.SetParentAdvisory = this.SetParentAdvisory.bind(this)
         this.SetSaga = this.SetSaga.bind(this)
+        this.ResetForm = this.ResetForm.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },
@@ -22,9 +23,6 @@ class CreateMovie extends Component {
 
     ChangeAlert(visible, message, variant) {
         this.setState({ alert: { visible: visible, message: message, variant: variant} })
-        setTimeout(() => {
-            this.setState({ alert: { visible: !visible, message: message, variant: variant} })
-        }, 5000)
     }
 
     AddMovie = (event) => {
@@ -49,6 +47,7 @@ class CreateMovie extends Component {
                 } else {
                     this.ResetForm()
                     this.ChangeAlert(true, res.result.message, 'success')
+                    this.props.onSubmit()
                 }
             })
         } else {

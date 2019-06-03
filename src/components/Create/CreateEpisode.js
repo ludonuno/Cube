@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
-import { Create } from '../../scripts/api'
+import { Create, Get } from '../../scripts/api'
 
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/ComboBox'
-class CreateSeries extends Component {
+class CreateEpisode extends Component {
     constructor(props) {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddSeries = this.AddSeries.bind(this)
-        this.SetParentAdvisory = this.SetParentAdvisory.bind(this)
-        this.SetSaga = this.SetSaga.bind(this)
+        this.AddEpisode = this.AddEpisode.bind(this)
         this.ResetForm = this.ResetForm.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },
-            parentAdvisoryId: undefined,
-            sagaId: undefined
+            alertEpisode: { visible: false, message: '', variant: '' },
+            seriesId: undefined,
+            seasonId: undefined
         }
     }
 
@@ -24,18 +23,17 @@ class CreateSeries extends Component {
         this.setState({ alert: { visible: visible, message: message, variant: variant} })
     }
 
-    AddSeries = (event) => {
+    AddEpisode = (event) => {
         event.preventDefault()
-        if(this.props.sagaList[0] && this.props.parentAdvisoryList[0]) {
+        if(this.props.seriesList[0] && this.props.seasonList[0]) {
             let insertData = [
-                { table: 'Series', fieldData: [ 
+                { table: 'Season', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
                     {field: 'title', data: this.title.value},
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'synopsis', data: this.synopsis.value},
-                    {field: 'sagaId', data: this.state.sagaId ? this.state.sagaId : this.props.sagaList[0].id},
-                    {field: 'parentAdvisoryId', data: this.state.parentAdvisoryId ? this.state.parentAdvisoryId : this.props.parentAdvisoryList[0].id}
+                    {field: 'seriesId', data: this.state.seriesId ? this.state.seriesId : this.props.seriesList[0].id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -45,7 +43,6 @@ class CreateSeries extends Component {
                 } else {
                     this.ResetForm()
                     this.ChangeAlert(true, res.result.message, 'success')
-                    this.props.onSubmit()
                 }
             })
         } else {
@@ -53,25 +50,34 @@ class CreateSeries extends Component {
         }
     }
     
-    SetParentAdvisory = (event) => {
-        this.setState({ parentAdvisoryId: Number(event.target.value) })
+    SetSeries = (event) => {
+        this.setState({ seriesId: Number(event.target.value) })
     }
-    SetSaga = (event) => {
-        this.setState({ sagaId: Number(event.target.value) })
+
+    SetSeason = (event) => {
+        this.setState({ seasonId: Number(event.target.value) })
     }
+    
+    // return (<ComboBox header={'Série'} list={this.props.seriesList} onChange={this.SetSeason} />)
     
     ResetForm = () => {
         this.formRef.reset()        
-        this.setState({parentAdvisoryId: this.props.parentAdvisoryList[0] ? this.props.parentAdvisoryList[0].id : undefined})
-        this.setState({sagaId: this.props.sagaList[0] ? this.props.sagaList[0].id : undefined})
+        this.setState({seriesId: (this.props.series && this.props.series[0]) ? this.props.series[0].id : undefined})
     }
-    
+
+    componentDidMount() {
+        console.log(this.props.seriesList)
+        //this.props.GetSeasonList(this.props.seriesList[0].id)
+    }
+
     render() {
         return ( 
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
-                <Form onSubmit={this.AddSeries} ref={(form) => this.formRef = form}>
+                <Form onSubmit={this.AddEpisode} ref={(form) => this.formRef = form}>
+                    <ComboBox header={'Série'} list={this.props.seriesList} onChange={this.SetSeries} />
+                    <Alert variant={this.state.alertEpisode.variant} message={this.state.alertEpisode.message} visible={this.state.alertEpisode.visible} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>
@@ -90,8 +96,6 @@ class CreateSeries extends Component {
                             <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.synopsis = input}}/>
                         </Col>
                     </Form.Group>
-                    <ComboBox header={'Acon. Parental'} list={this.props.parentAdvisoryList} onChange={this.SetParentAdvisory} />
-                    <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSaga} />
                     <Row>
                         <Col>
                             <Button variant="primary" type="submit" block>Submit</Button>
@@ -103,4 +107,4 @@ class CreateSeries extends Component {
     }
 }
  
-export default CreateSeries;
+export default CreateEpisode;
