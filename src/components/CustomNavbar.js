@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
+import { Navbar, NavDropdown } from 'react-bootstrap'
 
 class CustomNavbar extends Component {
     constructor(props) {
@@ -11,23 +11,26 @@ class CustomNavbar extends Component {
 
     logOut = () => {
         localStorage.removeItem('user')
-        this.props.props.history.push('/')
+        if(this.props.props.history.location.pathname === "/")
+            this.setState({ user: undefined })
+        else
+            this.props.props.history.push('/')
     }
 
     UserFields = () => {
         if(this.state.user) {
             return (
-                <NavDropdown title={this.state.user.name} id="basic-nav-dropdown">
+                <NavDropdown title={this.state.user.name} id="basic-nav-dropdown" > 
                     <NavDropdown.Item href="/user/page">Perfil</NavDropdown.Item>
                     <this.CanUserEdit />
                     <NavDropdown.Divider />
-                    <NavDropdown.Item onClick={this.logOut}>Logout</NavDropdown.Item>
+                    <NavDropdown.Item onClick={this.logOut}>Sair</NavDropdown.Item>
                 </NavDropdown>
             )
         } else {
             return (
                 <div>
-                    <a href="/user/login" className="btn btn-outline-primary">LogIn</a> / <a href="/user/create" className="btn btn-outline-success">Registar</a>
+                    <a href="/user/login" className="btn btn-outline-primary">LogIn</a> <a href="/user/create" className="btn btn-outline-success">Registar</a>
                 </div>
             )
         }
@@ -35,38 +38,26 @@ class CustomNavbar extends Component {
     
     CanUserEdit = () => {
         if(this.state.user.canedit) {
-            return (<NavDropdown.Item href="/create">Create</NavDropdown.Item>)
+            return (
+                <React.Fragment>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item href="/create">Adicionar</NavDropdown.Item>
+                    <NavDropdown.Item href="/#">Atualizar</NavDropdown.Item>
+                    <NavDropdown.Item href="/#">Apagar</NavDropdown.Item>
+                </React.Fragment>
+            )
         } else {
             return (null)
-        }
-        
-    }
-
-    CustomNavbarBrand = () => {
-        if(!this.state.user) {
-            return (<Navbar.Brand href="/">Cube</Navbar.Brand>)
-        } else {
-            let firstName = String(this.state.user.name).substr(0, String(this.state.user.name).indexOf(" "))
-            return (<Navbar.Brand href="/">Bem vindo(a) {firstName}</Navbar.Brand>)
         }
     }
 
     render() {
         return ( 
-            <Navbar bg="light" expand="lg">
-                <this.CustomNavbarBrand />
-                <Navbar.Toggle aria-controls="basic-navbar-nav" className="text-left"/>
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="mr-auto">
-                        <Nav.Link href="/series">Series</Nav.Link>
-                        <Nav.Link href="/book">Book</Nav.Link>
-                        <Nav.Link href="/movie">Movie</Nav.Link>
-                        <Nav.Link href="/game">Game</Nav.Link>
-                    </Nav>
-                    <div>
-                        <this.UserFields />
-                    </div>
-                </Navbar.Collapse>
+            <Navbar bg="Light" expand="lg">
+                <Navbar.Brand href="/">Cube</Navbar.Brand>
+                <div className="align-right">
+                    <this.UserFields />
+                </div>
             </Navbar>
         )
     }

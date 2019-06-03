@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
+import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
 
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/ComboBox'
 
-//TODO: atualizar
 class CreateGame extends Component {
     constructor(props) {
         super(props);
@@ -26,9 +25,10 @@ class CreateGame extends Component {
     }
 
     ChangeAlert(visible, message, variant) {
-        let alert = {...this.state.alert}
-        alert = { visible: visible, message: message, variant: variant}
-        this.setState({ alert })
+        this.setState({ alert: { visible: visible, message: message, variant: variant} })
+        setTimeout(() => {
+            this.setState({ alert: { visible: !visible, message: message, variant: variant} })
+        }, 5000)
     }
 
     AddGame = (event) => {
@@ -41,10 +41,10 @@ class CreateGame extends Component {
                     {field: 'title', data: this.title.value},
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'synopsis', data: this.synopsis.value},
-                    {field: 'engineId', data: this.state.engineId ? this.state.engineId : 1},
-                    {field: 'parentAdvisoryId', data: this.state.parentAdvisoryId ? this.state.parentAdvisoryId : 1},
-                    {field: 'publicadorId', data: this.state.companyId ? this.state.companyId : 1}, //Tem nome diferente porque na base de dados este campo refere-se a quem publicou o jogo
-                    {field: 'sagaId', data: this.state.sagaId ? this.state.sagaId : 1}
+                    {field: 'engineId', data: this.state.engineId ? this.state.engineId : this.props.engineList[0].id},
+                    {field: 'parentAdvisoryId', data: this.state.parentAdvisoryId ? this.state.parentAdvisoryId : this.props.parentAdvisoryList[0].id},
+                    {field: 'publicadorId', data: this.state.companyId ? this.state.companyId : this.props.companyList[0].id}, //Tem nome diferente porque na base de dados este campo refere-se a quem publicou o jogo
+                    {field: 'sagaId', data: this.state.sagaId ? this.state.sagaId : this.props.sagaList[0].id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -52,7 +52,7 @@ class CreateGame extends Component {
                 if(res.error) {
                     this.ChangeAlert(true, res.error, 'danger')
                 } else {
-                    this.formRef.reset()
+                    this.ResetForm()
                     this.ChangeAlert(true, res.result.message, 'success')
                 }
             })
@@ -62,91 +62,54 @@ class CreateGame extends Component {
     }
 
     SetEngine = (event) => {
-        let engineId = {...this.state.engineId}
-        engineId = Number(event.target.value)
-        this.setState({ engineId })
+        this.setState({ engineId: Number(event.target.value) })
     }
-
     SetParentAdvisory = (event) => {
-        let parentAdvisoryId = {...this.state.parentAdvisoryId}
-        parentAdvisoryId = Number(event.target.value)
-        this.setState({ parentAdvisoryId })
+        this.setState({ parentAdvisoryId: Number(event.target.value) })
     }
-
     SetCompany = (event) => {
-        let companyId = {...this.state.companyId}
-        companyId = Number(event.target.value)
-        this.setState({ companyId })
+        this.setState({ companyId: Number(event.target.value) })
+    }
+    SetSaga = (value) => {
+        this.setState({ sagaId: Number(value) })
     }
 
-    SetSaga = (event) => {
-        let sagaId = {...this.state.sagaId}
-        sagaId = Number(event.target.value)
-        this.setState({ sagaId })
+    ResetForm = () => {
+        this.formRef.reset()        
+        this.setState({engineId: this.props.engineList[0] ? this.props.engineList[0].id : undefined})
+        this.setState({parentAdvisoryId: this.props.parentAdvisoryList[0] ? this.props.parentAdvisoryList[0].id : undefined})
+        this.setState({companyId: this.props.companyList[0] ? this.props.companyList[0].id : undefined})
+        this.setState({sagaId: this.props.sagaList[0] ? this.props.sagaList[0].id : undefined})
     }
 
     render() {
         return ( 
             <React.Fragment>
-                <h3>Create Series</h3>
+                <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddGame} ref={(form) => this.formRef = form}>
-                    <Row>
+                    <Form.Group as={Row}> 
+                        <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>
-                            <Form.Group>
-                                <InputGroup>
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Text>Title</InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <Form.Control type="text" ref={(input) => {this.title = input}} required/>
-                                </InputGroup>
-                            </Form.Group>
+                            <Form.Control type="text" ref={(input) => {this.title = input}} required/>
                         </Col>
-                    </Row>
-                    <Row>
+                    </Form.Group>
+                    <Form.Group as={Row}> 
+                        <Form.Label column lg={12} xl={2}>Data</Form.Label>
                         <Col>
-                            <Form.Group>
-                                <InputGroup>
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Text>Release date</InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <Form.Control type="date" ref={(input) => {this.releaseDate = input}} required/>
-                                </InputGroup>
-                            </Form.Group>
+                            <Form.Control type="date" ref={(input) => {this.releaseDate = input}} required/>
                         </Col>
-                    </Row>
-                    <Row>
+                    </Form.Group>
+                    <Form.Group as={Row}> 
+                        <Form.Label column lg={12} xl={2}>Sinópse</Form.Label>
                         <Col>
-                            <Form.Group>
-                                <InputGroup>
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Text>Synopsis</InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <Form.Control as="textarea" rows="2" className="noresize" ref={(input) => {this.synopsis = input}}/>
-                                </InputGroup>
-                            </Form.Group>
+                            <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.synopsis = input}}/>
                         </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <ComboBox header={'Engine'} list={this.props.engineList} onChange={this.SetEngine} />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <ComboBox header={'Parent Advisory'} list={this.props.parentAdvisoryList} onChange={this.SetParentAdvisory} />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <ComboBox header={'Company'} list={this.props.companyList} onChange={this.SetCompany} />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSaga} />
-                        </Col>
-                    </Row>
+                    </Form.Group>
+                    <ComboBox header={'Engine'} list={this.props.engineList} onChange={this.SetEngine} />
+                    <ComboBox header={'Acon. Parental'} list={this.props.parentAdvisoryList} onChange={this.SetParentAdvisory} />
+                    <ComboBox header={'Empresa'} list={this.props.companyList} onChange={this.SetCompany} />
+                    <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSaga} />
                     <Row>
                         <Col>
                             <Button variant="primary" type="submit" block>Submit</Button>

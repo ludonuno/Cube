@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
-import { Create } from '../../../scripts/api'
-import Alert from '../../utils/Alert'
+import { Form, Button, Row, Col } from 'react-bootstrap'
+import { Create } from '../../scripts/api'
+import Alert from '../utils/Alert'
 
 class CreateAssignment extends Component {
     constructor(props) {
@@ -12,6 +12,13 @@ class CreateAssignment extends Component {
         }
     }
     
+    ChangeAlert(visible, message, variant) {
+        this.setState({ alert: { visible: visible, message: message, variant: variant} })
+        setTimeout(() => {
+            this.setState({ alert: { visible: !visible, message: message, variant: variant} })
+        }, 5000)
+    }
+
     AddAssignment = (event) => {
         event.preventDefault()
         let insertData = [
@@ -37,33 +44,21 @@ class CreateAssignment extends Component {
     render() { 
         return ( 
             <React.Fragment>
-                <h3>Create Assignment</h3>
+                <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddAssignment} ref={(form) => this.formRef = form}>
-                <Row>
-                        <Col xs={4} lg={2}>
-                            <Form.Group>
-                                <InputGroup.Text>Assignment</InputGroup.Text>
-                            </Form.Group>
-                        </Col>
+                    <Form.Group as={Row}> 
+                        <Form.Label column lg={12} xl={2}>Função</Form.Label>
                         <Col>
-                            <Form.Group>
-                                <Form.Control type="text" ref={(input) => {this.assignment = input}} required/>
-                            </Form.Group>
+                            <Form.Control type="text" ref={(input) => {this.assignment = input}} required/> 
                         </Col>
-                    </Row>
-                    <Row>
-                        <Col xs={4} lg={2}>
-                            <Form.Group>
-                                <InputGroup.Text>Description</InputGroup.Text>
-                            </Form.Group>
-                        </Col>
+                    </Form.Group>
+                    <Form.Group as={Row}> 
+                        <Form.Label column lg={12} xl={2}>Descrição</Form.Label>
                         <Col>
-                            <Form.Group>
-                                <Form.Control as="textarea" rows="3" className="noresize" ref={(input) => {this.description = input}}/>
-                            </Form.Group>
+                            <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.description = input}}/>
                         </Col>
-                    </Row>
+                    </Form.Group>
                     <Row>
                         <Col>
                             <Button variant="primary" type="submit" block>Submit</Button>

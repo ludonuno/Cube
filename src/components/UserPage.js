@@ -15,7 +15,6 @@ class UserPage extends Component {
         if(!this.state.user) {
             return (<Redirect to='/user/login' />)
         }
-        console.log(this.props.location.pathname)
         return ( 
             <React.Fragment>
                 <Navbar props={this.props}/>

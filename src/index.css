@@ -16,3 +16,6 @@ code {
 .noresize {
   resize: none; 
 }
+.align-right {
+  margin-left: auto
+}

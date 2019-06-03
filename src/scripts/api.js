@@ -57,6 +57,7 @@ const HandleCreateData = (data, callback) => {
 const Create = (insertData, callback) => {
     return new Promise((resolve, reject) => {
         HandleCreateData(insertData, (res) => {
+            console.log(res)
             request.post(res, (error, response, body) => {
                 resolve(JSON.parse(body))
             })

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
+import { Redirect } from 'react-router-dom'
 import { Get } from '../scripts/api'
 import Alert from './utils/Alert'
 
@@ -18,9 +19,10 @@ class UserLogin extends Component {
     }
 
     ChangeAlert(visible, message, variant) {
-        let alert = {...this.state.alert}
-        alert = { visible: visible, message: message, variant: variant}
-        this.setState({ alert })
+        this.setState({ alert: { visible: visible, message: message, variant: variant} })
+        setTimeout(() => {
+            this.setState({ alert: { visible: !visible, message: message, variant: variant} })
+        }, 5000)
     }
 
     LoginUser = (event) => {
@@ -43,6 +45,9 @@ class UserLogin extends Component {
     }
       
     render() {
+        if(this.state.user) {
+            return (<Redirect to='/noMatch' />)
+        }
         return ( 
             <React.Fragment>
                 <Navbar props={this.props}/>

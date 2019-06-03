@@ -33,7 +33,6 @@ class App extends Component {
         super()
         this.state = { }
     }
-    //TODO: redirect to Root if user isn't login
     render() {
         return (
             <Router>

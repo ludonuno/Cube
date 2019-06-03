@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { Jumbotron } from 'react-bootstrap'
+import { Container, Form } from 'react-bootstrap'
 
 import Navbar from './CustomNavbar'
+
+//Faz as pesquisas aqui que depois são direcionadas para as respetivas páginas
 
 class Home extends Component {
     constructor(props) {
@@ -14,9 +16,11 @@ class Home extends Component {
         return (
             <React.Fragment>
                 <Navbar props={this.props}/>
-                <Jumbotron>
-                    Inicio
-                </Jumbotron>
+                <Container>
+                    <Form>
+                        ola
+                    </Form>
+                </Container>
             </React.Fragment>
         );
     }

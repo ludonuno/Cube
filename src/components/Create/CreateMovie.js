@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
+import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
 
 import Alert from '../utils/Alert'
@@ -21,9 +21,10 @@ class CreateMovie extends Component {
     }
 
     ChangeAlert(visible, message, variant) {
-        let alert = {...this.state.alert}
-        alert = { visible: visible, message: message, variant: variant}
-        this.setState({ alert })
+        this.setState({ alert: { visible: visible, message: message, variant: variant} })
+        setTimeout(() => {
+            this.setState({ alert: { visible: !visible, message: message, variant: variant} })
+        }, 5000)
     }
 
     AddMovie = (event) => {
@@ -37,8 +38,8 @@ class CreateMovie extends Component {
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'duration', data: this.duration.value},
                     {field: 'synopsis', data: this.synopsis.value},
-                    {field: 'sagaId', data: this.state.sagaId ? this.state.sagaId : 1},
-                    {field: 'parentAdvisoryId', data: this.state.parentAdvisoryId ? this.state.parentAdvisoryId : 1}
+                    {field: 'sagaId', data: this.state.sagaId ? this.state.sagaId : this.props.sagaList[0].id},
+                    {field: 'parentAdvisoryId', data: this.state.parentAdvisoryId ? this.state.parentAdvisoryId : this.props.parentAdvisoryList[0].id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -46,7 +47,7 @@ class CreateMovie extends Component {
                 if(res.error) {
                     this.ChangeAlert(true, res.error, 'danger')
                 } else {
-                    this.formRef.reset()
+                    this.ResetForm()
                     this.ChangeAlert(true, res.result.message, 'success')
                 }
             })
@@ -56,79 +57,51 @@ class CreateMovie extends Component {
     }
 
     SetParentAdvisory = (event) => {
-        let parentAdvisoryId = {...this.state.parentAdvisoryId}
-        parentAdvisoryId = Number(event.target.value)
-        this.setState({ parentAdvisoryId })
+        this.setState({ parentAdvisoryId: Number(event.target.value) })
     }
 
     SetSaga = (event) => {
-        let sagaId = {...this.state.sagaId}
-        sagaId = Number(event.target.value)
-        this.setState({ sagaId })
+        this.setState({ sagaId: Number(event.target.value) })
     }
-
+    
+    ResetForm = () => {
+        this.formRef.reset()        
+        this.setState({parentAdvisoryId: this.props.parentAdvisoryList[0] ? this.props.parentAdvisoryList[0].id : undefined})
+        this.setState({sagaId: this.props.sagaList[0] ? this.props.sagaList[0].id : undefined})
+    }
+    
     render() {
         return ( 
             <React.Fragment>
-                <h3>Create Movie</h3>
+                <br/>   
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddMovie} ref={(form) => this.formRef = form}>
-                    <Row>
+                    <Form.Group as={Row}> 
+                        <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>
-                            <Form.Group>
-                                <InputGroup>
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Text>Title</InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <Form.Control type="text" ref={(input) => {this.title = input}} required/>
-                                </InputGroup>
-                            </Form.Group>
+                            <Form.Control type="text" ref={(input) => {this.title = input}} required/>
                         </Col>
-                    </Row>
-                    <Row>
-                        <Col xs={12} lg={6}>
-                            <Form.Group>
-                                <InputGroup>
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Text>Release date</InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <Form.Control type="date" ref={(input) => {this.releaseDate = input}} required/>
-                                </InputGroup>
-                            </Form.Group>
-                        </Col>
-                        <Col xs={12} lg={6}>
-                            <Form.Group>
-                                <InputGroup>
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Text>Duration</InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <Form.Control type="number" defaultValue="0" min="0" max="400" ref={(input) => {this.duration = input}} required/>
-                                </InputGroup>
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                    <Row>
+                    </Form.Group>
+                    <Form.Group as={Row}> 
+                        <Form.Label column lg={12} xl={2}>Data</Form.Label>
                         <Col>
-                            <Form.Group>
-                                <InputGroup>
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Text>Synopsis</InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <Form.Control as="textarea" rows="2" className="noresize" ref={(input) => {this.synopsis = input}}/>
-                                </InputGroup>
-                            </Form.Group>
+                            <Form.Control type="date" ref={(input) => {this.releaseDate = input}}/>
                         </Col>
-                    </Row>
-                    <Row>
+                    </Form.Group>
+                    <Form.Group as={Row}> 
+                        <Form.Label column lg={12} xl={2}>Duração</Form.Label>
                         <Col>
-                            <ComboBox header={'Parent Advisory'} list={this.props.parentAdvisoryList} onChange={this.SetParentAdvisoryValue} />
+                            <Form.Control type="number" defaultValue="0" min="0" max="400" ref={(input) => {this.duration = input}}/>
                         </Col>
-                    </Row>
-                    <Row>
+                    </Form.Group>
+                    <Form.Group as={Row}> 
+                        <Form.Label column lg={12} xl={2}>Sinópse</Form.Label>
                         <Col>
-                            <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSagaValue} />
+                            <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.synopsis = input}}/>
                         </Col>
-                    </Row>
+                    </Form.Group>
+                    <ComboBox header={'Acon. Parental'} list={this.props.parentAdvisoryList} onChange={this.SetParentAdvisory} />
+                    <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSaga} />
                     <Row>
                         <Col>
                             <Button variant="primary" type="submit" block>Submit</Button>

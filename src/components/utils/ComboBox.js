@@ -1,26 +1,27 @@
 import React from 'react'
-import { Form, InputGroup } from 'react-bootstrap'
+import { Row, Col, Form } from 'react-bootstrap'
 import Alert from './Alert'
 import { ReplaceComa } from '../../scripts/utils'
 
-const SagaCb = (props) => {
+const ComboBox = (props) => {
     if (props.list[0]) {
         let options = []
         props.list.forEach((element) => {
-            options.push(<option key={element.id} value={element.id}>{element.name ? ReplaceComa(element.name) : ReplaceComa(element.rate)}</option>)
+            let show = undefined
+            show = element.name ? ReplaceComa(element.name) : show
+            show = element.rate ? ReplaceComa(element.rate) : show
+            show = element.assignment ? ReplaceComa(element.assignment) : show
+            show = element.title ? ReplaceComa(element.title) : show
+            options.push(<option key={element.id} value={element.id}>{show} {element.id}</option>)
         })
         return (
-            <Form.Group>
-                <InputGroup className="mb-3">
-                    <InputGroup.Prepend>
-                        <InputGroup.Text>{props.header}</InputGroup.Text>
-                    </InputGroup.Prepend>
-                    <Form.Control as="select" onChange={props.onChange} required>
-                        {options}
-                    </Form.Control>
-                </InputGroup>
+            <Form.Group as={Row}> 
+                <Form.Label column lg={12} xl={2}>{props.header}</Form.Label>
+                <Col>
+                    <Form.Control as="select" onChange={props.onChange} required>{options}</Form.Control> 
+                </Col>
             </Form.Group>
         )
     } else return (<Alert visible={true} variant={'danger'} message={`Não existem ${props.header}, adicione uma.`} />)
 }
-export default SagaCb;
+export default ComboBox;

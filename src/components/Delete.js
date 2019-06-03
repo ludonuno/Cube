@@ -5,23 +5,22 @@ import { Get } from '../scripts/api'
 
 import Navbar from './CustomNavbar'
 
-import CreateBook from './Create/CreateBook'
-import CreateCelebrity from './Create/CreateCelebrity'
-import CreateCelebrityAssignment from './Create/CreateCelebrityAssignment'
-import CreateGame from './Create/CreateGame'
-import CreateMovie from './Create/CreateMovie'
-import CreateSeries from './Create/CreateSeries'
+// import CreateBook from './Delete/CreateBook'
+// import CreateCelebrity from './Delete/CreateCelebrity'
+// import CreateCelebrityAssignment from './Delete/CreateCelebrityAssignment'
+// import CreateGame from './Delete/CreateGame'
+// import CreateMovie from './Delete/CreateMovie'
+// import CreateSeries from './Delete/CreateSeries'
 
-import CreateAssignment from './Create/CreateAssignment'
-import CreateCompany from './Create/CreateCompany'
-import CreateEngine from './Create/CreateEngine'
-import CreateParentAdvisory from './Create/CreateParentAdvisory'
-import CreatePublishingCompany from './Create/CreatePublishingCompany'
-import CreateSaga from './Create/CreateSaga'
+// import CreateAssignment from './Delete/SecondaryForms/CreateAssignment'
+// import CreateCompany from './Delete/SecondaryForms/CreateCompany'
+// import CreateEngine from './Delete/SecondaryForms/CreateEngine'
+// import CreateParentAdvisory from './Delete/SecondaryForms/CreateParentAdvisory'
+// import CreatePublishingCompany from './Delete/SecondaryForms/CreatePublishingCompany'
+// import CreateSaga from './Delete/SecondaryForms/CreateSaga'
 
-import CreateVideo from './Create/CreateVideo'
 
-class Create extends Component {
+class Delete extends Component {
     constructor(props) {
         super(props);
         this.GetEngineList = this.GetEngineList.bind(this)        
@@ -35,13 +34,7 @@ class Create extends Component {
             engineList: [],
             companyList: [],
             parentAdvisoryList: [],
-            sagaList: [],
-            assignmentList: [],
-            celebrityList: [],
-            seriesList: [],
-            movieList: [],
-            bookList: [],
-            gameList: []
+            sagaList: []
         }
     }
     componentDidMount() {
@@ -50,13 +43,6 @@ class Create extends Component {
         this.GetCompanyList()
         this.GetParentAdvisoryList()
         this.GetSagaList()
-        
-        this.GetAssignmentList()
-        this.GetCelebrityList()
-        this.GetSeriesList()
-        this.GetBookList()
-        this.GetGameList()
-        this.GetMovieList()
     }
 
     GetPublisherList = () => {
@@ -90,45 +76,6 @@ class Create extends Component {
         })
     }
 
-    GetAssignmentList = () => {
-        let searchData = [ { table: 'Assignment', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ assignmentList: res.result })  
-        })
-    }
-    GetCelebrityList = () => {
-        let searchData = [ { table: 'Celebrity', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ celebrityList: res.result })  
-        })
-    }
-    GetSeriesList = () => {
-        let searchData = [ { table: 'Series', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ seriesList: res.result })  
-        })
-    }
-    GetBookList = () => {
-        let searchData = [ { table: 'Book', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ bookList: res.result })  
-        })
-    }
-    GetGameList = () => {
-        let searchData = [ { table: 'Game', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ gameList: res.result })  
-        })
-    }
-    GetMovieList = () => {
-        let searchData = [ { table: 'Movie', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ movieList: res.result })  
-        })
-    }
-
-
-
     render() { 
         if(!this.state.user || !this.state.user.canedit) {
             return (<Redirect to='/noMatch' />)
@@ -139,33 +86,33 @@ class Create extends Component {
                 <br/>
                 <Container>
                     <Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.setState({ key })}>
-                        <Tab eventKey="book" title="Livro"><CreateBook
+                        <Tab eventKey="book" title="Book"><CreateBook
                             publishingCompanyList={this.state.publishingCompanyList}
                             sagaList={this.state.sagaList}
                             onSubmit={this.GetPublisherList}
                         /></Tab>
-                        <Tab eventKey="game" title="Jogo"><CreateGame
+                        <Tab eventKey="game" title="Game"><CreateGame
                             engineList={this.state.engineList}
                             companyList={this.state.companyList}
                             parentAdvisoryList={this.state.parentAdvisoryList}
                             sagaList={this.state.sagaList}
                             onSubmit={this.GetEngineList}
                         /></Tab>
-                        <Tab eventKey="movie" title="Filme"><CreateMovie
+                        <Tab eventKey="movie" title="Movie"><CreateMovie
                             parentAdvisoryList={this.state.parentAdvisoryList}
                             sagaList={this.state.sagaList}
                             onSubmit={this.GetParentAdvisoryList}
                         /></Tab>
-                        <Tab eventKey="series" title="Séries"><CreateSeries
+                        <Tab eventKey="series" title="Series"><CreateSeries
                             parentAdvisoryList={this.state.parentAdvisoryList}
                             sagaList={this.state.sagaList}
                             onSubmit={this.GetParentAdvisoryList}
                         /></Tab>
-                        <Tab eventKey="parentAdvisory" title="Aconselhamento Parental"><CreateParentAdvisory
+                        <Tab eventKey="parentAdvisory" title="Parent Advisory"><CreateParentAdvisory
                             parentAdvisoryList={this.state.parentAdvisoryList}
                             onSubmit={this.GetParentAdvisoryList}
                         /></Tab>
-                        <Tab eventKey="company" title="Empresa"><CreateCompany
+                        <Tab eventKey="company" title="Company"><CreateCompany
                             companyList={this.state.companyList}
                             onSubmit={this.GetCompanyList}
                         /></Tab>
@@ -173,7 +120,7 @@ class Create extends Component {
                             engineList={this.state.engineList}
                             onSubmit={this.GetEngineList}
                         /></Tab>
-                        <Tab eventKey="publishingCompany" title="Editora"><CreatePublishingCompany
+                        <Tab eventKey="publishingCompany" title="Publishing Company"><CreatePublishingCompany
                             publishingCompanyList={this.state.publishingCompanyList}
                             onSubmit={this.GetPublisherList}
                         /></Tab>
@@ -181,24 +128,10 @@ class Create extends Component {
                             sagaList={this.state.sagaList}
                             onSubmit={this.GetSagaList}
                         /></Tab>
-                        <Tab eventKey="celebrity" title="Celebridade"><CreateCelebrity/></Tab>
-                        <Tab eventKey="assignment" title="Função"><CreateAssignment
+                        <Tab eventKey="celebrity" title="Celebrity"><CreateCelebrity/></Tab>
+                        <Tab eventKey="assignment" title="Assignment"><CreateAssignment
                             assignmentList={this.state.assignmentList}
                             onSubmit={this.GetAssignmentList}
-                        /></Tab>
-                        <Tab eventKey="createCelebrityAssignment" title="Funções das Celebridades"><CreateCelebrityAssignment
-                            assignmentList={this.state.assignmentList}
-                            celebrityList={this.state.celebrityList}
-                            bookList={this.state.bookList}
-                            gameList={this.state.gameList}
-                            movieList={this.state.movieList}
-                            seriesList={this.state.seriesList}
-                        /></Tab>
-                        <Tab eventKey="createVideo" title="Vídeos"><CreateVideo
-                            bookList={this.state.bookList}
-                            gameList={this.state.gameList}
-                            movieList={this.state.movieList}
-                            seriesList={this.state.seriesList}
                         /></Tab>
                     </Tabs>
                 </Container>
@@ -207,4 +140,4 @@ class Create extends Component {
     }
 }
  
-export default Create;
+export default Delete;

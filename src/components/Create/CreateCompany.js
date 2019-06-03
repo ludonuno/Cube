@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
-import { Create } from '../../../scripts/api'
-import Alert from '../../utils/Alert'
+import { Form, Button, Row, Col } from 'react-bootstrap'
+import { Create } from '../../scripts/api'
+import Alert from '../utils/Alert'
 
 class CreateCompany extends Component {
     constructor(props) {
@@ -15,9 +15,10 @@ class CreateCompany extends Component {
     }
     
     ChangeAlert(visible, message, variant) {
-        let alert = {...this.state.alert}
-        alert = { visible: visible, message: message, variant: variant}
-        this.setState({ alert })
+        this.setState({ alert: { visible: visible, message: message, variant: variant} })
+        setTimeout(() => {
+            this.setState({ alert: { visible: !visible, message: message, variant: variant} })
+        }, 5000)
     }
 
     AddCompany = (event) => {
@@ -44,21 +45,15 @@ class CreateCompany extends Component {
     render() {
         return ( 
             <React.Fragment>
-                <h3>Create Company</h3>
+                <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddCompany} ref={(form) => this.formRef = form}>
-                    <Row>
+                    <Form.Group as={Row}> 
+                        <Form.Label column lg={12} xl={2}>Nome</Form.Label>
                         <Col>
-                            <Form.Group>
-                                <InputGroup className="mb-3">
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Text>name</InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <Form.Control type="text" ref={(input) => {this.name = input}} required/>
-                                </InputGroup>
-                            </Form.Group>
+                            <Form.Control type="text" ref={(input) => {this.name = input}} required/> 
                         </Col>
-                    </Row>
+                    </Form.Group>
                     <Row>
                         <Col>
                             <Button variant="primary" type="submit" block>Submit</Button>

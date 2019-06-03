@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
-import { Create } from '../../../scripts/api'
-import Alert from '../../utils/Alert'
+import { Form, Button, Row, Col } from 'react-bootstrap'
+import { Create } from '../../scripts/api'
+import Alert from '../utils/Alert'
 
 class CreateSaga extends Component {
     constructor(props) {
@@ -15,9 +15,10 @@ class CreateSaga extends Component {
     }
     
     ChangeAlert(visible, message, variant) {
-        let alert = {...this.state.alert}
-        alert = { visible: visible, message: message, variant: variant}
-        this.setState({ alert })
+        this.setState({ alert: { visible: visible, message: message, variant: variant} })
+        setTimeout(() => {
+            this.setState({ alert: { visible: !visible, message: message, variant: variant} })
+        }, 5000)
     }
 
     AddSaga = (event) => {
@@ -45,33 +46,21 @@ class CreateSaga extends Component {
     render() {
         return ( 
             <React.Fragment>
-                <h3>Create Saga</h3>
+                <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddSaga} ref={(form) => this.formRef = form}>
-                    <Row>
+                    <Form.Group as={Row}> 
+                        <Form.Label column lg={12} xl={2}>Nome</Form.Label>
                         <Col>
-                            <Form.Group>
-                                <InputGroup className="mb-3">
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Text>Name</InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <Form.Control type="text" ref={(name) => {this.name = name}} required/>
-                                </InputGroup>
-                            </Form.Group>
+                            <Form.Control type="text" ref={(input) => {this.name = input}} required/>
                         </Col>
-                    </Row>
-                    <Row>
+                    </Form.Group>
+                    <Form.Group as={Row}> 
+                        <Form.Label column lg={12} xl={2}>Descrição</Form.Label>
                         <Col>
-                            <Form.Group>
-                                <InputGroup>
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Text>Description</InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <Form.Control as="textarea" rows="2" className="noresize" ref={(input) => {this.description = input}}/>
-                                </InputGroup>
-                            </Form.Group>
+                            <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.description = input}}/>
                         </Col>
-                    </Row>
+                    </Form.Group>
                     <Row>
                         <Col>
                             <Button variant="primary" type="submit" block>Submit</Button>
