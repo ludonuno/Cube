@@ -19,21 +19,26 @@ const HandleGetData = (data, callback) => {
             resolve(`${url}/${table}`)
         }
     }).then(
-        resolve => callback(resolve),
-        reject => callback(undefined)
+        resolve => callback(resolve, undefined),
+        reject => callback(undefined, reject)
     )
 }
 
 const Get = (searchData, callback) => {
     return new Promise((resolve, reject) => {
-        HandleGetData(searchData, (res) => {
-            request.get(res, (error, response, body) => {
-                resolve(JSON.parse(body))
-            })
+        HandleGetData(searchData, (res, rej) => {
+            if(res){
+                request.get(res, (error, response, body) => {
+                if(body)
+                    resolve(JSON.parse(body))
+                else
+                    reject('Erro na ligação à base de dados')
+                })
+            }
         })
     }).then(
-        resolve => callback(resolve),
-        reject => callback(undefined)
+        resolve => callback(resolve, undefined),
+        reject => callback(undefined, reject)
     )
 }
 
@@ -49,22 +54,26 @@ const HandleCreateData = (data, callback) => {
         })
         resolve(`${url}/${table}?${fieldsData}`)
     }).then(
-        resolve => callback(resolve),
-        reject => callback(reject)
+        resolve => callback(resolve, undefined),
+        reject => callback(undefined, reject)
     )
 }
 
 const Create = (insertData, callback) => {
     return new Promise((resolve, reject) => {
-        HandleCreateData(insertData, (res) => {
-            console.log(res)
-            request.post(res, (error, response, body) => {
-                resolve(JSON.parse(body))
-            })
+        HandleCreateData(insertData, (res, rej) => {
+            if(res){
+                request.post(res, (error, response, body) => {
+                if(body)
+                    resolve(JSON.parse(body))
+                else
+                    reject('Erro na ligação à base de dados')
+                })
+            }
         })
     }).then(
-        resolve => callback(resolve),
-        reject => callback(undefined)
+        resolve => callback(resolve, undefined),
+        reject => callback(undefined, reject)
     )
 }
 

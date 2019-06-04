@@ -27,9 +27,9 @@ class CreateCelebrityAssignment extends Component {
             bookId: undefined,
             gameId: undefined,
             movieId: undefined,
-            seriesId: undefined
-            // seasonId: undefined,
-            // episodeId: undefined
+            seriesId: undefined,
+            seasonId: undefined,
+            episodeId: undefined
         }
     }
 
@@ -49,12 +49,16 @@ class CreateCelebrityAssignment extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res) => {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
+            Create(insertData, (res, rej) => {
+                if(res) {  
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.formRefBook.reset()
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
                 } else {
-                    this.formRefBook.reset()
-                    this.ChangeAlert(true, res.result.message, 'success')
+                    this.ChangeAlert(true, `${rej}`, 'danger')
                 }
             })
         } else {
@@ -74,12 +78,16 @@ class CreateCelebrityAssignment extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res) => {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
+            Create(insertData, (res, rej) => {
+                if(res) {  
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.formRefGame.reset()
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
                 } else {
-                    this.formRefGame.reset()
-                    this.ChangeAlert(true, res.result.message, 'success')
+                    this.ChangeAlert(true, `${rej}`, 'danger')
                 }
             })
         } else {
@@ -99,12 +107,16 @@ class CreateCelebrityAssignment extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res) => {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
+            Create(insertData, (res, rej) => {
+                if(res) {  
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.formRefMovie.reset()
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
                 } else {
-                    this.formRefMovie.reset()
-                    this.ChangeAlert(true, res.result.message, 'success')
+                    this.ChangeAlert(true, `${rej}`, 'danger')
                 }
             })
         } else {
@@ -124,12 +136,44 @@ class CreateCelebrityAssignment extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res) => {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
+            Create(insertData, (res, rej) => {
+                if(res) {  
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.formRefSeries.reset()
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
                 } else {
-                    this.formRefSeries.reset()
-                    this.ChangeAlert(true, res.result.message, 'success')
+                    this.ChangeAlert(true, `${rej}`, 'danger')
+                }
+            })
+        } else {
+            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
+        }
+    }
+    AddVideoSeason = (event) => {
+        event.preventDefault()
+        if(this.props.seriesList[0] && this.props.seasonList[0]) {
+            let insertData = [
+                { table: 'VideoSeasons', fieldData: [ 
+                    {field: 'userEmail', data: this.state.user.email},
+                    {field: 'userPassword', data: this.state.user.password},
+                    {field: 'link', data: this.linkSeries.value},
+                    {field: 'seriesId', data: this.state.seriesId ? this.state.seriesId : this.props.seriesList[0].id},
+                ] }
+            ]
+            this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
+            Create(insertData, (res, rej) => {
+                if(res) {  
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.formRefSeries.reset()
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
+                } else {
+                    this.ChangeAlert(true, `${rej}`, 'danger')
                 }
             })
         } else {
@@ -140,44 +184,23 @@ class CreateCelebrityAssignment extends Component {
     SetBook = (event) => {
         this.setState({ bookId: Number(event.target.value) })
     }
-
     SetGame = (event) => {
         this.setState({ gameId: Number(event.target.value) })
     }
-
     SetMovie = (event) => {
         this.setState({ movieId: Number(event.target.value) })
     }
-
     SetSeries = (event) => {
         this.setState({ seriesId: Number(event.target.value) })
-        this.GetSeason()
+        this.props.GetSeasonList(Number(event.target.value))
     }
-    // SetSeason = (event) => {
-    //     this.setState({ seasonId: Number(event.target.value) })
-    //     this.GetEpisode()
-    // }
-    // SetEpisode = (event) => {
-    //     this.setState({ episodeId: Number(event.target.value) })
-    // }
-
-    // GetSeason = (value) => {
-    //     let searchData = [ { table: 'Season', fieldData: [ 
-    //         {field: 'seriesId', data: value ? value : this.state.seriesId}
-    //     ] } ]
-    //     Get(searchData,(res) => {
-    //         if(res.result) this.setState({ seasonList: res.result })  
-    //     })
-    // }
-
-    // GetEpisode = () => {
-    //     let searchData = [ { table: 'Episode', fieldData: [ 
-    //         {field: 'seasonId', data: this.state.seasonId}
-    //     ] } ]
-    //     Get(searchData,(res) => {
-    //         if(res.result) this.setState({ episodeList: res.result })  
-    //     })
-    // }
+    SetSeason = (event) => {
+        this.setState({ seasonId: Number(event.target.value) })
+        this.props.GetEpisodeList(Number(event.target.value))
+    }
+    SetEpisode = (event) => {
+        this.setState({ episodeId: Number(event.target.value) })
+    }
 
     ClickEvent = () => {
         if(this.accordionPage.id === 'accordionBook')
@@ -188,12 +211,14 @@ class CreateCelebrityAssignment extends Component {
             this.ResetForm(true, true, false, true, true, true)
         if(this.accordionPage.id === 'accordionSeries')
             this.ResetForm(true, true, true, false, true, true)
-        // if(this.accordionPage.id === 'accordionSeason') {
-        //     this.ResetForm(true, true, true, true, false, true)
-        //     this.GetSeason(this.props.seriesList[0].id)
-        // }
-        // if(this.accordionPage.id === 'accordionEpisode')
-        //     this.ResetForm(true, true, true, true, true, false)
+        if(this.accordionPage.id === 'accordionSeason') {
+            this.ResetForm(true, true, true, true, false, true)
+            this.props.GetSeasonList(this.props.seriesList[0].id)
+        }
+        if(this.accordionPage.id === 'accordionEpisode') {
+            this.ResetForm(true, true, true, true, true, false)
+            this.props.GetSeasonList(this.props.seriesList[0].id)
+        }
     }
 
     ResetForm = (book, game, movie, series, season, episode) => {
@@ -201,21 +226,44 @@ class CreateCelebrityAssignment extends Component {
         if (game) this.formRefGame.reset()
         if (movie) this.formRefMovie.reset()
         if (series) this.formRefSeries.reset()
-        // if (season) this.formRefSeason.reset()
-       // if (episode) this.formRefEpisode.reset()
+        if (season) this.formRefSeason.reset()
+        if (episode) this.formRefEpisode.reset()
 
         this.setState({bookId: this.props.bookList[0] ? this.props.bookList[0].id : undefined})
         this.setState({gameId: this.props.gameList[0] ? this.props.gameList[0].id : undefined})
         this.setState({movieId: this.props.movieList[0] ? this.props.movieList[0].id : undefined})
         this.setState({seriesId: this.props.seriesList[0] ? this.props.seriesList[0].id : undefined})
-        // this.setState({seasonId: this.props.seasonList[0] ? this.props.seasonList[0].id : undefined})
-        //this.setState({episodeId: this.props.episodeList[0] ? this.props.episodeList[0].id : undefined})
+        this.setState({seasonId: this.props.seasonList[0] ? this.props.seasonList[0].id : undefined})
+        this.setState({episodeId: this.props.episodeList[0] ? this.props.episodeList[0].id : undefined})
     }
 
-    // ShowComboBoxSeason = () => {
-    //     if(this.state.seriesId)
-    //         return<ComboBox header={'Season'} list={this.seasonList} onChange={this.SetSeason} />
-    // }
+    HasSeasons = () => {
+        if(this.props.seasonList[0])
+            return (<ComboBox header={'Temporada'} list={this.props.seasonList} onChange={this.SetSeason} />)
+        else
+            return (
+                <Form.Group as={Row}> 
+                    <Form.Label column lg={12} xl={2}>Temporada</Form.Label>
+                    <Col>
+                        <Alert variant={'danger'} message={'A série selecionada não tem temporadas'} visible={true} />
+                    </Col>
+                </Form.Group>
+            )
+    }
+
+    HasEpisodes = () => {
+        if(this.props.episodeList[0])
+            return (<ComboBox header={'Episódio'} list={this.props.episodeList} onChange={this.SetEpisode} />)
+        else
+            return (
+                <Form.Group as={Row}> 
+                    <Form.Label column lg={12} xl={2}>Temporada</Form.Label>
+                    <Col>
+                        <Alert variant={'danger'} message={'A temporada selecionada não tem episódios'} visible={true} />
+                    </Col>
+                </Form.Group>
+            )
+    }
 
     render() { 
         return ( 
@@ -315,11 +363,11 @@ class CreateCelebrityAssignment extends Component {
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>
-                    {/* <Card>
+                    <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="4" id="accordionSeason" ref={(accordion) => this.accordionPage = accordion} onClick={this.ClickEvent}>
                             Adicionar um vídeo a uma Temporada
                         </Accordion.Toggle>
-                        <Accordion.Collapse eventKey="3">
+                        <Accordion.Collapse eventKey="4">
                             <Card.Body>
                                 <Form onSubmit={this.AddVideoSeason} ref={(form) => this.formRefSeason = form}>
                                     <Form.Group as={Row}> 
@@ -329,7 +377,7 @@ class CreateCelebrityAssignment extends Component {
                                         </Col>
                                     </Form.Group>
                                     <ComboBox header={'Séries'} list={this.props.seriesList} onChange={this.SetSeries} />
-                                    <this.ShowComboBoxSeason />
+                                    <this.HasSeasons />
                                     <Row>
                                         <Col>
                                             <Button variant="primary" type="submit" block>Submit</Button>
@@ -338,23 +386,23 @@ class CreateCelebrityAssignment extends Component {
                                 </Form>
                             </Card.Body>
                         </Accordion.Collapse>
-                    </Card> */}
-                    {/* <Card>
+                    </Card>
+                    <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="5" id="accordionEpisode" ref={(accordion) => this.accordionPage = accordion} onClick={this.ClickEvent}>
                             Adicionar um vídeo a um Episódio
                         </Accordion.Toggle>
-                        <Accordion.Collapse eventKey="3">
+                        <Accordion.Collapse eventKey="5">
                             <Card.Body>
-                                <Form onSubmit={this.AddVideoSeries} ref={(form) => this.formRefSeries = form}>
+                                <Form onSubmit={this.AddVideoEpisode} ref={(form) => this.formRefEpisode = form}>
                                     <Form.Group as={Row}> 
                                         <Form.Label column lg={12} xl={2}>Link do vídeo</Form.Label>
                                         <Col>
                                             <Form.Control type="text" ref={(input) => {this.link = input}} required/>
                                         </Col>
                                     </Form.Group>
-                                    <this.ShowComboBoxSeason />
-                                    <this.ShowComboBoxEpisode />
-                                    <ComboBox header={'Séries'} list={this.episodeList} onChange={this.SetEpisode} />
+                                    <ComboBox header={'Séries'} list={this.props.seriesList} onChange={this.SetSeries} />
+                                    <this.HasSeasons />
+                                    <this.HasEpisodes />
                                     <Row>
                                         <Col>
                                             <Button variant="primary" type="submit" block>Submit</Button>
@@ -363,7 +411,7 @@ class CreateCelebrityAssignment extends Component {
                                 </Form>
                             </Card.Body>
                         </Accordion.Collapse>
-                    </Card> */}
+                    </Card>
                 </Accordion>
             </React.Fragment>
         )

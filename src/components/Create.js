@@ -72,83 +72,104 @@ class Create extends Component {
     GetPublishingCompanyList = () => {
         let searchData = [ { table: 'PublishingCompany', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ publishingCompanyList: res.result })  
+            if(res && res.result) this.setState({ publishingCompanyList: res.result })  
         })
     }
     GetEngineList = () => {
         let searchData = [ { table: 'Engine', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ engineList: res.result })  
+            if(res && res.result) this.setState({ engineList: res.result })  
         })
     }
     GetCompanyList = () => {
         let searchData = [ { table: 'Company', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ companyList: res.result })  
+            if(res && res.result) this.setState({ companyList: res.result })  
         })
     }
     GetParentAdvisoryList = () => {
         let searchData = [ { table: 'ParentAdvisory', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ parentAdvisoryList: res.result })  
+            if(res && res.result) this.setState({ parentAdvisoryList: res.result })  
         })
     }
     GetSagaList = () => {
         let searchData = [ { table: 'Saga', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ sagaList: res.result })  
+            if(res && res.result) this.setState({ sagaList: res.result })  
         })
     }
 
     GetAssignmentList = () => {
         let searchData = [ { table: 'Assignment', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ assignmentList: res.result })  
+            if(res && res.result) this.setState({ assignmentList: res.result })  
         })
     }
     GetCelebrityList = () => {
         let searchData = [ { table: 'Celebrity', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ celebrityList: res.result })  
+            if(res && res.result) this.setState({ celebrityList: res.result })  
         })
     }
+
+    GetEpisodeList = (seasonId) => {
+        let searchData = [ { table: 'Episode', fieldData: [
+            { field: 'seasonId', data: seasonId }
+        ] } ]
+        Get(searchData,(res) => {
+            if(res && res.result) this.setState({ episodeList: res.result })
+            else this.setState({ episodeList: [] })
+        })
+    }
+
+    GetSeasonList = (seriesId) => {
+        let searchData = [ { table: 'Season', fieldData: [
+            { field: 'seriesId', data: seriesId }
+        ] } ]
+        Get(searchData,(res) => {
+            if(res && res.result) {
+                this.setState({ seasonList: res.result })  
+                if(res.result[0])
+                    this.GetEpisodeList(res.result[0].id)
+            } else {
+                this.setState({ seasonList: [] })
+            }
+        })
+    }
+
     GetSeriesList = () => {
         let searchData = [ { table: 'Series', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ seriesList: res.result })  
-        })
-    }
-    GetSeasonList = (seriesId) => {
-        let searchData = [ { table: 'Season', fieldData: [
-            {field: 'seriesId', data: seriesId}
-        ] } ]
-        Get(searchData,(res) => {
-            console.log(res)
-            if(res.result) this.setState({ seasonList: res.result })  
+            if(res && res.result) {
+                this.setState({ seriesList: res.result })
+                if(res.result[0])
+                    this.GetSeasonList(res.result[0].id)
+            }
         })
     }
     GetBookList = () => {
         let searchData = [ { table: 'Book', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ bookList: res.result })  
+            if(res && res.result) this.setState({ bookList: res.result })  
         })
     }
     GetGameList = () => {
         let searchData = [ { table: 'Game', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ gameList: res.result })  
+            if(res && res.result) this.setState({ gameList: res.result })  
         })
     }
     GetMovieList = () => {
         let searchData = [ { table: 'Movie', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ movieList: res.result })  
+            if(res && res.result) this.setState({ movieList: res.result })  
         })
     }
     GetGenresList = () => {
         let searchData = [ { table: 'Genres', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ genresList: res.result })  
+            if(res && res.result) this.setState({ genresList: res.result })  
         })
     }
 
@@ -188,7 +209,7 @@ class Create extends Component {
                         <Tab eventKey="season" title="Temporada"><CreateSeason
                             seriesList={this.state.seriesList}
                         /></Tab>
-                        <Tab eventKey="episode" title="Episode"><CreateEpisode
+                        <Tab eventKey="episode" title="Episódio"><CreateEpisode
                             seriesList={this.state.seriesList}
                             seasonList={this.state.seasonList}
                             GetSeasonList={this.GetSeasonList}
@@ -227,6 +248,10 @@ class Create extends Component {
                             gameList={this.state.gameList}
                             movieList={this.state.movieList}
                             seriesList={this.state.seriesList}
+                            seasonList={this.state.seasonList}
+                            episodeList={this.state.episodeList}
+                            GetSeasonList={this.GetSeasonList}
+                            GetEpisodeList={this.GetEpisodeList}
                         /></Tab>
                         <Tab eventKey="genres" title="Géneros"><CreateGenres
                             onSubmit={this.GetGenresList}

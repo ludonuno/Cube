@@ -35,12 +35,16 @@ class CreateSeason extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res) => {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
+            Create(insertData, (res, rej) => {
+                if(res) {
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.ResetForm()
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
                 } else {
-                    this.ResetForm()
-                    this.ChangeAlert(true, res.result.message, 'success')
+                    this.ChangeAlert(true, `${rej}`, 'danger')
                 }
             })
         } else {
@@ -73,6 +77,7 @@ class CreateSeason extends Component {
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Data</Form.Label>
                         <Col>
+                            {/* TODO: ADICIONAR MIN */}
                             <Form.Control type="date" ref={(input) => {this.releaseDate = input}} required/>
                         </Col>
                     </Form.Group>

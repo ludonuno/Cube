@@ -50,12 +50,16 @@ class CreateRelateAssignment extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res) => {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
+            Create(insertData, (res, rej) => {
+                if(res) {
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.ResetForm(true, false, false, false)
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
                 } else {
-                    this.ResetForm(true, false, false, false)
-                    this.ChangeAlert(true, res.result.message, 'success')
+                    this.ChangeAlert(true, `${rej}`, 'danger')
                 }
             })
         } else {
@@ -76,12 +80,16 @@ class CreateRelateAssignment extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res) => {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
+            Create(insertData, (res, rej) => {
+                if(res) {
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.ResetForm(false, true, false, false)
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
                 } else {
-                    this.ResetForm(false, true, false, false)
-                    this.ChangeAlert(true, res.result.message, 'success')
+                    this.ChangeAlert(true, `${rej}`, 'danger')
                 }
             })
         } else {
@@ -102,12 +110,16 @@ class CreateRelateAssignment extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res) => {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
+            Create(insertData, (res, rej) => {
+                if(res) {
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.ResetForm(false, false, true, false)
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
                 } else {
-                    this.ResetForm(false, false, true, false)
-                    this.ChangeAlert(true, res.result.message, 'success')
+                    this.ChangeAlert(true, `${rej}`, 'danger')
                 }
             })
         } else {
@@ -128,12 +140,16 @@ class CreateRelateAssignment extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res) => {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
+            Create(insertData, (res, rej) => {
+                if(res) {
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.ResetForm(false, false, false, true)
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
                 } else {
-                    this.ResetForm(false, false, false, true)
-                    this.ChangeAlert(true, res.result.message, 'success')
+                    this.ChangeAlert(true, `${rej}`, 'danger')
                 }
             })
         } else {
