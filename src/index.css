@@ -19,3 +19,9 @@ code {
 .align-right {
   margin-left: auto
 }
+.fullpage {
+  height: 100vh;
+}
+.footer {
+  margin: 0
+}

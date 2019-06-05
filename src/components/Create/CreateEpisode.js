@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
-import { Create, Get } from '../../scripts/api'
+import { Create } from '../../scripts/api'
 
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/ComboBox'
