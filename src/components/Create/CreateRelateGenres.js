@@ -36,12 +36,16 @@ class CreateRelateGenres extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res) => {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
+            Create(insertData, (res, rej) => {
+                if(res) {
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.formRefBook.reset()
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
                 } else {
-                    this.formRefBook.reset()
-                    this.ChangeAlert(true, res.result.message, 'success')
+                    this.ChangeAlert(true, `${rej}`, 'danger')
                 }
             })
         } else {
@@ -61,12 +65,16 @@ class CreateRelateGenres extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res) => {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
+            Create(insertData, (res, rej) => {
+                if(res) {
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.formRefGame.reset()
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
                 } else {
-                    this.formRefGame.reset()
-                    this.ChangeAlert(true, res.result.message, 'success')
+                    this.ChangeAlert(true, `${rej}`, 'danger')
                 }
             })
         } else {
@@ -86,12 +94,16 @@ class CreateRelateGenres extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res) => {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
+            Create(insertData, (res, rej) => {
+                if(res) {
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.formRefMovie.reset()
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
                 } else {
-                    this.formRefMovie.reset()
-                    this.ChangeAlert(true, res.result.message, 'success')
+                    this.ChangeAlert(true, `${rej}`, 'danger')
                 }
             })
         } else {
@@ -111,12 +123,16 @@ class CreateRelateGenres extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res) => {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
+            Create(insertData, (res, rej) => {
+                if(res) {
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.formRefSeries.reset()
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
                 } else {
-                    this.formRefSeries.reset()
-                    this.ChangeAlert(true, res.result.message, 'success')
+                    this.ChangeAlert(true, `${rej}`, 'danger')
                 }
             })
         } else {
