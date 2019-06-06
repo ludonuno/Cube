@@ -31,22 +31,6 @@ class Home extends Component {
         }
     }
 
-    acomponentDidMount() {
-        this.GetPublishingCompanyList()
-        this.GetEngineList()
-        this.GetCompanyList()
-        this.GetParentAdvisoryList()
-        this.GetSagaList()
-        
-        this.GetAssignmentList()
-        this.GetCelebrityList()
-        this.GetSeriesList()
-        this.GetBookList()
-        this.GetGameList()
-        this.GetMovieList()
-        this.GetGenresList()
-    }
-
     aGetPublishingCompanyList = () => {
         let searchData = [ { table: 'PublishingCompany', fieldData: undefined } ]
         Get(searchData,(res) => {
@@ -59,10 +43,14 @@ class Home extends Component {
             if(res.result) this.setState({ engineList: res.result })  
         })
     }
-    GetCompanyList = () => {
-        let searchData = [ { table: 'Company', fieldData: undefined } ]
+    GetCompanyList = (value) => {
+        let searchData = [ { table: 'Company', fieldData: [
+            {field: 'name', data: value},
+        ] } ]
+        console.log(searchData)
         Get(searchData,(res) => {
-            if(res.result) this.setState({ companyList: res.result })  
+            if(res && res.result) this.setState({ companyList: res.result }) 
+            else  this.setState({ companyList: [] })
         })
     }
     GetParentAdvisoryList = () => {
@@ -122,21 +110,38 @@ class Home extends Component {
     }
 
     HasSearched = () => {
-        if(this.state.searched)
-            return(
+        //var toRender
+        if(this.state.companyList[0]) {
+            return (
                 <div>
-                    {this.state.searched}
-                </div>
+                    {JSON.stringify(this.state.companyList)}
+                </div>   
             )
-        else   
-            return(
-                <div>Pesquise algo na barra de pesquisa</div>
+        } else {
+            return (
+                <div>
+                    Não foram encontrados resultados da pesquisa: {this.state.searched}
+                </div>   
             )
+        }
+        // if(this.state.searched)
+        //     return(
+        //         <div>
+        //             {this.state.searched}
+        //         </div>
+        //     )
+        // else   
+        //     return(
+        //         <div>Pesquise algo na barra de pesquisa</div>
+        //     )
     }
 
     Search(event) {
         event.preventDefault()
         this.setState({ searched: this.search.value })
+        //executar os gets
+        this.GetCompanyList(this.search.value)
+        
     }
     
     render() { 

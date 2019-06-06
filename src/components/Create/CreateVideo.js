@@ -17,7 +17,6 @@ class CreateCelebrityAssignment extends Component {
         this.SetGame = this.SetGame.bind(this)
         this.SetMovie = this.SetMovie.bind(this)
         this.SetSeries = this.SetSeries.bind(this)
-        this.ClickEvent = this.ClickEvent.bind(this)
         this.ResetForm = this.ResetForm.bind(this)
         this.state = { 
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
@@ -202,32 +201,16 @@ class CreateCelebrityAssignment extends Component {
         this.setState({ episodeId: Number(event.target.value) })
     }
 
-    ClickEvent = () => {
-        if(this.accordionPage.id === 'accordionBook')
-            this.ResetForm(false, true, true, true, true, true)
-        if(this.accordionPage.id === 'accordionGame')
-            this.ResetForm(true, false, true, true, true, true)
-        if(this.accordionPage.id === 'accordionMovie')
-            this.ResetForm(true, true, false, true, true, true)
-        if(this.accordionPage.id === 'accordionSeries')
-            this.ResetForm(true, true, true, false, true, true)
-        if(this.accordionPage.id === 'accordionSeason') {
-            this.ResetForm(true, true, true, true, false, true)
-            this.props.GetSeasonList(this.props.seriesList[0].id)
-        }
-        if(this.accordionPage.id === 'accordionEpisode') {
-            this.ResetForm(true, true, true, true, true, false)
-            this.props.GetSeasonList(this.props.seriesList[0].id)
-        }
-    }
+    ResetForm = () => {
+        this.formRefBook.reset()
+        this.formRefGame.reset()
+        this.formRefMovie.reset()
+        this.formRefSeries.reset()
+        if (this.formRefSeason) this.formRefSeason.reset()
+        if (this.formRefEpisode) this.formRefEpisode.reset()
 
-    ResetForm = (book, game, movie, series, season, episode) => {
-        if (book) this.formRefBook.reset()
-        if (game) this.formRefGame.reset()
-        if (movie) this.formRefMovie.reset()
-        if (series) this.formRefSeries.reset()
-        if (season) this.formRefSeason.reset()
-        if (episode) this.formRefEpisode.reset()
+        this.props.GetSeasonList(this.props.seriesList[0].id)
+        if(this.props.seasonList[0]) this.props.GetEpisodeList(this.props.seasonList[0].id)
 
         this.setState({bookId: this.props.bookList[0] ? this.props.bookList[0].id : undefined})
         this.setState({gameId: this.props.gameList[0] ? this.props.gameList[0].id : undefined})
@@ -272,7 +255,7 @@ class CreateCelebrityAssignment extends Component {
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Accordion defaultActiveKey="0">
                     <Card>
-                        <Accordion.Toggle as={Card.Header} eventKey="0"  id="accordionBook" ref={(accordion) => this.accordionPage = accordion} onClick={this.ClickEvent}>
+                        <Accordion.Toggle as={Card.Header} eventKey="0"  id="accordionBook" ref={(accordion) => this.accordionPage = accordion} onClick={this.ResetForm}>
                             Adicionar um vídeo a um Livro
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="0">
@@ -295,7 +278,7 @@ class CreateCelebrityAssignment extends Component {
                         </Accordion.Collapse>
                     </Card>
                     <Card>
-                        <Accordion.Toggle as={Card.Header} eventKey="1"  id="accordionGame" ref={(accordion) => this.accordionPage = accordion} onClick={this.ClickEvent}>
+                        <Accordion.Toggle as={Card.Header} eventKey="1"  id="accordionGame" ref={(accordion) => this.accordionPage = accordion} onClick={this.ResetForm}>
                             Adicionar um vídeo a um Jogo
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="1">
@@ -318,7 +301,7 @@ class CreateCelebrityAssignment extends Component {
                         </Accordion.Collapse>
                     </Card>
                     <Card>
-                        <Accordion.Toggle as={Card.Header} eventKey="2" id="accordionMovie" ref={(accordion) => this.accordionPage = accordion} onClick={this.ClickEvent}>
+                        <Accordion.Toggle as={Card.Header} eventKey="2" id="accordionMovie" ref={(accordion) => this.accordionPage = accordion} onClick={this.ResetForm}>
                             Adicionar um vídeo a um Filme
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="2">
@@ -341,7 +324,7 @@ class CreateCelebrityAssignment extends Component {
                         </Accordion.Collapse>
                     </Card>
                     <Card>
-                        <Accordion.Toggle as={Card.Header} eventKey="3" id="accordionSeries" ref={(accordion) => this.accordionPage = accordion} onClick={this.ClickEvent}>
+                        <Accordion.Toggle as={Card.Header} eventKey="3" id="accordionSeries" ref={(accordion) => this.accordionPage = accordion} onClick={this.ResetForm}>
                             Adicionar um vídeo a uma Série
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="3">
@@ -364,7 +347,7 @@ class CreateCelebrityAssignment extends Component {
                         </Accordion.Collapse>
                     </Card>
                     <Card>
-                        <Accordion.Toggle as={Card.Header} eventKey="4" id="accordionSeason" ref={(accordion) => this.accordionPage = accordion} onClick={this.ClickEvent}>
+                        <Accordion.Toggle as={Card.Header} eventKey="4" id="accordionSeason" ref={(accordion) => this.accordionPage = accordion} onClick={this.ResetForm}>
                             Adicionar um vídeo a uma Temporada
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="4">
@@ -388,7 +371,7 @@ class CreateCelebrityAssignment extends Component {
                         </Accordion.Collapse>
                     </Card>
                     <Card>
-                        <Accordion.Toggle as={Card.Header} eventKey="5" id="accordionEpisode" ref={(accordion) => this.accordionPage = accordion} onClick={this.ClickEvent}>
+                        <Accordion.Toggle as={Card.Header} eventKey="5" id="accordionEpisode" ref={(accordion) => this.accordionPage = accordion} onClick={this.ResetForm}>
                             Adicionar um vídeo a um Episódio
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="5">

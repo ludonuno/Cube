@@ -134,6 +134,7 @@ class Create extends Component {
                     this.GetEpisodeList(res.result[0].id)
             } else {
                 this.setState({ seasonList: [] })
+                this.setState({ episodeList: [] })
             }
         })
     }

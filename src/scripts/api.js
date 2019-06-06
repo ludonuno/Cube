@@ -19,7 +19,9 @@ const HandleGetData = (data, callback) => {
             resolve(`${url}/${table}`)
         }
     }).then(
-        resolve => callback(resolve, undefined),
+        resolve => {
+            callback(resolve, undefined)
+        },
         reject => callback(undefined, reject)
     )
 }
