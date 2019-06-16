@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { Container, Form, Row, Col, Card, Button } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 
-import Navbar from './CustomNavbar'
-import Footer from './Footer'
-import { Get } from '../scripts/api'
+import Navbar from '../CustomNavbar'
+import Footer from '../Footer'
+import { Get } from '../../scripts/api'
 //Faz as pesquisas aqui que depois são direcionadas para as respetivas páginas
 
 class Home extends Component {

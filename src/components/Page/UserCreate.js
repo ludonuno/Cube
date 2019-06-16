@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
-import { Create } from '../scripts/api'
+import { Create } from '../../scripts/api'
 import { Redirect } from 'react-router-dom'
 
-import Alert from './utils/Alert'
-import Navbar from './CustomNavbar'
+import Alert from '../utils/Alert'
+import Navbar from '../CustomNavbar'
 
 class UserCreate extends Component {
     constructor(props) {

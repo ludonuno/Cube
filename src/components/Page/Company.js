@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Container } from 'react-bootstrap'
-import { Get } from '../scripts/api'
+import { Get } from '../../scripts/api'
 
-import Navbar from './CustomNavbar'
+import Navbar from '../CustomNavbar'
 class Company extends Component {
     constructor(props) {
         super(props);

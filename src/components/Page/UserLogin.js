@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
-import { Get } from '../scripts/api'
-import Alert from './utils/Alert'
+import { Get } from '../../scripts/api'
+import Alert from '../utils/Alert'
 
-import Navbar from './CustomNavbar'
+import Navbar from '../CustomNavbar'
 
 class UserLogin extends Component {
     constructor(props) {

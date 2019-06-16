@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Container } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 
-import Navbar from './CustomNavbar'
+import Navbar from '../CustomNavbar'
 
 class UserPage extends Component {
     constructor(props) {

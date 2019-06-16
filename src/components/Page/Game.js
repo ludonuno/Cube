@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Jumbotron } from 'react-bootstrap'
 
-import Navbar from './CustomNavbar'
+import Navbar from '../CustomNavbar'
 
-class Series extends Component {
+class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -15,11 +15,11 @@ class Series extends Component {
             <React.Fragment>
                 <Navbar props={this.props}/>
                 <Jumbotron>
-                    Series
+                    Game
                 </Jumbotron>
-            </React.Fragment>   
+            </React.Fragment>      
         );
     }
 }
  
-export default Series;
+export default Game;

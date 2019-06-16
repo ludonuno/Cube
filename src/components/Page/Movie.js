@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Jumbotron } from 'react-bootstrap'
 
-import Navbar from './CustomNavbar'
+import Navbar from '../CustomNavbar'
 
 class Movie extends Component {
     constructor(props) {
