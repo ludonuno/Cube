@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { Container, Form, Row, Col, Jumbotron } from 'react-bootstrap'
+import { Container, Form, Row, Col, Card, Button } from 'react-bootstrap'
+import { Redirect } from 'react-router-dom'
 
 import Navbar from './CustomNavbar'
+import Footer from './Footer'
 import { Get } from '../scripts/api'
 //Faz as pesquisas aqui que depois são direcionadas para as respetivas páginas
 
@@ -31,14 +33,18 @@ class Home extends Component {
         }
     }
 
-    aGetPublishingCompanyList = () => {
-        let searchData = [ { table: 'PublishingCompany', fieldData: undefined } ]
+    GetPublishingCompanyList = (value) => {
+        let searchData = [ { table: 'PublishingCompany', fieldData: [
+            {field: 'name', data: value},
+        ] } ]
         Get(searchData,(res) => {
             if(res.result) this.setState({ publishingCompanyList: res.result })  
         })
     }
-    GetEngineList = () => {
-        let searchData = [ { table: 'Engine', fieldData: undefined } ]
+    GetEngineList = (value) => {
+        let searchData = [ { table: 'Engine', fieldData: [
+            {field: 'name', data: value},
+        ] } ]
         Get(searchData,(res) => {
             if(res.result) this.setState({ engineList: res.result })  
         })
@@ -47,20 +53,15 @@ class Home extends Component {
         let searchData = [ { table: 'Company', fieldData: [
             {field: 'name', data: value},
         ] } ]
-        console.log(searchData)
         Get(searchData,(res) => {
             if(res && res.result) this.setState({ companyList: res.result }) 
             else  this.setState({ companyList: [] })
         })
     }
-    GetParentAdvisoryList = () => {
-        let searchData = [ { table: 'ParentAdvisory', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ parentAdvisoryList: res.result })  
-        })
-    }
-    GetSagaList = () => {
-        let searchData = [ { table: 'Saga', fieldData: undefined } ]
+    GetSagaList = (value) => {
+        let searchData = [ { table: 'Saga', fieldData: [
+            {field: 'name', data: value},
+        ] } ]
         Get(searchData,(res) => {
             if(res.result) this.setState({ sagaList: res.result })  
         })
@@ -84,8 +85,10 @@ class Home extends Component {
             if(res.result) this.setState({ seriesList: res.result })  
         })
     }
-    GetBookList = () => {
-        let searchData = [ { table: 'Book', fieldData: undefined } ]
+    GetBookList = (value) => {
+        let searchData = [ { table: 'Book', fieldData: [
+            {field: 'title', data: value},
+        ] } ]
         Get(searchData,(res) => {
             if(res.result) this.setState({ bookList: res.result })  
         })
@@ -109,14 +112,41 @@ class Home extends Component {
         })
     }
 
+    RenderCompanyList = () => {
+        let toRender = []
+        this.state.companyList.forEach(company => {
+            toRender.push(
+                <Col lg={3}>
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>{company.name}</Card.Title>
+                            <Card.Text>Visite a página de {company.name}</Card.Text>
+                            <Button variant="primary" onClick={() => {console.log('ola'); console.log('adeus')} }>Go somewhere</Button>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                
+            )
+        })
+        return (
+            <React.Fragment>
+                {}
+                <Row>
+                    {toRender}
+                    {toRender}
+                </Row>
+                <Row>
+                    {toRender}
+                    {toRender}
+                </Row>
+            </React.Fragment>
+        )
+    }
+
     HasSearched = () => {
         //var toRender
         if(this.state.companyList[0]) {
-            return (
-                <div>
-                    {JSON.stringify(this.state.companyList)}
-                </div>   
-            )
+            return this.RenderCompanyList()
         } else {
             return (
                 <div>
@@ -124,16 +154,6 @@ class Home extends Component {
                 </div>   
             )
         }
-        // if(this.state.searched)
-        //     return(
-        //         <div>
-        //             {this.state.searched}
-        //         </div>
-        //     )
-        // else   
-        //     return(
-        //         <div>Pesquise algo na barra de pesquisa</div>
-        //     )
     }
 
     Search(event) {
@@ -149,18 +169,27 @@ class Home extends Component {
             <React.Fragment>
                 <Navbar/>
                 <Container className="fullpage">
-                    <Form onSubmit={this.Search} ref={(form) => this.formRef = form}>
-                        <Form.Group as={Row}> 
-                            <Col>
-                                <Form.Control type="text" ref={(input) => {this.search = input}} placeholder="Pesquisa" required/>
-                            </Col>
-                        </Form.Group>
-                    </Form>
-                    <this.HasSearched />
+                <Row>
+                    <Col>
+                        <Form onSubmit={this.Search} ref={(form) => this.formRef = form}>
+                            <Form.Group as={Row}> 
+                                <Col>
+                                    <Form.Control type="text" ref={(input) => {this.search = input}} placeholder="Pesquisa" required/>
+                                </Col>
+                            </Form.Group>
+                        </Form>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col lg={2} className="searchMenu">
+                        menu
+                    </Col>
+                    <Col>
+                        Apresentação de resultados
+                    </Col>
+                </Row>
                 </Container>
-                <Jumbotron className="footer">
-                    Isto é suposto ser o footer
-                </Jumbotron>
+                <Footer />
             </React.Fragment>
         );
     }

@@ -23,16 +23,14 @@ import UserCreate from './components/UserCreate'
 import UserLogin from './components/UserLogin'
 import UserPage from './components/UserPage'
 
+import Company from './components/Company'
+
 import Create from './components/Create'
 
 import NoMatch from './components/NoMatch'
 
 
 class App extends Component {
-    constructor() {
-        super()
-        this.state = { }
-    }
     render() {
         return (
             <Router>
@@ -52,6 +50,8 @@ class App extends Component {
                     <Route path="/user/login" render={ (props) => <UserLogin {...props} /> } />
                     <Route path="/user/page" render={ (props) => <UserPage {...props}  /> } />
                     <Route path="/create" render={ (props) => <Create {...props}  /> } />
+                    <Route path="/company/:name" render={(props) => <Company {...props} />} />
+
                     <Route path="/noMatch" render={(props) => <NoMatch {...props} />} />
                     <Route render={NoMatch}/>
                 </Switch>
