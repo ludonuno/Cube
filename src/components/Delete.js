@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Tabs, Tab, Container } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
-import { Get } from '../../scripts/api'
+import { Get } from '../scripts/api'
 
-import Navbar from '../CustomNavbar'
+import Navbar from './CustomNavbar'
 
 // import CreateBook from './Delete/CreateBook'
 // import CreateCelebrity from './Delete/CreateCelebrity'

@@ -2,28 +2,28 @@ import React, { Component } from 'react';
 import { Switch } from 'react-router'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-import Home from './components/Home'
+import Home from './components/Page/Home'
 
-import Movie from './components/Movie'
+import Movie from './components/Page/Movie'
 import CreateMovie from './components/Create/CreateMovie'
 
-import Book from './components/Book'
+import Book from './components/Page/Book'
 import CreateBook from './components/Create/CreateBook'
 
-import Series from './components/Series'
+import Series from './components/Page/Series'
 import CreateSeries from './components/Create/CreateSeries'
 
-import Game from './components/Game'
+import Game from './components/Page/Game'
 import CreateGame from './components/Create/CreateGame'
 
-import Celebrity from './components/Celebrity'
+import Celebrity from './components/Page/Celebrity'
 import CreateCelebrity from './components/Create/CreateCelebrity'
 
-import UserCreate from './components/UserCreate'
-import UserLogin from './components/UserLogin'
-import UserPage from './components/UserPage'
+import UserCreate from './components/Page/UserCreate'
+import UserLogin from './components/Page/UserLogin'
+import UserPage from './components/Page/UserPage'
 
-import Company from './components/Company'
+import Company from './components/Page/Company'
 
 import Create from './components/Create'
 
