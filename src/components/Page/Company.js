@@ -28,7 +28,7 @@ class Company extends Component {
     render() {
         return ( 
             <React.Fragment>
-                <Navbar />
+                <Navbar props={this.props} />
                 <Container>
                     {this.state.pageName}
                 </Container>

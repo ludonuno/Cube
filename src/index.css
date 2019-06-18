@@ -20,8 +20,32 @@ code {
   margin-left: auto
 }
 .fullpage {
-  height: 100vh;
+  height: calc(100vh - 3em);
+}
+.jumbotron {
+  background: transparent
 }
 .footer {
-  margin: 0
+  position: relative;
+  margin: 0;
+  border-radius: 0;
+  color: #ffffff;
+  background: #222222
+}
+.background {
+  height: 0
+}
+.background-item-img {
+  height: calc(100vh - 3em);
+  width: 100vw;
+  opacity: 0.85;
+}
+.navbar a, .navbar a:visited, .navbar a:hover, .navbar a:visited:hover, .navbar a:active {
+  color: #ffffff
+}
+.dropdown-menu a, .dropdown-menu a:visited, .dropdown-menu a:hover, .dropdown-menu a:visited:hover {
+  color: #222222
+}
+.dropdown-menu a:active, .dropdown-menu a:visited:active {
+  color: #ffffff
 }

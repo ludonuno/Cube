@@ -53,7 +53,7 @@ class CustomNavbar extends Component {
 
     render() {
         return ( 
-            <Navbar bg="Light" expand="lg">
+            <Navbar bg="dark" expand="lg">
                 <Navbar.Brand href="/">Cube</Navbar.Brand>
                 <div className="align-right">
                     <this.UserFields />

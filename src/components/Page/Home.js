@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Container, Form, Row, Col, Card, Button } from 'react-bootstrap'
-import { Redirect } from 'react-router-dom'
+import { Container, Form, Row, Col, Dropdown, InputGroup, DropdownButton, Carousel, Pagination} from 'react-bootstrap'
 
 import Navbar from '../CustomNavbar'
 import Footer from '../Footer'
+import Alert from '../utils/Alert'
 import { Get } from '../../scripts/api'
 //Faz as pesquisas aqui que depois são direcionadas para as respetivas páginas
 
@@ -11,187 +11,210 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.Search = this.Search.bind(this)
-        this.HasSearched = this.HasSearched.bind(this)
-
+        this.SearchForm = this.SearchForm.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            searched: undefined,
-            apublishingCompanyList: [],
-            engineList: [],
-            companyList: [],
-            parentAdvisoryList: [],
-            sagaList: [],
-            assignmentList: [],
-            celebrityList: [],
-            seriesList: [],
-            seasonList: [],
-            episodeList: [],
-            movieList: [],
-            bookList: [],
-            gameList: [],
-            genresList: []
+            tableToSearch: 'Livros',
+            hasSearched: false,
+            searchList: [],
+            searchPage: 1,
+            alert: { visible: false, message: '', variant: '' }
         }
     }
-
-    GetPublishingCompanyList = (value) => {
-        let searchData = [ { table: 'PublishingCompany', fieldData: [
-            {field: 'name', data: value},
-        ] } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ publishingCompanyList: res.result })  
-        })
-    }
-    GetEngineList = (value) => {
-        let searchData = [ { table: 'Engine', fieldData: [
-            {field: 'name', data: value},
-        ] } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ engineList: res.result })  
-        })
-    }
-    GetCompanyList = (value) => {
-        let searchData = [ { table: 'Company', fieldData: [
-            {field: 'name', data: value},
-        ] } ]
-        Get(searchData,(res) => {
-            if(res && res.result) this.setState({ companyList: res.result }) 
-            else  this.setState({ companyList: [] })
-        })
-    }
-    GetSagaList = (value) => {
-        let searchData = [ { table: 'Saga', fieldData: [
-            {field: 'name', data: value},
-        ] } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ sagaList: res.result })  
-        })
+    ChangeAlert(visible, message, variant) {
+        this.setState({ alert: { visible: visible, message: message, variant: variant} })
     }
 
-    GetAssignmentList = () => {
-        let searchData = [ { table: 'Assignment', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ assignmentList: res.result })  
-        })
-    }
-    GetCelebrityList = () => {
-        let searchData = [ { table: 'Celebrity', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ celebrityList: res.result })  
-        })
-    }
-    GetSeriesList = () => {
-        let searchData = [ { table: 'Series', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ seriesList: res.result })  
-        })
-    }
     GetBookList = (value) => {
         let searchData = [ { table: 'Book', fieldData: [
             {field: 'title', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ bookList: res.result })  
-        })
-    }
-    GetGameList = () => {
-        let searchData = [ { table: 'Game', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ gameList: res.result })  
-        })
-    }
-    GetMovieList = () => {
-        let searchData = [ { table: 'Movie', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ movieList: res.result })  
-        })
-    }
-    GetGenresList = () => {
-        let searchData = [ { table: 'Genres', fieldData: undefined } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ genresList: res.result })  
+            if(res.result) this.setState({ searchList: res.result })  
+            else {
+                this.setState({ searchList: [] })
+                this.ChangeAlert(true, `Não foram encontrados registos de : ${value}`, 'danger')
+            }
         })
     }
 
-    RenderCompanyList = () => {
-        let toRender = []
-        this.state.companyList.forEach(company => {
-            toRender.push(
-                <Col lg={3}>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>{company.name}</Card.Title>
-                            <Card.Text>Visite a página de {company.name}</Card.Text>
-                            <Button variant="primary" onClick={() => {console.log('ola'); console.log('adeus')} }>Go somewhere</Button>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                
-            )
+    GetMovieList = (value) => {
+        let searchData = [ { table: 'Movie', fieldData: [
+            {field: 'title', data: value},
+        ] } ]
+        Get(searchData,(res) => {
+            if(res.result) this.setState({ searchList: res.result })  
+            else {
+                this.setState({ searchList: [] })
+                this.ChangeAlert(true, `Não foram encontrados registos de : ${value}`, 'danger')
+            }
         })
-        return (
-            <React.Fragment>
-                {}
-                <Row>
-                    {toRender}
-                    {toRender}
-                </Row>
-                <Row>
-                    {toRender}
-                    {toRender}
-                </Row>
-            </React.Fragment>
-        )
     }
 
-    HasSearched = () => {
-        //var toRender
-        if(this.state.companyList[0]) {
-            return this.RenderCompanyList()
-        } else {
+    GetGameList = (value) => {
+        let searchData = [ { table: 'Game', fieldData: [
+            {field: 'title', data: value},
+        ] } ]
+        Get(searchData,(res) => {
+            if(res.result) this.setState({ searchList: res.result })  
+            else {
+                this.setState({ searchList: [] })
+                this.ChangeAlert(true, `Não foram encontrados registos de : ${value}`, 'danger')
+            }
+        })
+    }
+
+    GetSeriesList = (value) => {
+        let searchData = [ { table: 'Series', fieldData: [
+            {field: 'title', data: value},
+        ] } ]
+        Get(searchData,(res) => {
+            if(res && res.result) this.setState({ searchList: res.result }) 
+            else {
+                this.setState({ searchList: [] })
+                this.ChangeAlert(true, `Não foram encontrados registos de : ${value}`, 'danger')
+            }
+        })
+    }
+
+    GetCelebrityList = (value) => {
+        let searchData = [ { table: 'Celebrity', fieldData: [
+            {field: 'name', data: value},
+        ] } ]
+        Get(searchData,(res) => {
+            if(res.result) this.setState({ searchList: res.result })  
+            else {
+                this.setState({ searchList: [] })
+                this.ChangeAlert(true, `Não foram encontrados registos de : ${value}`, 'danger')
+            }
+        })
+    }
+
+    ShowSearchResult = () => {
+        if (this.state.searchList[0]) {
+            var toRender = []
+            console.log(this.state.searchList.length % 5)
+            
+            var index = (this.state.searchPage === 1) ? 1 : (this.state.searchPage - 1) * 5
+            for (let n = index ; n <= this.state.searchPage * 5; n++) {
+                toRender.push( <Pagination.Item key={n} active={n === this.state.searchPage} onClick={() => {this.setState({ searchPage: n })}}> {n} </Pagination.Item> )
+            }
+            //Check lenght
+                // lenght / 5
+                    // pagination = resultado
+                    // lenght mod 5
+                        //se resultado < 0
+                            // adiciona pagina seguinte
+
+
+            var nPages = []
+            for (let n = 1; n <= Math.floor(this.state.searchList.length / 5) + 1; n++) {
+                nPages.push( <Pagination.Item key={n} active={n === this.state.searchPage} onClick={() => {this.setState({ searchPage: n })}}> {n} </Pagination.Item> )
+            }
+
             return (
-                <div>
-                    Não foram encontrados resultados da pesquisa: {this.state.searched}
-                </div>   
+                <Row>
+                    <Col>
+                        {this.state.searchPage}
+                        
+                    </Col>
+                    <Col>
+                        <Pagination>{nPages}</Pagination>
+                    </Col>
+                </Row>
             )
+        } else {
+            return(<Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />)
         }
     }
 
     Search(event) {
         event.preventDefault()
-        this.setState({ searched: this.search.value })
-        //executar os gets
-        this.GetCompanyList(this.search.value)
-        
+        switch (this.state.tableToSearch) {
+            case 'Livros':
+                this.GetBookList(this.search.value)
+                break;
+            case 'Filmes':
+                this.GetMovieList(this.search.value)
+                break;
+            case 'Jogos':
+                this.GetGameList(this.search.value)
+                break;
+            case 'Series':
+                this.GetSeriesList(this.search.value)
+                break;
+            case 'Celebridades':
+                this.GetCelebrityList(this.search.value)
+                break;
+            default:
+                break;
+        }
+        this.setState({ hasSearched: true})
     }
     
+    SearchForm = () => {
+        return(
+            <Form onSubmit={this.Search} ref={(form) => this.formSearch = form}>
+                <Form.Group as={Row}> 
+                    <InputGroup className="mb-3">
+                        <DropdownButton as={InputGroup.Prepend} variant="dark" title={`Pesquisar por ${this.state.tableToSearch}`} id="input-group-dropdown-1" size="lg">
+                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Livros'}) }>Livros</Dropdown.Item>
+                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Filmes'}) }>Filmes</Dropdown.Item>
+                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Jogos'}) }>Jogos</Dropdown.Item>
+                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Series'}) }>Séries</Dropdown.Item>
+                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Celebridades'}) }>Celebridades</Dropdown.Item>
+                        </DropdownButton>
+                        <Form.Control type="text" ref={(input) => {this.search = input}} placeholder="Pesquisa" required/>
+                    </InputGroup>
+                </Form.Group>
+            </Form>
+        )
+    }
+
     render() { 
-        return (
-            <React.Fragment>
-                <Navbar/>
-                <Container className="fullpage">
-                <Row>
-                    <Col>
-                        <Form onSubmit={this.Search} ref={(form) => this.formRef = form}>
-                            <Form.Group as={Row}> 
-                                <Col>
-                                    <Form.Control type="text" ref={(input) => {this.search = input}} placeholder="Pesquisa" required/>
-                                </Col>
-                            </Form.Group>
-                        </Form>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col lg={2} className="searchMenu">
-                        menu
-                    </Col>
-                    <Col>
-                        Apresentação de resultados
-                    </Col>
-                </Row>
-                </Container>
-                <Footer />
-            </React.Fragment>
-        );
+        if(this.state.hasSearched) {
+            return (
+                <React.Fragment>
+                    <Navbar props={this.props} />
+                    <Container className="fullpage">
+                        <br />
+                        <Row>
+                            <Col>
+                                <this.SearchForm/>
+                            </Col>
+                        </Row>
+                        <this.ShowSearchResult />
+                    </Container>
+                    <Footer />
+                </React.Fragment>
+            );
+        } else {
+            return (
+                <React.Fragment>
+                    <Navbar props={this.props} />
+                    <Carousel className="background" controls={false} indicators={false}>
+                        <Carousel.Item className="background-item">
+                            <img className="background-item-img" src="http://yesofcorsa.com/wp-content/uploads/2017/05/Cinema-Wallpaper-High-Definition-1024x683.jpg" alt="First slide" />
+                        </Carousel.Item>
+                        <Carousel.Item className="background-item">
+                            <img className="background-item-img" src="https://www.rd.com/wp-content/uploads/2017/11/How-Much-Does-a-Book-Need-to-Sell-to-Be-a-Bestseller-509582812-Billion-Photos-1024x683.jpg" alt="Third slide" />
+                        </Carousel.Item>
+                        <Carousel.Item className="background-item">
+                            <img className="background-item-img" src="https://3c1703fe8d.site.internapcdn.net/newman/gfx/news/hires/2017/gaming.jpg" alt="Third slide" />
+                        </Carousel.Item>
+                    </Carousel>
+                    <Container className="fullpage">
+                        <br />
+                        <Row>
+                            <Col>
+                                <this.SearchForm/>
+                            </Col>
+                        </Row>
+                    </Container>
+                    <Footer />
+                </React.Fragment>
+            );
+        }
     }
 }
  
