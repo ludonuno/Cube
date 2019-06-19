@@ -14,7 +14,7 @@ class Home extends Component {
         this.SearchForm = this.SearchForm.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            tableToSearch: 'Livros',
+            tableToSearch: 'Book',
             hasSearched: false,
             searchList: [],
             searchPage: 1,
@@ -93,63 +93,85 @@ class Home extends Component {
     ShowSearchResult = () => {
         if (this.state.searchList[0]) {
             var toRender = []
-            console.log(this.state.searchList.length % 5)
+            //console.log(this.state.searchList.length % 5)
             
-            var index = (this.state.searchPage === 1) ? 1 : (this.state.searchPage - 1) * 5
-            for (let n = index ; n <= this.state.searchPage * 5; n++) {
-                toRender.push( <Pagination.Item key={n} active={n === this.state.searchPage} onClick={() => {this.setState({ searchPage: n })}}> {n} </Pagination.Item> )
+            var index = (this.state.searchPage === 1) ? 0 : (this.state.searchPage - 1) * 5
+            console.log(index)
+            console.log(this.state.searchList)
+            for (let n = index ; n <= this.state.searchPage * 5 - 1; n++) {
+                if(this.state.searchList[n]) {
+                    let element = this.state.searchList[n]
+                    let header = null, subTitle = null, body = null
+                    header = element.name ? element.name : header
+                    header = element.title ? element.title : header
+                    subTitle = element.releasedate ? element.releasedate.substring(0,10) : subTitle
+                    subTitle = element.birthday ? element.birthday.substring(0,10) : subTitle
+                    body = element.synopsis ? element.synopsis : body
+                    body = element.biography ? element.biography : body
+
+                    toRender.push(
+                        <Row>
+                            <Col>
+                                <Row><a href={`/${this.state.tableToSearch}/${element.id}`}><h3>{ header }</h3></a></Row>
+                                <Row><p className="sub-title-h3">{ subTitle }</p></Row>
+                                <Row><p className="body-h3">{ body }</p></Row>
+                            </Col>
+                        </Row>
+                    )
+                }
             }
-            //Check lenght
-                // lenght / 5
-                    // pagination = resultado
-                    // lenght mod 5
-                        //se resultado < 0
-                            // adiciona pagina seguinte
-
-
-            var nPages = []
-            for (let n = 1; n <= Math.floor(this.state.searchList.length / 5) + 1; n++) {
-                nPages.push( <Pagination.Item key={n} active={n === this.state.searchPage} onClick={() => {this.setState({ searchPage: n })}}> {n} </Pagination.Item> )
-            }
-
             return (
-                <Row>
-                    <Col>
-                        {this.state.searchPage}
-                        
-                    </Col>
-                    <Col>
-                        <Pagination>{nPages}</Pagination>
-                    </Col>
-                </Row>
+                <React.Fragment>
+                    <Row>
+                        <Col>
+                            {toRender}
+                        </Col>
+                    </Row>
+                    <Row >  
+                        <Col>
+                            <this.NavigationBar />
+                        </Col>
+                    </Row>
+                </React.Fragment>
             )
         } else {
             return(<Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />)
         }
     }
 
+    
+    NavigationBar = () => {
+        var nPages = []
+        for (let n = 1; n <= Math.floor(this.state.searchList.length / 5) + 1; n++) {
+            nPages.push( <Pagination.Item key={n} active={n === this.state.searchPage} onClick={() => {this.setState({ searchPage: n })}}> {n} </Pagination.Item> )
+        }
+        if(this.state.searchList.length % 5 === 0) nPages.pop()
+        return (<Pagination className="text-center mt-4 mb-4">{nPages}</Pagination>)
+    }
+
     Search(event) {
         event.preventDefault()
         switch (this.state.tableToSearch) {
-            case 'Livros':
+            case 'Book':
                 this.GetBookList(this.search.value)
                 break;
-            case 'Filmes':
+            case 'Movie':
                 this.GetMovieList(this.search.value)
                 break;
-            case 'Jogos':
+            case 'Game':
                 this.GetGameList(this.search.value)
                 break;
             case 'Series':
                 this.GetSeriesList(this.search.value)
                 break;
-            case 'Celebridades':
+            case 'Celebrity':
                 this.GetCelebrityList(this.search.value)
                 break;
             default:
                 break;
         }
         this.setState({ hasSearched: true})
+        this.setState({ searchPage: 1 })
     }
     
     SearchForm = () => {
@@ -158,11 +180,11 @@ class Home extends Component {
                 <Form.Group as={Row}> 
                     <InputGroup className="mb-3">
                         <DropdownButton as={InputGroup.Prepend} variant="dark" title={`Pesquisar por ${this.state.tableToSearch}`} id="input-group-dropdown-1" size="lg">
-                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Livros'}) }>Livros</Dropdown.Item>
-                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Filmes'}) }>Filmes</Dropdown.Item>
-                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Jogos'}) }>Jogos</Dropdown.Item>
+                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Book'}) }>Livros</Dropdown.Item>
+                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Movie'}) }>Filmes</Dropdown.Item>
+                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Game'}) }>Jogos</Dropdown.Item>
                             <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Series'}) }>Séries</Dropdown.Item>
-                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Celebridades'}) }>Celebridades</Dropdown.Item>
+                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Celebrity'}) }>Celebridades</Dropdown.Item>
                         </DropdownButton>
                         <Form.Control type="text" ref={(input) => {this.search = input}} placeholder="Pesquisa" required/>
                     </InputGroup>

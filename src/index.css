@@ -20,7 +20,7 @@ code {
   margin-left: auto
 }
 .fullpage {
-  height: calc(100vh - 3em);
+  min-height: calc(100vh - 3em);
 }
 .jumbotron {
   background: transparent
@@ -48,4 +48,8 @@ code {
 }
 .dropdown-menu a:active, .dropdown-menu a:visited:active {
   color: #ffffff
+}
+
+.sub-title-h3 {
+  font-size: 10pt;
 }
