@@ -79,7 +79,43 @@ const Create = (insertData, callback) => {
     )
 }
 
+const HandleDeleteData = (data, callback) => {
+    return new Promise((resolve, reject) => {
+        let table = data[0].table
+        let fieldsData = ''
+        let multipleParams = 0
+        data[0].fieldData.forEach(d => {
+            if(multipleParams) fieldsData += '&'
+            fieldsData += `${d.field}=${d.data}`
+            multipleParams++
+        })
+        resolve(`${url}/${table}?${fieldsData}`)
+    }).then(
+        resolve => callback(resolve, undefined),
+        reject => callback(undefined, reject)
+    )
+}
+
+const Delete = (deleteData, callback) => {
+    return new Promise((resolve, reject) => {
+        HandleDeleteData(deleteData, (res, rej) => {
+            if(res){
+                // request.delete(res, (error, response, body) => {
+                // if(body)
+                //     resolve(JSON.parse(body))
+                // else
+                //     reject('Erro na ligação à base de dados')
+                // })
+            }
+        })
+    }).then(
+        resolve => callback(resolve, undefined),
+        reject => callback(undefined, reject)
+    )
+}
+
 module.exports = {
     Get,
-    Create
+    Create,
+    Delete
 }

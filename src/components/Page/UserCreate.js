@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
+import { Container, Form, Button, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
 import { Redirect } from 'react-router-dom'
 
@@ -29,8 +29,7 @@ class UserCreate extends Component {
                     {field: 'name', data: this.name.value},
                     {field: 'email', data: this.email.value},
                     {field: 'password', data: this.password.value},
-                    {field: 'birthday', data: this.birthday.value},
-                    {field: 'description', data: this.description.value}
+                    {field: 'birthday', data: this.birthday.value}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao servidor...', 'info')
@@ -51,81 +50,45 @@ class UserCreate extends Component {
         return ( 
             <React.Fragment>
                 <Navbar props={this.props}/>
+                <br/>
                 <Container>
-                    <h3>Create User</h3>
+                    <h3>Registar</h3>
                     <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                     <Form onSubmit={this.AddUser}>
-                        <Row>
-                            <Col xs={12} lg={6}>
-                                <Form.Group>
-                                    <InputGroup>
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>Name</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control type="text" ref={(input) => {this.name = input}} required/>
-                                    </InputGroup>
-                                </Form.Group>
+                        <Form.Group as={Row}> 
+                            <Form.Label column lg={12} xl={2}>Nome</Form.Label>
+                            <Col>
+                                <Form.Control type="text" ref={(input) => {this.name = input}} required/>
                             </Col>
-                            <Col xs={12} lg={6}>
-                                <Form.Group>
-                                    <InputGroup>
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>E-mail</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control type="email" ref={(input) => {this.email = input}} required/>
-                                    </InputGroup>
-                                </Form.Group>
+                        </Form.Group>
+                        <Form.Group as={Row}> 
+                            <Form.Label column lg={12} xl={2}>E-mail</Form.Label>
+                            <Col>
+                                <Form.Control type="email" ref={(input) => {this.email = input}} required/>
                             </Col>
-                        </Row>
-                        <Row>
-                            <Col xs={12} lg={6}>
-                                <Form.Group>
-                                    <InputGroup>
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>Password</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control type="password" ref={(input) => {this.password = input}} required/>
-                                    </InputGroup>
-                                </Form.Group>
+                        </Form.Group>
+                        <Form.Group as={Row}> 
+                            <Form.Label column lg={12} xl={2}>Password</Form.Label>
+                            <Col>
+                                <Form.Control type="password" ref={(input) => {this.password = input}} required/>
                             </Col>
-                            <Col xs={12} lg={6}>
-                                <Form.Group>
-                                    <InputGroup>
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>Repetir Password</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control type="password" ref={(input) => {this.repeatPassword = input}} required/>
-                                    </InputGroup>
-                                </Form.Group>
+                        </Form.Group>
+                        <Form.Group as={Row}> 
+                            <Form.Label column lg={12} xl={2}>Repetir Password</Form.Label>
+                            <Col>
+                                <Form.Control type="password" ref={(input) => {this.repeatPassword = input}} required/>
                             </Col>
-                        </Row>
+                        </Form.Group>
+
+                        <Form.Group as={Row}> 
+                            <Form.Label column lg={12} xl={2}>Aniversário</Form.Label>
+                            <Col>
+                                <Form.Control type="date" ref={(input) => {this.birthday = input}} />
+                            </Col>
+                        </Form.Group>
                         <Row>
                             <Col>
-                                <Form.Group>
-                                    <InputGroup>
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>Birthday</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control type="date" ref={(input) => {this.birthday = input}} />
-                                    </InputGroup>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Form.Group>
-                                    <InputGroup>
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>Description</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control as="textarea" rows="3" className="noresize" ref={(input) => {this.description = input}}/>
-                                    </InputGroup>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Button variant="primary" type="submit" block>Submit</Button>
+                                <Button variant="primary" type="submit" block>Criar</Button>
                             </Col>
                         </Row>
                     </Form>

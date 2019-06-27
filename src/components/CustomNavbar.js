@@ -30,7 +30,7 @@ class CustomNavbar extends Component {
         } else {
             return (
                 <div>
-                    <a href="/user/login" className="btn btn-outline-primary">LogIn</a> <a href="/user/create" className="btn btn-outline-success">Registar</a>
+                    <a href="/user/login" className="btn btn-outline-primary">Login</a> <a href="/user/create" className="btn btn-outline-success">Registar</a>
                 </div>
             )
         }

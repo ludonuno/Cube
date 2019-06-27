@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
-import { Container, Form, Button, InputGroup, Row, Col } from 'react-bootstrap'
+import { Container, Form, Button, Row, Col } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 import { Get } from '../../scripts/api'
 import Alert from '../utils/Alert'
@@ -48,35 +48,26 @@ class UserLogin extends Component {
         return ( 
             <React.Fragment>
                 <Navbar props={this.props}/>
+                <br/>
                 <Container>
-                    <h3>UserLogin</h3>
+                    <h3>Login</h3>
                     <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                     <Form onSubmit={this.LoginUser}>
-                        <Row>
-                            <Col xs={12} lg={6}>
-                                <Form.Group>
-                                    <InputGroup className="mb-3">
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>E-mail</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control type="email" autoComplete="username" ref={(input) => {this.userEmail = input}} required/>
-                                    </InputGroup>
-                                </Form.Group>
+                        <Form.Group as={Row}> 
+                            <Form.Label column lg={12} xl={2}>E-mail</Form.Label>
+                            <Col>
+                                <Form.Control type="email" autoComplete="username" ref={(input) => {this.userEmail = input}} required/>
                             </Col>
-                            <Col xs={12} lg={6}>
-                                <Form.Group>
-                                    <InputGroup className="mb-3">
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>Password</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control type="password" autoComplete="current-password" ref={(input) => {this.userPassword = input}} required/>
-                                    </InputGroup>
-                                </Form.Group>
+                        </Form.Group>
+                        <Form.Group as={Row}> 
+                            <Form.Label column lg={12} xl={2}>Password</Form.Label>
+                            <Col>
+                                <Form.Control type="password" autoComplete="current-password" ref={(input) => {this.userPassword = input}} required/>
                             </Col>
-                        </Row>
+                        </Form.Group>
                         <Row>
                             <Col>
-                                <Button variant="primary" type="submit">Submit</Button>
+                                <Button variant="primary" type="submit" block>Entrar</Button>
                             </Col>
                         </Row>
                     </Form>

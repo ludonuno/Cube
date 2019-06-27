@@ -5,34 +5,42 @@ import { Get } from '../scripts/api'
 
 import Navbar from './CustomNavbar'
 
-import CreateBook from './Create/CreateBook'
-import CreateCelebrity from './Create/CreateCelebrity'
-import CreateRelateAssignment from './Create/CreateRelateAssignment'
-import CreateGame from './Create/CreateGame'
-import CreateMovie from './Create/CreateMovie'
-import CreateSeries from './Create/CreateSeries'
-import CreateSeason from './Create/CreateSeason'
-import CreateEpisode from './Create/CreateEpisode'
-
-import CreateAssignment from './Create/CreateAssignment'
-import CreateCompany from './Create/CreateCompany'
-import CreateEngine from './Create/CreateEngine'
-import CreateParentAdvisory from './Create/CreateParentAdvisory'
-import CreatePublishingCompany from './Create/CreatePublishingCompany'
-import CreateSaga from './Create/CreateSaga'
-
-import CreateVideo from './Create/CreateVideo'
-import CreateGenres from './Create/CreateGenres'
-import CreateRelateGenres from './Create/CreateRelateGenres'
-import CreateDevelopers from './Create/CreateDevelopers'
+import Book from './Create/Book'
+import Celebrity from './Create/Celebrity'
+import RelateAssignment from './Create/RelateAssignment'
+import Game from './Create/Game'
+import Movie from './Create/Movie'
+import Series from './Create/Series'
+import Season from './Create/Season'
+import Episode from './Create/Episode'
+import Assignment from './Create/Assignment'
+import Company from './Create/Company'
+import Engine from './Create/Engine'
+import ParentAdvisory from './Create/ParentAdvisory'
+import PublishingCompany from './Create/PublishingCompany'
+import Saga from './Create/Saga'
+import Video from './Create/Video'
+import Genres from './Create/Genres'
+import RelateGenres from './Create/RelateGenres'
+import Developers from './Create/Developers'
 
 class Create extends Component {
     constructor(props) {
         super(props);
-        this.GetEngineList = this.GetEngineList.bind(this)        
-        this.GetParentAdvisoryList = this.GetParentAdvisoryList.bind(this)        
-        this.GetCompanyList = this.GetCompanyList.bind(this)        
+        this.GetPublishingCompanyList = this.GetPublishingCompanyList.bind(this)
+        this.GetEngineList = this.GetEngineList.bind(this)
+        this.GetCompanyList = this.GetCompanyList.bind(this)
+        this.GetParentAdvisoryList = this.GetParentAdvisoryList.bind(this)
         this.GetSagaList = this.GetSagaList.bind(this)
+        this.GetAssignmentList = this.GetAssignmentList.bind(this)
+        this.GetCelebrityList = this.GetCelebrityList.bind(this)
+        this.GetEpisodeList = this.GetEpisodeList.bind(this)
+        this.GetSeasonList = this.GetSeasonList.bind(this)
+        this.GetSeriesList = this.GetSeriesList.bind(this)
+        this.GetBookList = this.GetBookList.bind(this)
+        this.GetGameList = this.GetGameList.bind(this)
+        this.GetMovieList = this.GetMovieList.bind(this)
+        this.GetGenresList = this.GetGenresList.bind(this)
         this.state = { 
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             key: 'book',
@@ -185,89 +193,24 @@ class Create extends Component {
                 <br/>
                 <Container>
                     <Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.setState({ key })}>
-                        <Tab eventKey="book" title="Livro"><CreateBook
-                            publishingCompanyList={this.state.publishingCompanyList}
-                            sagaList={this.state.sagaList}
-                            onSubmit={this.GetBookList}
-                        /></Tab>
-                        <Tab eventKey="game" title="Jogo"><CreateGame
-                            engineList={this.state.engineList}
-                            companyList={this.state.companyList}
-                            parentAdvisoryList={this.state.parentAdvisoryList}
-                            sagaList={this.state.sagaList}
-                            onSubmit={this.GetGameList}
-                        /></Tab>
-                        <Tab eventKey="movie" title="Filme"><CreateMovie
-                            parentAdvisoryList={this.state.parentAdvisoryList}
-                            sagaList={this.state.sagaList}
-                            onSubmit={this.GetMovieList}
-                        /></Tab>
-                        <Tab eventKey="series" title="Séries"><CreateSeries
-                            parentAdvisoryList={this.state.parentAdvisoryList}
-                            sagaList={this.state.sagaList}
-                            onSubmit={this.GetSeriesList}
-                        /></Tab>
-                        <Tab eventKey="season" title="Temporada"><CreateSeason
-                            seriesList={this.state.seriesList}
-                        /></Tab>
-                        <Tab eventKey="episode" title="Episódio"><CreateEpisode
-                            seriesList={this.state.seriesList}
-                            seasonList={this.state.seasonList}
-                            GetSeasonList={this.GetSeasonList}
-                        /></Tab>
-                        <Tab eventKey="parentAdvisory" title="Aconselhamento Parental"><CreateParentAdvisory
-                            onSubmit={this.GetParentAdvisoryList}
-                        /></Tab>
-                        <Tab eventKey="company" title="Empresa"><CreateCompany
-                            onSubmit={this.GetCompanyList}
-                        /></Tab>
-                        <Tab eventKey="engine" title="Engine"><CreateEngine
-                            onSubmit={this.GetEngineList}
-                        /></Tab>
-                        <Tab eventKey="publishingCompany" title="Editora"><CreatePublishingCompany
-                            onSubmit={this.GetPublishingCompanyList}
-                        /></Tab>
-                        <Tab eventKey="saga" title="Saga"><CreateSaga
-                            onSubmit={this.GetSagaList}
-                        /></Tab>
-                        <Tab eventKey="celebrity" title="Celebridade"><CreateCelebrity
-                            onSubmit={this.GetCelebrityList}
-                        /></Tab>
-                        <Tab eventKey="assignment" title="Função"><CreateAssignment
-                            onSubmit={this.GetAssignmentList}
-                        /></Tab>
-                        <Tab eventKey="createRelateAssignment" title="Funções das Celebridades"><CreateRelateAssignment
-                            assignmentList={this.state.assignmentList}
-                            celebrityList={this.state.celebrityList}
-                            bookList={this.state.bookList}
-                            gameList={this.state.gameList}
-                            movieList={this.state.movieList}
-                            seriesList={this.state.seriesList}
-                        /></Tab>
-                        <Tab eventKey="createVideo" title="Vídeos"><CreateVideo
-                            bookList={this.state.bookList}
-                            gameList={this.state.gameList}
-                            movieList={this.state.movieList}
-                            seriesList={this.state.seriesList}
-                            seasonList={this.state.seasonList}
-                            episodeList={this.state.episodeList}
-                            GetSeasonList={this.GetSeasonList}
-                            GetEpisodeList={this.GetEpisodeList}
-                        /></Tab>
-                        <Tab eventKey="genres" title="Géneros"><CreateGenres
-                            onSubmit={this.GetGenresList}
-                        /></Tab>
-                        <Tab eventKey="createRelateGenres" title="Associar Géneros"><CreateRelateGenres
-                            genresList={this.state.genresList}
-                            bookList={this.state.bookList}
-                            gameList={this.state.gameList}
-                            movieList={this.state.movieList}
-                            seriesList={this.state.seriesList}
-                        /></Tab>
-                        <Tab eventKey="developers" title="Desenvolvedores"><CreateDevelopers
-                            gameList={this.state.gameList}
-                            companyList={this.state.companyList}
-                        /></Tab>
+                        <Tab eventKey="book" title="Livro"><Book publishingCompanyList={this.state.publishingCompanyList} sagaList={this.state.sagaList} onSubmit={this.GetBookList} /></Tab>
+                        <Tab eventKey="game" title="Jogo"><Game engineList={this.state.engineList} companyList={this.state.companyList} parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetGameList} /></Tab>
+                        <Tab eventKey="movie" title="Filme"><Movie parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetMovieList} /></Tab>
+                        <Tab eventKey="series" title="Séries"><Series parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetSeriesList} /></Tab>
+                        <Tab eventKey="season" title="Temporada"><Season seriesList={this.state.seriesList} /></Tab>
+                        <Tab eventKey="episode" title="Episódio"><Episode seriesList={this.state.seriesList} seasonList={this.state.seasonList} GetSeasonList={this.GetSeasonList} /></Tab>
+                        <Tab eventKey="parentAdvisory" title="Aconselhamento Parental"><ParentAdvisory onSubmit={this.GetParentAdvisoryList} /></Tab>
+                        <Tab eventKey="company" title="Empresa"><Company onSubmit={this.GetCompanyList} /></Tab>
+                        <Tab eventKey="engine" title="Engine"><Engine onSubmit={this.GetEngineList} /></Tab>
+                        <Tab eventKey="publishingCompany" title="Editora"><PublishingCompany onSubmit={this.GetPublishingCompanyList} /></Tab>
+                        <Tab eventKey="saga" title="Saga"><Saga onSubmit={this.GetSagaList} /></Tab>
+                        <Tab eventKey="celebrity" title="Celebridade"><Celebrity onSubmit={this.GetCelebrityList} /></Tab>
+                        <Tab eventKey="assignment" title="Função"><Assignment onSubmit={this.GetAssignmentList} /></Tab>
+                        <Tab eventKey="createRelateAssignment" title="Funções das Celebridades"><RelateAssignment assignmentList={this.state.assignmentList} celebrityList={this.state.celebrityList} bookList={this.state.bookList} gameList={this.state.gameList} movieList={this.state.movieList} seriesList={this.state.seriesList} /></Tab>
+                        <Tab eventKey="createVideo" title="Vídeos"><Video bookList={this.state.bookList} gameList={this.state.gameList} movieList={this.state.movieList} seriesList={this.state.seriesList} seasonList={this.state.seasonList} episodeList={this.state.episodeList} GetSeasonList={this.GetSeasonList} GetEpisodeList={this.GetEpisodeList} /></Tab>
+                        <Tab eventKey="genres" title="Géneros"><Genres onSubmit={this.GetGenresList} /></Tab>
+                        <Tab eventKey="createRelateGenres" title="Associar Géneros"><RelateGenres genresList={this.state.genresList} bookList={this.state.bookList} gameList={this.state.gameList} movieList={this.state.movieList} seriesList={this.state.seriesList} /></Tab>
+                        <Tab eventKey="developers" title="Desenvolvedores"><Developers gameList={this.state.gameList} companyList={this.state.companyList} /></Tab>
                     </Tabs>
                 </Container>
             </React.Fragment>

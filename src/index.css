@@ -50,6 +50,19 @@ code {
   color: #ffffff
 }
 
-.sub-title-h3 {
+.sub-title {
   font-size: 10pt;
+}
+.info-slider {
+  background: #222222;
+  color: #ffffff;
+  padding: 32px 42px 32px 42px
+}
+.rating {
+  text-align: center !important;
+  background: #222222;
+  color: #ffffff;
+  margin-top: 1em;
+  margin-bottom: 0px;
+  padding: 1em 3em 1em 3em !important
 }

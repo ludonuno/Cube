@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Container, Form, Row, Col, Dropdown, InputGroup, DropdownButton, Carousel, Pagination} from 'react-bootstrap'
+import { Container, Form, Row, Col, Dropdown, InputGroup, DropdownButton, Carousel, Pagination, Jumbotron} from 'react-bootstrap'
 
 import Navbar from '../CustomNavbar'
 import Footer from '../Footer'
 import Alert from '../utils/Alert'
+import { ReplaceComa } from '../../scripts/utils'
 import { Get } from '../../scripts/api'
 //Faz as pesquisas aqui que depois são direcionadas para as respetivas páginas
 
@@ -93,28 +94,22 @@ class Home extends Component {
     ShowSearchResult = () => {
         if (this.state.searchList[0]) {
             var toRender = []
-            //console.log(this.state.searchList.length % 5)
-            
             var index = (this.state.searchPage === 1) ? 0 : (this.state.searchPage - 1) * 5
-            console.log(index)
-            console.log(this.state.searchList)
             for (let n = index ; n <= this.state.searchPage * 5 - 1; n++) {
                 if(this.state.searchList[n]) {
                     let element = this.state.searchList[n]
-                    let header = null, subTitle = null, body = null
-                    header = element.name ? element.name : header
-                    header = element.title ? element.title : header
+                    let header = undefined, subTitle = undefined, body = undefined
+                    header = element.name ? ReplaceComa(element.name) : header
+                    header = element.title ? ReplaceComa(element.title) : header
                     subTitle = element.releasedate ? element.releasedate.substring(0,10) : subTitle
                     subTitle = element.birthday ? element.birthday.substring(0,10) : subTitle
                     body = element.synopsis ? element.synopsis : body
-                    body = element.biography ? element.biography : body
-
                     toRender.push(
-                        <Row>
+                        <Row key={n}>
                             <Col>
                                 <Row><a href={`/${this.state.tableToSearch}/${element.id}`}><h3>{ header }</h3></a></Row>
-                                <Row><p className="sub-title-h3">{ subTitle }</p></Row>
-                                <Row><p className="body-h3">{ body }</p></Row>
+                                <Row><span className="sub-title-h3">{ subTitle }</span></Row>
+                                <Row><span className="body-h3">{ body }</span></Row>
                             </Col>
                         </Row>
                     )
@@ -122,16 +117,8 @@ class Home extends Component {
             }
             return (
                 <React.Fragment>
-                    <Row>
-                        <Col>
-                            {toRender}
-                        </Col>
-                    </Row>
-                    <Row >  
-                        <Col>
-                            <this.NavigationBar />
-                        </Col>
-                    </Row>
+                    <Row><Col>{toRender}</Col></Row>
+                    <Row><Col><this.NavigationBar /></Col></Row>
                 </React.Fragment>
             )
         } else {
@@ -139,7 +126,6 @@ class Home extends Component {
         }
     }
 
-    
     NavigationBar = () => {
         var nPages = []
         for (let n = 1; n <= Math.floor(this.state.searchList.length / 5) + 1; n++) {
@@ -175,11 +161,20 @@ class Home extends Component {
     }
     
     SearchForm = () => {
+        let searchFor = undefined
+        switch (this.state.tableToSearch) {
+            case 'Book': searchFor = 'Livros'; break;
+            case 'Movie': searchFor = 'Filmes'; break;
+            case 'Game': searchFor = 'Jogos'; break;
+            case 'Series': searchFor = 'Séries'; break;
+            case 'Celebrity': searchFor = 'Celebridades'; break;
+            default: break;
+        }
         return(
             <Form onSubmit={this.Search} ref={(form) => this.formSearch = form}>
                 <Form.Group as={Row}> 
                     <InputGroup className="mb-3">
-                        <DropdownButton as={InputGroup.Prepend} variant="dark" title={`Pesquisar por ${this.state.tableToSearch}`} id="input-group-dropdown-1" size="lg">
+                        <DropdownButton as={InputGroup.Prepend} variant="dark" title={`Pesquisar por ${searchFor}`} id="input-group-dropdown-1" >
                             <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Book'}) }>Livros</Dropdown.Item>
                             <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Movie'}) }>Filmes</Dropdown.Item>
                             <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Game'}) }>Jogos</Dropdown.Item>
@@ -229,7 +224,9 @@ class Home extends Component {
                         <br />
                         <Row>
                             <Col>
-                                <this.SearchForm/>
+                                <Jumbotron>
+                                    <this.SearchForm/>
+                                </Jumbotron>
                             </Col>
                         </Row>
                     </Container>
