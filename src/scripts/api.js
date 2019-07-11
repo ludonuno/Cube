@@ -100,12 +100,12 @@ const Delete = (deleteData, callback) => {
     return new Promise((resolve, reject) => {
         HandleDeleteData(deleteData, (res, rej) => {
             if(res){
-                // request.delete(res, (error, response, body) => {
-                // if(body)
-                //     resolve(JSON.parse(body))
-                // else
-                //     reject('Erro na ligação à base de dados')
-                // })
+                request.delete(res, (error, response, body) => {
+                if(body)
+                    resolve(JSON.parse(body))
+                else
+                    reject('Erro na ligação à base de dados')
+                })
             }
         })
     }).then(

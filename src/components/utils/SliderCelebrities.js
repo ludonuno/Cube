@@ -1,23 +1,22 @@
 import React from 'react';
 import { Carousel, Jumbotron, Col, Row, Badge } from 'react-bootstrap'
-
 import { ReplaceComa } from '../../scripts/utils'
 
-const SliderSagaRelated = (props) => {
+const SliderCelebrities = (props) => {
     if(props.list) {
         let toRender = []
         let howMany = undefined
         props.list.forEach((v, i) => {
             let id = v.id ? v.id : undefined
-            let title = v.title ? ReplaceComa(v.title) : undefined
-            let releaseDate = v.releasedate ? v.releasedate.substring(0,10) : 'Sem data de lançamento'
+            let name = v.name ? ReplaceComa(v.name) : undefined
+            let birthday = v.birthday ? v.birthday.substring(0,10) : 'Sem aniversário'
             toRender.push(
                 <Carousel.Item key={i}>
                     <br/>
                     <Jumbotron className="info-slider" >
-                        <Col >
-                            <Row><a href={`/${props.href}/${id}`}><h5>{title}</h5></a></Row>
-                            <Row><span className="sub-title">{releaseDate}</span></Row>
+                        <Col>
+                            <Row><a href={`/${props.href}/${id}`}><h5>{name}</h5></a></Row>
+                            <Row><span className="sub-title">{birthday}</span></Row>
                             <Row><h5><Badge variant="secondary">#{i+1}/{props.list.length}</Badge></h5></Row>
                         </Col>
                     </Jumbotron>
@@ -35,6 +34,6 @@ const SliderSagaRelated = (props) => {
                 </Col>
             </Row>
         )
-    } else return null
+    } else return <p>Sem celebridades associadas</p>
 }
-export default SliderSagaRelated;
+export default SliderCelebrities;
