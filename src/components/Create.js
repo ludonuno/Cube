@@ -197,8 +197,8 @@ class Create extends Component {
                         <Tab eventKey="game" title="Jogo"><Game engineList={this.state.engineList} companyList={this.state.companyList} parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetGameList} /></Tab>
                         <Tab eventKey="movie" title="Filme"><Movie parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetMovieList} /></Tab>
                         <Tab eventKey="series" title="Séries"><Series parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetSeriesList} /></Tab>
-                        <Tab eventKey="season" title="Temporada"><Season seriesList={this.state.seriesList} /></Tab>
-                        <Tab eventKey="episode" title="Episódio"><Episode seriesList={this.state.seriesList} seasonList={this.state.seasonList} GetSeasonList={this.GetSeasonList} /></Tab>
+                        <Tab eventKey="season" title="Temporada"><Season seriesList={this.state.seriesList} onSubmit={this.GetSeasonList}/></Tab>
+                        <Tab eventKey="episode" title="Episódio"><Episode seriesList={this.state.seriesList} seasonList={this.state.seasonList} GetSeasonList={this.GetSeasonList} onSubmit={this.GetSeasonList}/></Tab>
                         <Tab eventKey="parentAdvisory" title="Aconselhamento Parental"><ParentAdvisory onSubmit={this.GetParentAdvisoryList} /></Tab>
                         <Tab eventKey="company" title="Empresa"><Company onSubmit={this.GetCompanyList} /></Tab>
                         <Tab eventKey="engine" title="Engine"><Engine onSubmit={this.GetEngineList} /></Tab>

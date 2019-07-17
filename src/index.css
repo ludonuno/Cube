@@ -52,6 +52,7 @@ code {
 
 .sub-title {
   font-size: 10pt;
+  padding-right: 4px
 }
 .info-slider {
   background: #222222;
@@ -71,7 +72,7 @@ code {
 }
 
 .carousel-control-prev{
-    width: 42px !important
+  width: 42px !important
 }
 .carousel-control-next {
   width: 42px !important

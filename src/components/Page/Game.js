@@ -45,7 +45,8 @@ class Game extends Component {
             videos: undefined,
             rating: undefined,
             comments: undefined,
-            responseTo: undefined
+            responseTo: undefined,
+            developers: undefined
         }
     }
     componentDidMount() {
@@ -67,6 +68,7 @@ class Game extends Component {
                 this.GetComments(res.result[0].id)
                 this.GetCelebrities(res.result[0].id)
                 this.GetVideos(res.result[0].id)
+                this.GetDevelopers(res.result[0].id)
             } else {
                 this.setState({ game: undefined })
                 this.props.history.push('/noMatch')
@@ -202,24 +204,51 @@ class Game extends Component {
             }
         })
     }
-
+    GetDevelopers = (value) => {
+        let searchData = [ { table: 'Developers', fieldData: [
+            {field: 'gameId', data: value},
+        ] } ]
+        Get(searchData,(res) => {
+            if(res.result) {
+                this.setState({ developers: res.result })
+            } else {
+                this.setState({ developers: undefined })
+            }
+        })
+    }
+    OrderDevelopers() {
+        let toReturn = []
+        this.state.developers.forEach((v, i) => {
+            toReturn.push(v.name)
+            toReturn.push(', ')
+        })
+        toReturn.pop()
+        return toReturn
+    }
     // Game
     GameInfo = () => {
         let title = this.state.game ? ReplaceComa(this.state.game.title) : null
-        let releaseDate = this.state.game ? this.state.game.releasedate.substring(0,10) : null
+        let releaseDate = (this.state.game && this.state.game.releasedate) ? this.state.game.releasedate.substring(0,10) : 'Data de lançamento indisponível'
         let company = this.state.company ? this.state.company.name : null
         let engine = this.state.engine ? this.state.engine.name : null
-        let synopsis = this.state.game ? ReplaceComa(this.state.game.synopsis) : null
+        let synopsis = this.state.game ? ReplaceComa(this.state.game.synopsis) : 'Sem sínopse'
         let saga = this.state.saga ? this.state.saga.name : null
         let genres = this.state.genresGame ? this.OrderGenres() : 'Sem géneros associados'
         let rating = this.state.rating ? this.state.rating.avg : null
+        let developers = this.state.developers ? this.OrderDevelopers() : 'Sem desenvolvedores'
         return (
             <React.Fragment>
                 <Row>
                     <Col>
                         <Row><h2>{ title }</h2></Row>
-                        <Row><span className="sub-title">Data de lançamento: { releaseDate } | Publicador: { company } | Engine: { engine } | Saga: { saga }</span></Row>
-                        <Row><span className="sub-title">Géneros: { genres } </span></Row>
+                        <Row>
+                            <span className="sub-title">Data de lançamento: { releaseDate }</span>
+                            <span className="sub-title">| Publicador: { company }</span>
+                            <span className="sub-title">| Engine: { engine }</span>
+                            <span className="sub-title">| Saga: { saga }</span>
+                        </Row>
+                        <Row><span className="sub-title">Desenvolvedores: { developers }</span></Row>
+                        <Row><span className="sub-title">Géneros: { genres }</span></Row>
                     </Col>
                     <Col lg={12} xl={4} >
                         <Jumbotron className="rating">

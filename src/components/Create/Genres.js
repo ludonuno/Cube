@@ -24,7 +24,7 @@ class Genres extends Component {
             { table: 'Genres', fieldData: [ 
                 {field: 'userEmail', data: this.state.user.email},
                 {field: 'userPassword', data: this.state.user.password},
-                {field: 'genre', data: this.genre.value}
+                {field: 'genres', data: this.genre.value}
             ] }
         ]
         this.ChangeAlert(true, 'A ligar ao servidor...', 'info')

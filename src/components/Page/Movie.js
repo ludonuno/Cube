@@ -11,8 +11,6 @@ import SagaRelated from '../utils/SagaRelated'
 import SliderVideos from '../utils/SliderVideos'
 import SliderCelebrities from '../utils/SliderCelebrities'
 
-//TODO: Apresentar os campos do Movie
-
 class Movie extends Component {
     constructor(props) {
         super(props);
@@ -32,6 +30,7 @@ class Movie extends Component {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             movie: undefined,
             publishingCompany: undefined,
+            parentAdvisory: undefined,
             saga: undefined,
             sagaMovie: undefined,
             sagaGame: undefined,
@@ -55,10 +54,12 @@ class Movie extends Component {
         ] } ]
         Get(searchData,(res) => {
             if(res.result) {
+                console.log(res.result[0])
                 this.setState({ movie: res.result[0] })
                 this.GetSaga(res.result[0].sagaid) //TODO: Deve ser devolvido atraves do GetMovie
                 this.GetGenresMovie(res.result[0].id)
                 this.GetRating(res.result[0].id) //TODO: Deve ser devolvido atraves do GetMovie
+                this.GetParentAdvisory(res.result[0].parentadvisoryid) //TODO: Deve ser devolvido atraves do GetMovie
                 this.GetComments(res.result[0].id)
                 this.GetCelebrities(res.result[0].id)
                 this.GetVideos(res.result[0].id)
@@ -166,7 +167,6 @@ class Movie extends Component {
             {field: 'movieId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            console.log(res)
             if(res.result) {
                 this.setState({ videos: res.result })
             } else {
@@ -174,14 +174,28 @@ class Movie extends Component {
             }
         })
     }
+    GetParentAdvisory = (value) => {
+        let searchData = [ { table: 'ParentAdvisory', fieldData: [
+            {field: 'id', data: value},
+        ] } ]
+        Get(searchData,(res) => {
+            if(res.result) {
+                this.setState({ parentAdvisory: res.result[0] })
+            } else {
+                this.setState({ parentAdvisory: undefined })
+            }
+        })
+    }
 
     // Movie
     MovieInfo = () => {
         let title = this.state.movie ? ReplaceComa(this.state.movie.title) : null
-        let releaseDate = this.state.movie ? this.state.movie.releasedate.substring(0,10) : null
-        let publishingCompany = this.state.publishingCompany ? this.state.publishingCompany.name : null
-        let synopsis = this.state.movie ? ReplaceComa(this.state.movie.synopsis) : null
-        let saga = this.state.saga ? this.state.saga.name : null
+        let releaseDate = (this.state.movie && this.state.movie.releasedate) ? this.state.movie.releasedate.substring(0,10) : 'Data de lançamento indisponível'
+        let duration = this.state.movie ? this.state.movie.duration : null
+        let parentAdvisory = this.state.parentAdvisory ? this.state.parentAdvisory.rate : null
+        let parentAdvisoryTitle = this.state.parentAdvisory ? this.state.parentAdvisory.description : null
+        let synopsis = this.state.movie ? ReplaceComa(this.state.movie.synopsis) : 'Sem sínopse'
+        let saga = this.state.saga ? ReplaceComa(this.state.saga.name) : null
         let genres = this.state.genresMovie ? this.OrderGenres() : 'Sem géneros associados'
         let rating = this.state.rating ? this.state.rating.avg : null
         return (
@@ -189,7 +203,12 @@ class Movie extends Component {
                 <Row>
                     <Col>
                         <Row><h2>{ title }</h2></Row>
-                        <Row><span className="sub-title">Data de lançamento: { releaseDate } | Editora: { publishingCompany } | Saga: { saga }</span></Row>
+                        <Row>
+                            <span className="sub-title">Data de lançamento: { releaseDate }</span>
+                            <span className="sub-title">| Duração: {duration} minutos</span>
+                            <span className="sub-title" title={parentAdvisoryTitle}>| Aconselhamento parental: { parentAdvisory }</span>
+                            <span className="sub-title">| Saga: { saga }</span>
+                        </Row>
                         <Row><span className="sub-title">Géneros: { genres } </span></Row>
                     </Col>
                     <Col lg={12} xl={4} >

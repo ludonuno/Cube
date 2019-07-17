@@ -21,8 +21,6 @@ class Video extends Component {
         this.state = { 
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },
-            seasonList: [],
-            episodeList: [],
             bookId: undefined,
             gameId: undefined,
             movieId: undefined,
@@ -155,11 +153,40 @@ class Video extends Component {
         event.preventDefault()
         if(this.props.seriesList[0] && this.props.seasonList[0]) {
             let insertData = [
-                { table: 'VideoSeasons', fieldData: [ 
+                { table: 'VideoSeason', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'link', data: this.linkSeries.value},
-                    {field: 'seriesId', data: this.state.seriesId ? this.state.seriesId : this.props.seriesList[0].id},
+                    {field: 'link', data: this.linkSeason.value},
+                    {field: 'seasonId', data: this.state.seasonId ? this.state.seasonId : this.props.seasonId[0].id},
+                ] }
+            ]
+            this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
+            Create(insertData, (res, rej) => {
+                if(res) {  
+                    if(res.error) {
+                        this.ChangeAlert(true, res.error, 'danger')
+                    } else {
+                        this.formRefSeries.reset()
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
+                } else {
+                    this.ChangeAlert(true, `${rej}`, 'danger')
+                }
+            })
+        } else {
+            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
+        }
+    }
+
+    AddVideoEpisode = (event) => {
+        event.preventDefault()
+        if(this.props.seriesList[0] && this.props.seasonList[0] && this.props.episodeList[0]) {
+            let insertData = [
+                { table: 'VideoEpisode', fieldData: [ 
+                    {field: 'userEmail', data: this.state.user.email},
+                    {field: 'userPassword', data: this.state.user.password},
+                    {field: 'link', data: this.linkEpisode.value},
+                    {field: 'episodeId', data: this.state.episodeId ? this.state.episodeId : this.props.episodeList[0].id},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -356,7 +383,7 @@ class Video extends Component {
                                     <Form.Group as={Row}> 
                                         <Form.Label column lg={12} xl={2}>Link do vídeo</Form.Label>
                                         <Col>
-                                            <Form.Control type="text" ref={(input) => {this.link = input}} required/>
+                                            <Form.Control type="text" ref={(input) => {this.linkSeason = input}} required/>
                                         </Col>
                                     </Form.Group>
                                     <ComboBox header={'Séries'} list={this.props.seriesList} onChange={this.SetSeries} />
@@ -380,7 +407,7 @@ class Video extends Component {
                                     <Form.Group as={Row}> 
                                         <Form.Label column lg={12} xl={2}>Link do vídeo</Form.Label>
                                         <Col>
-                                            <Form.Control type="text" ref={(input) => {this.link = input}} required/>
+                                            <Form.Control type="text" ref={(input) => {this.linkEpisode = input}} required/>
                                         </Col>
                                     </Form.Group>
                                     <ComboBox header={'Séries'} list={this.props.seriesList} onChange={this.SetSeries} />

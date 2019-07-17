@@ -188,10 +188,10 @@ class Book extends Component {
     // Book
     BookInfo = () => {
         let title = this.state.book ? ReplaceComa(this.state.book.title) : null
-        let releaseDate = this.state.book ? this.state.book.releasedate.substring(0,10) : null
-        let publishingCompany = this.state.publishingCompany ? this.state.publishingCompany.name : null
-        let synopsis = this.state.book ? ReplaceComa(this.state.book.synopsis) : null
-        let saga = this.state.saga ? this.state.saga.name : null
+        let releaseDate = (this.state.book && this.state.book.releasedate) ? this.state.book.releasedate.substring(0,10) : 'Data de lançamento indisponível'
+        let publishingCompany = this.state.publishingCompany ? ReplaceComa(this.state.publishingCompany.name) : null
+        let synopsis = this.state.book ? ReplaceComa(this.state.book.synopsis) : 'Sem sínopse'
+        let saga = this.state.saga ? ReplaceComa(this.state.saga.name) : null
         let genres = this.state.genresBook ? this.OrderGenres() : 'Sem géneros associados'
         let rating = this.state.rating ? this.state.rating.avg : null
         return (
@@ -199,7 +199,11 @@ class Book extends Component {
                 <Row>
                     <Col>
                         <Row><h2>{ title }</h2></Row>
-                        <Row><span className="sub-title">Data de lançamento: { releaseDate } | Editora: { publishingCompany } | Saga: { saga }</span></Row>
+                        <Row>
+                            <span className="sub-title">Data de lançamento: { releaseDate }</span>
+                            <span className="sub-title">| Editora: { publishingCompany }</span>
+                            <span className="sub-title">| Saga: { saga }</span>
+                        </Row>
                         <Row><span className="sub-title">Géneros: { genres } </span></Row>
                     </Col>
                     <Col lg={12} xl={4} >

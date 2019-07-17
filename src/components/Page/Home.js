@@ -31,7 +31,10 @@ class Home extends Component {
             {field: 'title', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ searchList: res.result })  
+            if(res.result) {
+                this.ChangeAlert(false, `Não foram encontrados registos de : ${value}`, 'danger')
+                this.setState({ searchList: res.result })
+            }
             else {
                 this.setState({ searchList: [] })
                 this.ChangeAlert(true, `Não foram encontrados registos de : ${value}`, 'danger')
@@ -44,7 +47,10 @@ class Home extends Component {
             {field: 'title', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ searchList: res.result })  
+            if(res.result) {
+                this.ChangeAlert(false, `Não foram encontrados registos de : ${value}`, 'danger')
+                this.setState({ searchList: res.result })
+            }
             else {
                 this.setState({ searchList: [] })
                 this.ChangeAlert(true, `Não foram encontrados registos de : ${value}`, 'danger')
@@ -57,7 +63,10 @@ class Home extends Component {
             {field: 'title', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ searchList: res.result })  
+            if(res.result) {
+                this.ChangeAlert(false, `Não foram encontrados registos de : ${value}`, 'danger')
+                this.setState({ searchList: res.result })
+            }
             else {
                 this.setState({ searchList: [] })
                 this.ChangeAlert(true, `Não foram encontrados registos de : ${value}`, 'danger')
@@ -70,7 +79,10 @@ class Home extends Component {
             {field: 'title', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res && res.result) this.setState({ searchList: res.result }) 
+            if(res && res.result) {
+                this.ChangeAlert(false, `Não foram encontrados registos de : ${value}`, 'danger')
+                this.setState({ searchList: res.result })
+            }
             else {
                 this.setState({ searchList: [] })
                 this.ChangeAlert(true, `Não foram encontrados registos de : ${value}`, 'danger')
@@ -83,7 +95,10 @@ class Home extends Component {
             {field: 'name', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ searchList: res.result })  
+            if(res.result) {
+                this.ChangeAlert(false, `Não foram encontrados registos de : ${value}`, 'danger')
+                this.setState({ searchList: res.result })
+            }
             else {
                 this.setState({ searchList: [] })
                 this.ChangeAlert(true, `Não foram encontrados registos de : ${value}`, 'danger')
@@ -122,7 +137,7 @@ class Home extends Component {
                 </React.Fragment>
             )
         } else {
-            return(<Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />)
+            return null
         }
     }
 
@@ -156,6 +171,7 @@ class Home extends Component {
             default:
                 break;
         }
+        this.ChangeAlert(true, 'A ligar ao servidor...', 'info')
         this.setState({ hasSearched: true})
         this.setState({ searchPage: 1 })
     }
@@ -200,6 +216,7 @@ class Home extends Component {
                                 <this.SearchForm/>
                             </Col>
                         </Row>
+                        <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                         <this.ShowSearchResult />
                     </Container>
                     <Footer />

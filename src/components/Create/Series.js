@@ -85,7 +85,7 @@ class Series extends Component {
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Data</Form.Label>
                         <Col>
-                            <Form.Control type="date" ref={(input) => {this.releaseDate = input}} required/>
+                            <Form.Control type="date" ref={(input) => {this.releaseDate = input}}/>
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row}> 

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { Container, Col, Row, Jumbotron, Form, Tabs, Tab, } from 'react-bootstrap'
+import { Container, Col, Row, Jumbotron, Tabs, Tab, Card, Accordion } from 'react-bootstrap'
 
 import Navbar from '../CustomNavbar'
-import { Get, Create } from '../../scripts/api'
+import { Get } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 import Footer from '../Footer';
 
@@ -25,9 +25,7 @@ class Series extends Component {
         this.GetCelebrities = this.GetCelebrities.bind(this)
         this.SeriesInfo = this.SeriesInfo.bind(this)
         this.OrderGenres = this.OrderGenres.bind(this)
-        this.AddRating = this.AddRating.bind(this)
         this.GetRating = this.GetRating.bind(this)
-        this.FormRating = this.FormRating.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             series: undefined,
@@ -42,7 +40,9 @@ class Series extends Component {
             videos: undefined,
             rating: undefined,
             comments: undefined,
-            responseTo: undefined
+            responseTo: undefined,
+            seasonList: undefined,
+            episodeList: undefined
         }
     }
     componentDidMount() {
@@ -59,9 +59,11 @@ class Series extends Component {
                 this.GetSaga(res.result[0].sagaid) //TODO: Deve ser devolvido atraves do GetSeries
                 this.GetGenresSeries(res.result[0].id)
                 this.GetRating(res.result[0].id) //TODO: Deve ser devolvido atraves do GetSeries
+                this.GetParentAdvisory(res.result[0].parentadvisoryid) //TODO: Deve ser devolvido atraves do GetSeries
                 this.GetComments(res.result[0].id)
                 this.GetCelebrities(res.result[0].id)
                 this.GetVideos(res.result[0].id)
+                this.GetSeasons(res.result[0].id)
             } else {
                 this.setState({ series: undefined })
                 this.props.history.push('/noMatch')
@@ -166,7 +168,6 @@ class Series extends Component {
             {field: 'seriesId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            console.log(res)
             if(res.result) {
                 this.setState({ videos: res.result })
             } else {
@@ -174,12 +175,105 @@ class Series extends Component {
             }
         })
     }
+    GetSeasons = (value) => {
+        let searchData = [ { table: 'Season', fieldData: [
+            {field: 'seriesId', data: value},
+        ] } ]
+        Get(searchData,(res) => {
+            if(res.result) {
+                this.setState({ seasonList: res.result })
+                res.result.forEach((v, i) => {
+                    this.GetEpisodes(v)
+                })
+            } else {
+                this.setState({ seasonList: undefined })
+            }
+        })
+    }
+    GetEpisodes = (value) => {
+        let searchData = [ { table: 'Episode', fieldData: [
+            {field: 'seasonId', data: value.id},
+        ] } ]
+        Get(searchData,(res) => {
+            if(res.result) {
+                let seasonList = [...this.state.seasonList]
+                seasonList.forEach((v, i) => {
+                    if(v === value) {
+                        value.episodes = res.result
+                        v = value
+                    }
+                })
+                this.setState({ seasonList: seasonList })
+            }
+        })
+    }
+    GetParentAdvisory = (value) => {
+        let searchData = [ { table: 'ParentAdvisory', fieldData: [
+            {field: 'id', data: value},
+        ] } ]
+        Get(searchData,(res) => {
+            if(res.result) {
+                this.setState({ parentAdvisory: res.result[0] })
+            } else {
+                this.setState({ parentAdvisory: undefined })
+            }
+        })
+    }
 
+    SeasonEpisode = () => {
+        if(this.state.seasonList) {
+            let SeasonCards = []
+            this.state.seasonList.forEach((v, i) => {
+                let episodes = []
+                if(v.episodes) {
+                    v.episodes.forEach((v, i) => {
+                        episodes.push(
+                            <Row key={i}>
+                                <Col lg={12}>
+                                    <a href={`/Episode/${v.id}`}><h4>{v.title ? ReplaceComa(v.title) : 'Sem título'} </h4></a>
+                                    <span className="sub-title">{v.releasedate ? v.releasedate.substring(0,10) : 'Sem data de lançamento'} </span>
+                                </Col>
+                                <Col lg={12}>
+                                    <p>{v.synopsis ? ReplaceComa(v.synopsis) : 'Sem sinópse' }</p>
+                                </Col>
+                            </Row>
+                        )
+                    })
+                }
+                SeasonCards.push(
+                    <Card key={i}>
+                        <Accordion.Toggle as={Card.Header} eventKey={i} id={i}>
+                            {v.title}
+                        </Accordion.Toggle>
+                        <Accordion.Collapse eventKey={i}>
+                            <Card.Body>
+                                <Row>
+                                    <Col lg={12}>
+                                        <a href={`/Season/${v.id}`}><h4>{v.title ? ReplaceComa(v.title) : 'Sem título'} </h4></a>
+                                        <span className="sub-title">{v.releasedate ? v.releasedate.substring(0,10) : 'Sem data de lançamento'} </span>
+                                    </Col>
+                                    <Col lg={12}>{v.synopsis ? ReplaceComa(v.synopsis) : 'Sem sinópse' } </Col>
+                                </Row>
+                                <br/>
+                                {episodes[0] ? episodes : 'Esta temporada não tem episódios'}
+                            </Card.Body>
+                        </Accordion.Collapse>
+                    </Card>
+                )
+            })
+            return (<Accordion defaultActiveKey="0">
+                    {SeasonCards}
+                    <br/>
+                </Accordion>)
+        }
+        return <p>Sem temporadas e episódios associados</p>
+    }
     // Series
     SeriesInfo = () => {
         let title = this.state.series ? ReplaceComa(this.state.series.title) : null
-        let releaseDate = this.state.series ? this.state.series.releasedate.substring(0,10) : null
-        let publishingCompany = this.state.publishingCompany ? this.state.publishingCompany.name : null
+        let releaseDate = (this.state.series && this.state.series.releasedate) ? this.state.series.releasedate.substring(0,10) : 'Data de lançamento indisponível'
+        let parentAdvisory = this.state.parentAdvisory ? this.state.parentAdvisory.rate : null
+        let parentAdvisoryTitle = this.state.parentAdvisory ? this.state.parentAdvisory.description : null
         let synopsis = this.state.series ? ReplaceComa(this.state.series.synopsis) : null
         let saga = this.state.saga ? this.state.saga.name : null
         let genres = this.state.genresSeries ? this.OrderGenres() : 'Sem géneros associados'
@@ -189,14 +283,17 @@ class Series extends Component {
                 <Row>
                     <Col>
                         <Row><h2>{ title }</h2></Row>
-                        <Row><span className="sub-title">Data de lançamento: { releaseDate } | Editora: { publishingCompany } | Saga: { saga }</span></Row>
+                        <Row>
+                            <span className="sub-title">Data de lançamento: { releaseDate }</span>
+                            <span className="sub-title" title={parentAdvisoryTitle}>| Aconselhamento parental: { parentAdvisory }</span>
+                            <span className="sub-title">| Saga: { saga }</span>
+                        </Row>
                         <Row><span className="sub-title">Géneros: { genres } </span></Row>
                     </Col>
                     <Col lg={12} xl={4} >
                         <Jumbotron className="rating">
                             Avaliação: { rating ? `${rating}/10` : 'Sem avaliações' }
                             <br/>
-                            <this.FormRating />
                         </Jumbotron>
                     </Col>
                 </Row>
@@ -221,24 +318,6 @@ class Series extends Component {
         })
         return genresSeries
     }
-    
-    // Rating
-    AddRating = (event) => {
-        event.preventDefault()
-        let searchData = [ { table: 'SeriesRating', fieldData: [
-            {field: 'userEmail', data: this.state.user.email},
-            {field: 'userPassword', data: this.state.user.password},
-            {field: 'userId', data: this.state.user.id},
-            {field: 'seriesId', data: this.state.series.id},
-            {field: 'rate', data: this.rate.value},
-        ] } ]
-        Create(searchData,(res) => {
-            if(res.result) {
-                this.GetRating(this.state.series.id)
-            } 
-            else this.setState({ rating: undefined })
-        })
-    }
     GetRating = (value) => {
         let searchData = [ { table: 'SeriesRating', fieldData: [
             {field: 'seriesId', data: value},
@@ -247,22 +326,6 @@ class Series extends Component {
             if(res.result) this.setState({ rating: res.result[0] })
             else this.setState({ rating: undefined })
         })
-    }
-    FormRating = () => {
-        if (!this.state.user) return null
-        return (
-            <React.Fragment>
-                <br/>
-                <Form onSubmit={this.AddRating}>
-                    <Form.Group as={Row}>
-                        <Form.Label column lg={6}>Avaliação</Form.Label>
-                        <Col>
-                            <Form.Control type="number" defaultValue="0" min="0" max="10" ref={(input) => {this.rate = input}}/>
-                        </Col>
-                    </Form.Group>
-                </Form>
-            </React.Fragment>
-        )
     }
 
     render() { 
@@ -289,6 +352,10 @@ class Series extends Component {
                         <Tab eventKey="videos" title="Vídeos">
                             <br/>
                             <SliderVideos list={this.state.videos}/>
+                        </Tab>
+                        <Tab eventKey="Season" title="Temporadas e episódios">
+                            <br/>
+                            <this.SeasonEpisode/>
                         </Tab>
                     </Tabs>
                 </Container>

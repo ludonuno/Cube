@@ -5,8 +5,13 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Home from './components/Page/Home'
 
 import Movie from './components/Page/Movie'
+
 import Book from './components/Page/Book'
+
 import Series from './components/Page/Series'
+import Season from './components/Page/Season'
+import Episode from './components/Page/Episode'
+
 import Game from './components/Page/Game'
 import Celebrity from './components/Page/Celebrity'
 import UserCreate from './components/Page/UserCreate'
@@ -29,8 +34,8 @@ class App extends Component {
                     <Route path="/movie/:id" render={(props) => <Movie {...props}/>}/>
                     <Route path="/book/:id" render={(props) => <Book {...props}/>}/>
                     <Route path="/series/:id" render={(props) => <Series {...props}/>}/>
-                    <Route path="/season/:id" render={(props) => <Series {...props}/>}/>
-                    <Route path="/episode/:id" render={(props) => <Series {...props}/>}/>
+                    <Route path="/season/:id" render={(props) => <Season {...props}/>}/>
+                    <Route path="/episode/:id" render={(props) => <Episode {...props}/>}/>
                     <Route path="/game/:id" render={(props) => <Game {...props}/>}/>     
                     <Route path="/celebrity/:id" render={(props) => <Celebrity {...props}/>}/>
                     <Route path="/user/create" render={(props) => <UserCreate {...props}/>}/>

@@ -42,6 +42,7 @@ class Season extends Component {
                     } else {
                         this.ResetForm()
                         this.ChangeAlert(true, res.result.message, 'success')
+                        this.props.onSubmit(this.state.seriesId ? this.state.seriesId : this.props.seriesList[0].id)
                     }
                 } else {
                     this.ChangeAlert(true, `${rej}`, 'danger')
@@ -77,8 +78,7 @@ class Season extends Component {
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Data</Form.Label>
                         <Col>
-                            {/* TODO: ADICIONAR MIN */}
-                            <Form.Control type="date" ref={(input) => {this.releaseDate = input}} required/>
+                            <Form.Control type="date" ref={(input) => {this.releaseDate = input}}/>
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row}> 

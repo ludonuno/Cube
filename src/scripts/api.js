@@ -64,6 +64,7 @@ const HandleCreateData = (data, callback) => {
 const Create = (insertData, callback) => {
     return new Promise((resolve, reject) => {
         HandleCreateData(insertData, (res, rej) => {
+            console.log(res)
             if(res){
                 request.post(res, (error, response, body) => {
                 if(body)
