@@ -4,7 +4,6 @@ import { Redirect } from 'react-router-dom'
 import { Update } from '../../scripts/api'
 
 import Navbar from '../CustomNavbar'
-import { thisExpression } from '@babel/types';
 //TODO: fazer com que a página funcione
 //TODO: fazer com que a página funcione
 //TODO: fazer com que a página funcione
