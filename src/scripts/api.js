@@ -44,7 +44,7 @@ const Get = (searchData, callback) => {
     )
 }
 
-const HandleCreateData = (data, callback) => {
+const HandleCreateDeleteUpdateData = (data, callback) => {
     return new Promise((resolve, reject) => {
         let table = data[0].table
         let fieldsData = ''
@@ -63,8 +63,7 @@ const HandleCreateData = (data, callback) => {
 
 const Create = (insertData, callback) => {
     return new Promise((resolve, reject) => {
-        HandleCreateData(insertData, (res, rej) => {
-            console.log(res)
+        HandleCreateDeleteUpdateData(insertData, (res, rej) => {
             if(res){
                 request.post(res, (error, response, body) => {
                 if(body)
@@ -80,28 +79,29 @@ const Create = (insertData, callback) => {
     )
 }
 
-const HandleDeleteData = (data, callback) => {
+const Delete = (deleteData, callback) => {
     return new Promise((resolve, reject) => {
-        let table = data[0].table
-        let fieldsData = ''
-        let multipleParams = 0
-        data[0].fieldData.forEach(d => {
-            if(multipleParams) fieldsData += '&'
-            fieldsData += `${d.field}=${d.data}`
-            multipleParams++
+        HandleCreateDeleteUpdateData(deleteData, (res, rej) => {
+            if(res){
+                request.delete(res, (error, response, body) => {
+                if(body)
+                    resolve(JSON.parse(body))
+                else
+                    reject('Erro na ligação à base de dados')
+                })
+            }
         })
-        resolve(`${url}/${table}?${fieldsData}`)
     }).then(
         resolve => callback(resolve, undefined),
         reject => callback(undefined, reject)
     )
 }
 
-const Delete = (deleteData, callback) => {
+const Update = (updateData, callback) => {
     return new Promise((resolve, reject) => {
-        HandleDeleteData(deleteData, (res, rej) => {
+        HandleCreateDeleteUpdateData(updateData, (res, rej) => {
             if(res){
-                request.delete(res, (error, response, body) => {
+                request.put(res, (error, response, body) => {
                 if(body)
                     resolve(JSON.parse(body))
                 else
@@ -118,5 +118,6 @@ const Delete = (deleteData, callback) => {
 module.exports = {
     Get,
     Create,
-    Delete
+    Delete,
+    Update
 }

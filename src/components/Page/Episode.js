@@ -117,9 +117,9 @@ class Episode extends Component {
 
     // Episode
     EpisodeInfo = () => {
-        let title = this.state.episode ? ReplaceComa(this.state.episode.title) : null
-        let releaseDate = (this.state.episode && this.state.episode.releasedate) ? this.state.episode.releasedate.substring(0,10) : 'Data de lançamento indisponível'
-        let synopsis = this.state.episode ? ReplaceComa(this.state.episode.synopsis) : null
+        let title = this.state.episode ? ReplaceComa(this.state.episode.title) : 'Título desconhecido'
+        let releaseDate = (this.state.episode && this.state.episode.releasedate) ? this.state.episode.releasedate.substring(0,10) : 'Data de lançamento desconhecida'
+        let synopsis = (this.state.episode && this.state.episode.synopsis) ? ReplaceComa(this.state.episode.synopsis) : 'Sínopse desconhecida'
         let rating = this.state.rating ? this.state.rating.avg : null
         return (
             <React.Fragment>

@@ -113,12 +113,12 @@ class Home extends Component {
             for (let n = index ; n <= this.state.searchPage * 5 - 1; n++) {
                 if(this.state.searchList[n]) {
                     let element = this.state.searchList[n]
-                    let header = undefined, subTitle = undefined, body = undefined
-                    header = element.name ? ReplaceComa(element.name) : header
-                    header = element.title ? ReplaceComa(element.title) : header
-                    subTitle = element.releasedate ? element.releasedate.substring(0,10) : subTitle
-                    subTitle = element.birthday ? element.birthday.substring(0,10) : subTitle
-                    body = element.synopsis ? element.synopsis : body
+                    let header = null, subTitle = null, body = null
+                    header = element.name ? ReplaceComa(element.name) : 'Sem nome.'
+                    header = element.title ? ReplaceComa(element.title) : 'Sem título.'
+                    subTitle = element.releasedate ? element.releasedate.substring(0,10) : 'Data de lançamento indisponível.'
+                    subTitle = element.birthday ? element.birthday.substring(0,10) : 'Data de aniversário indisponível.'
+                    body = element.synopsis ? element.synopsis : 'Sinópse indisponível.'
                     toRender.push(
                         <Row key={n}>
                             <Col>

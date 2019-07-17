@@ -189,13 +189,13 @@ class Movie extends Component {
 
     // Movie
     MovieInfo = () => {
-        let title = this.state.movie ? ReplaceComa(this.state.movie.title) : null
-        let releaseDate = (this.state.movie && this.state.movie.releasedate) ? this.state.movie.releasedate.substring(0,10) : 'Data de lançamento indisponível'
-        let duration = this.state.movie ? this.state.movie.duration : null
-        let parentAdvisory = this.state.parentAdvisory ? this.state.parentAdvisory.rate : null
-        let parentAdvisoryTitle = this.state.parentAdvisory ? this.state.parentAdvisory.description : null
-        let synopsis = this.state.movie ? ReplaceComa(this.state.movie.synopsis) : 'Sem sínopse'
-        let saga = this.state.saga ? ReplaceComa(this.state.saga.name) : null
+        let title = this.state.movie ? ReplaceComa(this.state.movie.title) : 'Título desconhecido'
+        let releaseDate = (this.state.movie && this.state.movie.releasedate) ? this.state.movie.releasedate.substring(0,10) : 'Data de lançamento desconhecida'
+        let duration = this.state.movie ? this.state.movie.duration : 'Duração desconhecida'
+        let parentAdvisory = this.state.parentAdvisory ? this.state.parentAdvisory.rate : 'Aconselhamento parental desconhecido'
+        let parentAdvisoryTitle = this.state.parentAdvisory ? this.state.parentAdvisory.description : 'Descrição do Aconselhamento parental desconhecida'
+        let synopsis = (this.state.movie && this.state.movie.synopsis) ? ReplaceComa(this.state.movie.synopsis) : 'Sínopse desconhecida'
+        let saga = this.state.saga ? ReplaceComa(this.state.saga.name) : 'Saga desconhecida'
         let genres = this.state.genresMovie ? this.OrderGenres() : 'Sem géneros associados'
         let rating = this.state.rating ? this.state.rating.avg : null
         return (

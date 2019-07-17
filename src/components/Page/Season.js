@@ -70,11 +70,11 @@ class Season extends Component {
                 episodes.push(
                     <Row key={i}>
                         <Col lg={12}>
-                            <a href={`/Episode/${v.id}`}><h4>{v.title ? ReplaceComa(v.title) : 'Sem título'} </h4></a>
-                            <span className="sub-title">{v.releasedate ? v.releasedate.substring(0,10) : 'Sem data de lançamento'} </span>
+                            <a href={`/Episode/${v.id}`}><h4>{v.title ? ReplaceComa(v.title) : 'Título desconhecido'} </h4></a>
+                            <span className="sub-title">{v.releasedate ? v.releasedate.substring(0,10) : 'Data de lançamento desconhecida'} </span>
                         </Col>
                         <Col lg={12}>
-                            <p>{v.synopsis ? ReplaceComa(v.synopsis) : 'Sem sinópse' }</p>
+                            <p>{v.synopsis ? ReplaceComa(v.synopsis) : 'Sinópse desconhecida' }</p>
                         </Col>
                     </Row>
                 )
@@ -85,9 +85,9 @@ class Season extends Component {
     }
     // Season
     SeasonInfo = () => {
-        let title = this.state.season ? ReplaceComa(this.state.season.title) : null
-        let releaseDate = (this.state.season && this.state.season.releasedate) ? this.state.season.releasedate.substring(0,10) : 'Data de lançamento indisponível'
-        let synopsis = this.state.season ? ReplaceComa(this.state.season.synopsis) : null
+        let title = this.state.season ? ReplaceComa(this.state.season.title) : 'Título desconhecido'
+        let releaseDate = (this.state.season && this.state.season.releasedate) ? this.state.season.releasedate.substring(0,10) : 'Data de lançamento desconhecido'
+        let synopsis = (this.state.season && this.state.season.synopsis) ? ReplaceComa(this.state.season.synopsis) : 'Sínopse desconhecida'
         let rating = this.state.rating ? this.state.rating.avg : null
         return (
             <React.Fragment>

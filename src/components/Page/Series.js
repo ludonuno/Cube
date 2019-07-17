@@ -270,12 +270,12 @@ class Series extends Component {
     }
     // Series
     SeriesInfo = () => {
-        let title = this.state.series ? ReplaceComa(this.state.series.title) : null
-        let releaseDate = (this.state.series && this.state.series.releasedate) ? this.state.series.releasedate.substring(0,10) : 'Data de lançamento indisponível'
-        let parentAdvisory = this.state.parentAdvisory ? this.state.parentAdvisory.rate : null
-        let parentAdvisoryTitle = this.state.parentAdvisory ? this.state.parentAdvisory.description : null
-        let synopsis = this.state.series ? ReplaceComa(this.state.series.synopsis) : null
-        let saga = this.state.saga ? this.state.saga.name : null
+        let title = this.state.series ? ReplaceComa(this.state.series.title) : 'Título desconhecido'
+        let releaseDate = (this.state.series && this.state.series.releasedate) ? this.state.series.releasedate.substring(0,10) : 'Data de lançamento desconhecido'
+        let parentAdvisory = this.state.parentAdvisory ? this.state.parentAdvisory.rate : 'Aconselhamento parental desconhecido'
+        let parentAdvisoryTitle = this.state.parentAdvisory ? this.state.parentAdvisory.description : 'Descrição do Aconselhamento parental desconhecida'
+        let synopsis = (this.state.series && this.state.series.synopsis) ? ReplaceComa(this.state.series.synopsis) : 'Sínopse desconhecida'
+        let saga = this.state.saga ? this.state.saga.name : 'Saga desconhecida'
         let genres = this.state.genresSeries ? this.OrderGenres() : 'Sem géneros associados'
         let rating = this.state.rating ? this.state.rating.avg : null
         return (

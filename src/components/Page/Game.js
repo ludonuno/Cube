@@ -227,15 +227,15 @@ class Game extends Component {
     }
     // Game
     GameInfo = () => {
-        let title = this.state.game ? ReplaceComa(this.state.game.title) : null
-        let releaseDate = (this.state.game && this.state.game.releasedate) ? this.state.game.releasedate.substring(0,10) : 'Data de lançamento indisponível'
-        let company = this.state.company ? this.state.company.name : null
-        let engine = this.state.engine ? this.state.engine.name : null
-        let synopsis = this.state.game ? ReplaceComa(this.state.game.synopsis) : 'Sem sínopse'
-        let saga = this.state.saga ? this.state.saga.name : null
+        let title = this.state.game ? ReplaceComa(this.state.game.title) :  'Título desconhecido'
+        let releaseDate = (this.state.game && this.state.game.releasedate) ? this.state.game.releasedate.substring(0,10) : 'Data de lançamento desconhecida'
+        let company = this.state.company ? this.state.company.name : 'Publicadora desconhecida'
+        let engine = this.state.engine ? this.state.engine.name : 'Engine desconhecido'
+        let synopsis = (this.state.game && this.state.game.synopsis) ? ReplaceComa(this.state.game.synopsis) : 'Sínopse desconhecida'
+        let saga = this.state.saga ? this.state.saga.name : 'Saga desconhecida'
         let genres = this.state.genresGame ? this.OrderGenres() : 'Sem géneros associados'
         let rating = this.state.rating ? this.state.rating.avg : null
-        let developers = this.state.developers ? this.OrderDevelopers() : 'Sem desenvolvedores'
+        let developers = this.state.developers ? this.OrderDevelopers() : 'Desenvolvedores desconhecidos'
         return (
             <React.Fragment>
                 <Row>

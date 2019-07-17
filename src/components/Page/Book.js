@@ -187,12 +187,12 @@ class Book extends Component {
 
     // Book
     BookInfo = () => {
-        let title = this.state.book ? ReplaceComa(this.state.book.title) : null
-        let releaseDate = (this.state.book && this.state.book.releasedate) ? this.state.book.releasedate.substring(0,10) : 'Data de lançamento indisponível'
-        let publishingCompany = this.state.publishingCompany ? ReplaceComa(this.state.publishingCompany.name) : null
-        let synopsis = this.state.book ? ReplaceComa(this.state.book.synopsis) : 'Sem sínopse'
-        let saga = this.state.saga ? ReplaceComa(this.state.saga.name) : null
-        let genres = this.state.genresBook ? this.OrderGenres() : 'Sem géneros associados'
+        let title = this.state.book ? ReplaceComa(this.state.book.title) : 'Título desconhecido'
+        let releaseDate = (this.state.book && this.state.book.releasedate) ? this.state.book.releasedate.substring(0,10) : 'Data de lançamento desconhecida'
+        let publishingCompany = this.state.publishingCompany ? ReplaceComa(this.state.publishingCompany.name) : 'Publicadora desconhecida'
+        let synopsis = (this.state.book && this.state.book.synopsis) ? ReplaceComa(this.state.book.synopsis) : 'Sínopse desconhecida'
+        let saga = this.state.saga ? ReplaceComa(this.state.saga.name) : 'Saga desconhecida'
+        let genres = this.state.genresBook ? this.OrderGenres() : 'Géneros associados desconhecidos'
         let rating = this.state.rating ? this.state.rating.avg : null
         return (
             <React.Fragment>
