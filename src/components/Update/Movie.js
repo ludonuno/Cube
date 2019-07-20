@@ -19,7 +19,6 @@ class Movie extends Component {
             alert: { visible: false, message: '', variant: '' },
             parentAdvisoryId: undefined,
             sagaId: undefined,
-            parentAdvisoryId: undefined,
             selectedMovie: undefined
         }
     }
