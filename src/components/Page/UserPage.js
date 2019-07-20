@@ -2,17 +2,12 @@ import React, { Component } from 'react';
 import { Container, Row, Col, Form, Button, Tab, Tabs } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 import { Update } from '../../scripts/api'
+import Alert from '../utils/Alert'
 
 import Navbar from '../CustomNavbar'
+
 //TODO: fazer com que a página funcione
-//TODO: fazer com que a página funcione
-//TODO: fazer com que a página funcione
-//TODO: fazer com que a página funcione
-//TODO: fazer com que a página funcione
-//TODO: fazer com que a página funcione
-//TODO: fazer com que a página funcione
-//TODO: fazer com que a página funcione
-//TODO: fazer com que a página funcione
+
 class UserPage extends Component {
     constructor(props) {
         super(props);
@@ -22,8 +17,13 @@ class UserPage extends Component {
         this.FormAniversario = this.FormAniversario.bind(this)
         this.FormDescricao = this.FormDescricao.bind(this)
         this.state = {
-            user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined
+            user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
+            alert: { visible: false, message: '', variant: '' }
         }
+    }
+
+    ChangeAlert(visible, message, variant) {
+        this.setState({ alert: { visible: visible, message: message, variant: variant} })
     }
 
     FormName = () => {
@@ -52,6 +52,12 @@ class UserPage extends Component {
     FormEmail = () => {
         return (
             <Form onSubmit={this.UpdateUserEmail}>
+                <Form.Group as={Row}> 
+                    <Form.Label column lg={12} xl={2} size="sm">E-mail actual</Form.Label>
+                    <Col>
+                        <Form.Control type="email" ref={(input) => {this.currentEmail = input}} required size="sm"/>
+                    </Col>
+                </Form.Group>
                 <Form.Group as={Row}> 
                     <Form.Label column lg={12} xl={2} size="sm">Novo E-mail</Form.Label>
                     <Col>
@@ -151,8 +157,6 @@ class UserPage extends Component {
     //TODO: Por estas 4 funções a funcionar
     UpdateUserName = (event) => {
         event.preventDefault()
-        console.log( 0, this.currentPasswordName.value)
-        console.log( 1, this.name.value)
         let updateData = [ { table: 'User', fieldData: [
             {field: 'userEmail', data: this.state.user.email},
             {field: 'userPassword', data: this.currentPasswordName.value},
@@ -160,42 +164,53 @@ class UserPage extends Component {
             {field: 'name', data: this.name.value}
         ] } ]
         Update(updateData,(res) => {
-            console.log(res)
-            // if(res.result) {
-            //     this.GetRating(this.state.movie.id)
-            // } 
-            // else this.setState({ rating: undefined })
+            if(res && res.result) {
+                localStorage.removeItem('user')
+                this.setState({ user: undefined })
+            }
         })
     }
     UpdateUserEmail = (event) => {
         event.preventDefault()
-        let updateData = [ { table: 'User', fieldData: [
-            {field: 'userEmail', data: this.state.user.email},
-            {field: 'userPassword', data: this.currentPasswordEmail.value},
-            {field: 'id', data: this.state.user.id},
-            {field: 'email', data: this.email}
-        ] } ]
-        Update(updateData,(res) => {
-            if(res.result) {
-                this.GetRating(this.state.movie.id)
-            } 
-            else this.setState({ rating: undefined })
-        })
+        if(this.currentEmail.value === this.state.user.email) {
+            if( this.email.value !== this.state.user.email) {
+                let updateData = [ { table: 'User', fieldData: [
+                    {field: 'userEmail', data: this.state.user.email},
+                    {field: 'userPassword', data: this.currentPasswordEmail.value},
+                    {field: 'id', data: this.state.user.id},
+                    {field: 'email', data: this.email.value}
+                ] } ]
+                this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
+                Update(updateData,(res) => {
+                    if(res && res.result) {
+                        localStorage.removeItem('user')
+                        this.setState({ user: undefined })
+                    } else if(res.error) {
+                        this.ChangeAlert(true, res.error, 'warning')
+                    }
+                })
+            } else this.ChangeAlert(true, 'O novo email não pode ser igual ao atual', 'warning')
+        } else this.ChangeAlert(true, 'O email não corresponde ao atual', 'warning')
     }
     UpdateUserPassword = (event) => {
         event.preventDefault()
-        let updateData = [ { table: 'User', fieldData: [
-            {field: 'userEmail', data: this.state.user.email},
-            {field: 'userPassword', data: this.currentPasswordPassword.value},
-            {field: 'id', data: this.state.user.id},
-            {field: 'password', data: this.password}
-        ] } ]
-        Update(updateData,(res) => {
-            if(res.result) {
-                this.GetRating(this.state.movie.id)
-            } 
-            else this.setState({ rating: undefined })
-        })
+        if(this.currentEmail.value === this.state.user.email) {
+            let updateData = [ { table: 'User', fieldData: [
+                {field: 'userEmail', data: this.state.user.email},
+                {field: 'userPassword', data: this.currentPasswordPassword.value},
+                {field: 'id', data: this.state.user.id},
+                {field: 'password', data: this.password.value}
+            ] } ]
+            this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
+            Update(updateData,(res) => {
+                if(res && res.result) {
+                    localStorage.removeItem('user')
+                    this.setState({ user: undefined })
+                } else if(res.error) {
+                    this.ChangeAlert(true, res.error, 'warning')
+                }
+            })
+        } else this.ChangeAlert(true, 'O email não corresponde ao atual', 'warning')
     }
     UpdateUserBirthday = (event) => {
         event.preventDefault()
@@ -203,13 +218,14 @@ class UserPage extends Component {
             {field: 'userEmail', data: this.state.user.email},
             {field: 'userPassword', data: this.currentPasswordBirthday.value},
             {field: 'id', data: this.state.user.id},
-            {field: 'birthday', data: this.birthday}
+            {field: 'birthday', data: this.birthday.value}
         ] } ]
+        this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
         Update(updateData,(res) => {
-            if(res.result) {
-                this.GetRating(this.state.movie.id)
-            } 
-            else this.setState({ rating: undefined })
+            if(res && res.result) {
+                localStorage.removeItem('user')
+                this.setState({ user: undefined })
+            }
         })
     }
     UpdateUserDescription = (event) => {
@@ -218,13 +234,14 @@ class UserPage extends Component {
             {field: 'userEmail', data: this.state.user.email},
             {field: 'userPassword', data: this.currentPasswordDescription.value},
             {field: 'id', data: this.state.user.id},
-            {field: 'description', data: this.description}
+            {field: 'description', data: this.description.value}
         ] } ]
+        this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
         Update(updateData,(res) => {
-            if(res.result) {
-                this.GetRating(this.state.movie.id)
-            } 
-            else this.setState({ rating: undefined })
+            if(res && res.result) {
+                localStorage.removeItem('user')
+                this.setState({ user: undefined })
+            }
         })
     }
 
@@ -233,7 +250,6 @@ class UserPage extends Component {
         if(!this.state.user) {
             return (<Redirect to='/user/login'/>)
         }
-        console.log(this.state.user)
         return ( 
             <React.Fragment>
                 <Navbar props={this.props}/>
@@ -241,10 +257,12 @@ class UserPage extends Component {
                 <Container>
                     <Row><h3>Perfil de {this.state.user.name}</h3></Row>
                     <Row>Conta criada a {this.state.user.creationdate.substring(0,10)}</Row>
-                    {this.state.user.birthday ? <Row>Aniversário {this.state.user.birthday}</Row> : <Row>Sem registo de aniversário</Row> }
+                    {this.state.user.birthday ? <Row>Aniversário {this.state.user.birthday ? this.state.user.birthday.substring(0,10) : 'Aniversário desconhecido'}</Row> : <Row>Sem registo de aniversário</Row> }
                     <br/>
                     {this.state.user.description ? <React.Fragment><Row><h5>Descrição</h5></Row><Row>{this.state.user.description}</Row></React.Fragment> : <React.Fragment><Row><h5>Descrição</h5></Row><Row>Sem registo de descrição</Row></React.Fragment> }
                     <br/>
+                    <Alert visible={true} variant={'info'} message={'Depois de cada alteração terá de iniciar a sessão novamente.'} />
+                    <Alert visible={this.state.alert.visible} variant={this.state.alert.variant} message={this.state.alert.message} />
                     <Tabs defaultActiveKey="nome" id="uncontrolled-tab-example">
                         <Tab eventKey="nome" title="Atualizar nome">
                             <br/>

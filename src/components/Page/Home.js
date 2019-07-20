@@ -113,12 +113,12 @@ class Home extends Component {
             for (let n = index ; n <= this.state.searchPage * 5 - 1; n++) {
                 if(this.state.searchList[n]) {
                     let element = this.state.searchList[n]
-                    let header = null, subTitle = null, body = null
-                    header = element.name ? ReplaceComa(element.name) : 'Sem nome.'
-                    header = element.title ? ReplaceComa(element.title) : 'Sem título.'
-                    subTitle = element.releasedate ? element.releasedate.substring(0,10) : 'Data de lançamento indisponível.'
-                    subTitle = element.birthday ? element.birthday.substring(0,10) : 'Data de aniversário indisponível.'
-                    body = element.synopsis ? element.synopsis : 'Sinópse indisponível.'
+                    let header = 'Sem registo', subTitle = 'Sem registo', body = 'Sem registo'
+                    header = element.name ? ReplaceComa(element.name) :  header
+                    header = element.title ? ReplaceComa(element.title) : header
+                    subTitle = element.releasedate ? element.releasedate.substring(0,10) : subTitle
+                    subTitle = element.birthday ? element.birthday.substring(0,10) : subTitle
+                    body = element.synopsis ? ReplaceComa(element.synopsis) : body
                     toRender.push(
                         <Row key={n}>
                             <Col>
@@ -191,11 +191,11 @@ class Home extends Component {
                 <Form.Group as={Row}> 
                     <InputGroup className="mb-3">
                         <DropdownButton as={InputGroup.Prepend} variant="dark" title={`Pesquisar por ${searchFor}`} id="input-group-dropdown-1" >
-                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Book'}) }>Livros</Dropdown.Item>
-                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Movie'}) }>Filmes</Dropdown.Item>
-                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Game'}) }>Jogos</Dropdown.Item>
-                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Series'}) }>Séries</Dropdown.Item>
-                            <Dropdown.Item onClick={ () => this.setState({ tableToSearch: 'Celebrity'}) }>Celebridades</Dropdown.Item>
+                            <Dropdown.Item onClick={ () => { this.setState({ tableToSearch: 'Book'}) ; this.setState({ hasSearched: undefined })} }>Livros</Dropdown.Item>
+                            <Dropdown.Item onClick={ () => { this.setState({ tableToSearch: 'Movie'}) ; this.setState({ hasSearched: undefined })} }>Filmes</Dropdown.Item>
+                            <Dropdown.Item onClick={ () => { this.setState({ tableToSearch: 'Game'}) ; this.setState({ hasSearched: undefined })} }>Jogos</Dropdown.Item>
+                            <Dropdown.Item onClick={ () => { this.setState({ tableToSearch: 'Series'}) ; this.setState({ hasSearched: undefined })} }>Séries</Dropdown.Item>
+                            <Dropdown.Item onClick={ () => { this.setState({ tableToSearch: 'Celebrity'}) ; this.setState({ hasSearched: undefined })} }>Celebridades</Dropdown.Item>
                         </DropdownButton>
                         <Form.Control type="text" ref={(input) => {this.search = input}} placeholder="Pesquisa" required/>
                     </InputGroup>

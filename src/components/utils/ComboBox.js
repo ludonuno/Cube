@@ -13,13 +13,13 @@ const ComboBox = (props) => {
             show = element.assignment ? ReplaceComa(element.assignment) : show
             show = element.title ? ReplaceComa(element.title) : show
             show = element.genre ? ReplaceComa(element.genre) : show
-            options.push(<option key={element.id} value={element.id}>{show}</option>)
+            options.push(<option key={element.id} value={element.id} >{show}</option>)
         })
         return (
             <Form.Group as={Row}> 
                 <Form.Label column lg={12} xl={2}>{props.header}</Form.Label>
                 <Col>
-                    <Form.Control as="select" onChange={props.onChange} required>{options}</Form.Control> 
+                    <Form.Control as="select" onChange={props.onChange} value={props.defaultValue ? props.defaultValue : undefined} required>{options}</Form.Control> 
                 </Col>
             </Form.Group>
         )

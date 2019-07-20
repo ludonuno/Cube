@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
-import { Create } from '../../scripts/api'
+import { Update } from '../../scripts/api'
+import { ReplaceComa } from '../../scripts/utils'
+
 import Alert from '../utils/Alert'
+import ComboBox from '../utils/ComboBox'
 
 class PublishingCompany extends Component {
     constructor(props) {
@@ -10,25 +13,35 @@ class PublishingCompany extends Component {
         this.AddPublishingCompany = this.AddPublishingCompany.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' }
+            alert: { visible: false, message: '', variant: '' },
+            selectedPublishingCompany: undefined
         }
     }
 
     ChangeAlert(visible, message, variant) {
         this.setState({ alert: { visible: visible, message: message, variant: variant} })
     }
-
+    componentWillReceiveProps(){
+        if(this.props.publishingCompanyList[0])
+        this.SetPublishingCompanyFieldValues(this.props.publishingCompanyList[0])
+    }
+    SetPublishingCompanyFieldValues = (publishingCompany) => {
+        this.setState({selectedPublishingCompany: publishingCompany})
+        let name = (publishingCompany.name) ? ReplaceComa(publishingCompany.name) : null
+        this.name.value = name
+    }
     AddPublishingCompany = (event) => {
         event.preventDefault()
-        let insertData = [
+        let updateData = [
             { table: 'PublishingCompany', fieldData: [ 
                 {field: 'userEmail', data: this.state.user.email},
                 {field: 'userPassword', data: this.state.user.password},
+                {field: 'id', data: this.state.selectedPublishingCompany.id},
                 {field: 'name', data: this.name.value}
             ] }
         ]
         this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-        Create(insertData, (res, rej) => {
+        Update(updateData, (res, rej) => {
             if(res) {
                 if(res.error) {
                     this.ChangeAlert(true, res.error, 'danger')
@@ -42,13 +55,20 @@ class PublishingCompany extends Component {
             }
         })
     }
-
+    SetPublishingCompanyToEdit = (event) => {
+        this.props.publishingCompanyList.forEach(publishingCompany => {
+            if(publishingCompany.id === Number(event.target.value)) {
+                this.SetPublishingCompanyFieldValues(publishingCompany)
+            }
+        })
+    }
     render() {
         return ( 
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddPublishingCompany} ref={(form) => this.formRef = form}>
+                    <ComboBox header={'Livros'} list={this.props.publishingCompanyList} onChange={this.SetPublishingCompanyToEdit} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Nome</Form.Label>
                         <Col>

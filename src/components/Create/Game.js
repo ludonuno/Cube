@@ -74,8 +74,8 @@ class Game extends Component {
     SetCompany = (event) => {
         this.setState({ companyId: Number(event.target.value) })
     }
-    SetSaga = (value) => {
-        this.setState({ sagaId: Number(value) })
+    SetSaga = (event) => {
+        this.setState({ sagaId: Number(event.target.value) })
     }
 
     ResetForm = () => {

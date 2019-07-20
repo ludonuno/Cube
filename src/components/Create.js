@@ -80,44 +80,51 @@ class Create extends Component {
     GetPublishingCompanyList = () => {
         let searchData = [ { table: 'PublishingCompany', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res && res.result) this.setState({ publishingCompanyList: res.result })  
+            if(res && res.result) this.setState({ publishingCompanyList: res.result })
+            else this.setState({ publishingCompanyList: [] })
         })
     }
     GetEngineList = () => {
         let searchData = [ { table: 'Engine', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res && res.result) this.setState({ engineList: res.result })  
+            if(res && res.result) this.setState({ engineList: res.result })
+            else this.setState({ engineList: [] })
         })
     }
     GetCompanyList = () => {
         let searchData = [ { table: 'Company', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res && res.result) this.setState({ companyList: res.result })  
+            if(res && res.result) this.setState({ companyList: res.result })
+            else this.setState({ companyList: [] })
         })
     }
     GetParentAdvisoryList = () => {
         let searchData = [ { table: 'ParentAdvisory', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res && res.result) this.setState({ parentAdvisoryList: res.result })  
+            if(res && res.result) this.setState({ parentAdvisoryList: res.result })
+            else this.setState({ parentAdvisoryList: [] })
         })
     }
     GetSagaList = () => {
         let searchData = [ { table: 'Saga', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res && res.result) this.setState({ sagaList: res.result })  
+            if(res && res.result) this.setState({ sagaList: res.result })
+            else  this.setState({ sagaList: [] })
         })
     }
 
     GetAssignmentList = () => {
         let searchData = [ { table: 'Assignment', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res && res.result) this.setState({ assignmentList: res.result })  
+            if(res && res.result) this.setState({ assignmentList: res.result })
+            else this.setState({ assignmentList: [] })
         })
     }
     GetCelebrityList = () => {
         let searchData = [ { table: 'Celebrity', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res && res.result) this.setState({ celebrityList: res.result })  
+            if(res && res.result) this.setState({ celebrityList: res.result })
+            else this.setState({ celebrityList: [] })
         })
     }
 
@@ -155,30 +162,39 @@ class Create extends Component {
                 if(res.result[0])
                     this.GetSeasonList(res.result[0].id)
             }
+            else {
+                this.setState({ seriesList: [] })
+                this.setState({ seasonList: [] })
+                this.setState({ episodeList: [] })
+            }
         })
     }
     GetBookList = () => {
         let searchData = [ { table: 'Book', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res && res.result) this.setState({ bookList: res.result })  
+            if(res && res.result) this.setState({ bookList: res.result })
+            else this.setState({ bookList: [] })
         })
     }
     GetGameList = () => {
         let searchData = [ { table: 'Game', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res && res.result) this.setState({ gameList: res.result })  
+            if(res && res.result) this.setState({ gameList: res.result })
+            else this.setState({ gameList: [] })
         })
     }
     GetMovieList = () => {
         let searchData = [ { table: 'Movie', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res && res.result) this.setState({ movieList: res.result })  
+            if(res && res.result) this.setState({ movieList: res.result })
+            else this.setState({ movieList: [] })
         })
     }
     GetGenresList = () => {
         let searchData = [ { table: 'Genres', fieldData: undefined } ]
         Get(searchData,(res) => {
-            if(res && res.result) this.setState({ genresList: res.result })  
+            if(res && res.result) this.setState({ genresList: res.result })
+            else this.setState({ genresList: [] })
         })
     }
 

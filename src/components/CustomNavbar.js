@@ -42,8 +42,8 @@ class CustomNavbar extends Component {
                 <React.Fragment>
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="/create">Adicionar</NavDropdown.Item>
-                    <NavDropdown.Item href="/#">Atualizar</NavDropdown.Item>
-                    <NavDropdown.Item href="/#">Apagar</NavDropdown.Item>
+                    <NavDropdown.Item href="/update">Atualizar</NavDropdown.Item>
+                    <NavDropdown.Item href="/delete">Apagar</NavDropdown.Item>
                 </React.Fragment>
             )
         } else {

@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
-import { Create } from '../../scripts/api'
+import { Update } from '../../scripts/api'
+import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/ComboBox'
+
+//FIXME: Bugs na alteração de episódio com temporada
+//FIXME: Os registos permanecem mesmo quando a temproada não tem episódio
+
+
 class Episode extends Component {
     constructor(props) {
         super(props);
@@ -12,16 +18,29 @@ class Episode extends Component {
         this.SetSeries = this.SetSeries.bind(this)
         this.SetSeason = this.SetSeason.bind(this)
         this.ResetForm = this.ResetForm.bind(this)
-        this.HasSeasons = this.HasSeasons.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },
-            alertEpisode: { visible: false, message: '', variant: '' },
             seriesId: undefined,
-            seasonId: undefined
+            seasonId: undefined,
+            selectedEpisode: undefined
         }
     }
-
+    componentWillReceiveProps(){
+        if(this.props.episodeList[0])
+        this.SetEpisodeFieldValues(this.props.episodeList[0])
+    }
+    SetEpisodeFieldValues = (episode) => {
+        this.setState({selectedEpisode: episode})
+        let title = (episode.title) ? ReplaceComa(episode.title) : null
+        let releaseDate = (episode && episode.releasedate) ? episode.releasedate.substring(0,10) : null
+        let synopsis = (episode && episode.synopsis) ? ReplaceComa(episode.synopsis) : null
+        let seasonId = (episode.seasonid) ? episode.seasonid : null
+        this.title.value = title
+        this.releaseDate.value = releaseDate
+        this.synopsis.value = synopsis
+        this.setState({seasonId: seasonId})
+    }
     ChangeAlert(visible, message, variant) {
         this.setState({ alert: { visible: visible, message: message, variant: variant} })
     }
@@ -29,25 +48,26 @@ class Episode extends Component {
     AddEpisode = (event) => {
         event.preventDefault()
         if(this.props.seriesList[0] && this.props.seasonList[0]) {
-            let insertData = [
+            let updateData = [
                 { table: 'Episode', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
+                    {field: 'id', data: this.state.selectedEpisode.id},
                     {field: 'title', data: this.title.value},
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'synopsis', data: this.synopsis.value},
-                    {field: 'seriesId', data: this.state.seriesId ? this.state.seriesId : this.props.seriesList[0].id},
                     {field: 'seasonId', data: this.state.seasonId ? this.state.seasonId : this.props.seasonList[0].id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res, rej) => {
+            Update(updateData, (res, rej) => {
                 if(res) {
                     if(res.error) {
                         this.ChangeAlert(true, res.error, 'danger')
                     } else {
                         this.ResetForm()
                         this.ChangeAlert(true, res.result.message, 'success')
+                        this.props.onSubmit(this.state.seasonId)
                     }
                 } else {
                     this.ChangeAlert(true, `${rej}`, 'danger')
@@ -57,42 +77,35 @@ class Episode extends Component {
             this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
         }
     }
-    
+    SetEpisodeToEdit = (event) => {
+        this.props.episodeList.forEach(episode => {
+            if(episode.id === Number(event.target.value)) {
+                this.SetEpisodeFieldValues(episode)
+            }
+        })
+    }
     SetSeries = (event) => {
         this.setState({ seriesId: Number(event.target.value) })
         this.props.GetSeasonList(Number(event.target.value))
     }
     SetSeason = (event) => {
         this.setState({ seasonId: Number(event.target.value) })
+        this.props.onSubmit(Number(event.target.value))
     }    
     ResetForm = () => {
         this.formRef.reset()        
         this.setState({seriesId: (this.props.seriesList && this.props.seriesList[0]) ? this.props.seriesList[0].id : undefined})
         this.setState({seasonId: (this.props.seasonList && this.props.seasonList[0]) ? this.props.seasonList[0].id : undefined})
     }
-    HasSeasons = () => {
-        if(this.props.seasonList[0])
-            return (<ComboBox header={'Temporada'} list={this.props.seasonList} onChange={this.SetSeason} />)
-        else
-            return (
-                <Form.Group as={Row}> 
-                    <Form.Label column lg={12} xl={2}>Temporada</Form.Label>
-                    <Col>
-                        <Alert variant={'danger'} message={'A série selecionada não tem temporadas'} visible={true} />
-                    </Col>
-                </Form.Group>
-            )
-    }
-
     render() {
         return ( 
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddEpisode} ref={(form) => this.formRef = form}>
-                    <Alert variant={this.state.alertEpisode.variant} message={this.state.alertEpisode.message} visible={this.state.alertEpisode.visible} />
                     <ComboBox header={'Série'} list={this.props.seriesList} onChange={this.SetSeries} />
-                    <this.HasSeasons />
+                    <ComboBox header={'Temporada'} list={this.props.seasonList} onChange={this.SetSeason} />
+                    <ComboBox header={'Episódio'} list={this.props.episodeList} onChange={this.SetEpisodeToEdit} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>
@@ -102,8 +115,7 @@ class Episode extends Component {
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Data</Form.Label>
                         <Col>
-                            {/* TODO: ADICIONAR MIN */}
-                            <Form.Control type="date" ref={(input) => {this.releaseDate = input}} required/>
+                            <Form.Control type="date" ref={(input) => {this.releaseDate = input}} />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row}> 

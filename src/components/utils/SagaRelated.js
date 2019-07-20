@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import SliderSagaRelated from '../utils/SliderSagaRelated'
-class Sagarelated extends Component {
+import SliderSagaRelated from './SliderSagaRelated'
+class SagaRelated extends Component {
     constructor(props) {
         super(props);
         this.state = {  }
@@ -18,4 +18,4 @@ class Sagarelated extends Component {
     }
 }
  
-export default Sagarelated;
+export default SagaRelated;

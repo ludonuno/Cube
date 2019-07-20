@@ -12,11 +12,9 @@ class Episode extends Component {
         this.SetSeries = this.SetSeries.bind(this)
         this.SetSeason = this.SetSeason.bind(this)
         this.ResetForm = this.ResetForm.bind(this)
-        this.HasSeasons = this.HasSeasons.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },
-            alertEpisode: { visible: false, message: '', variant: '' },
             seriesId: undefined,
             seasonId: undefined
         }
@@ -36,7 +34,6 @@ class Episode extends Component {
                     {field: 'title', data: this.title.value},
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'synopsis', data: this.synopsis.value},
-                    {field: 'seriesId', data: this.state.seriesId ? this.state.seriesId : this.props.seriesList[0].id},
                     {field: 'seasonId', data: this.state.seasonId ? this.state.seasonId : this.props.seasonList[0].id}
                 ] }
             ]
@@ -71,19 +68,6 @@ class Episode extends Component {
         this.setState({seriesId: (this.props.seriesList && this.props.seriesList[0]) ? this.props.seriesList[0].id : undefined})
         this.setState({seasonId: (this.props.seasonList && this.props.seasonList[0]) ? this.props.seasonList[0].id : undefined})
     }
-    HasSeasons = () => {
-        if(this.props.seasonList[0])
-            return (<ComboBox header={'Temporada'} list={this.props.seasonList} onChange={this.SetSeason} />)
-        else
-            return (
-                <Form.Group as={Row}> 
-                    <Form.Label column lg={12} xl={2}>Temporada</Form.Label>
-                    <Col>
-                        <Alert variant={'danger'} message={'A série selecionada não tem temporadas'} visible={true} />
-                    </Col>
-                </Form.Group>
-            )
-    }
 
     render() {
         return ( 
@@ -91,9 +75,8 @@ class Episode extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddEpisode} ref={(form) => this.formRef = form}>
-                    <Alert variant={this.state.alertEpisode.variant} message={this.state.alertEpisode.message} visible={this.state.alertEpisode.visible} />
                     <ComboBox header={'Série'} list={this.props.seriesList} onChange={this.SetSeries} />
-                    <this.HasSeasons />
+                    <ComboBox header={'Temporada'} list={this.props.seasonList} onChange={this.SetSeason} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>

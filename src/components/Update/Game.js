@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
-import { Create } from '../../scripts/api'
+import { Update } from '../../scripts/api'
+import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/ComboBox'
@@ -9,7 +10,7 @@ class Game extends Component {
     constructor(props) {
         super(props);
         this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddGame = this.AddGame.bind(this)
+        this.UpdateGame = this.UpdateGame.bind(this)
         this.SetEngine = this.SetEngine.bind(this)
         this.SetParentAdvisory = this.SetParentAdvisory.bind(this)
         this.SetCompany = this.SetCompany.bind(this)
@@ -22,21 +23,43 @@ class Game extends Component {
             engineId: undefined,
             parentAdvisoryId: undefined,
             companyId: undefined,
-            sagaId: undefined
+            sagaId: undefined,
+            selectedGame: undefined
         }
     }
-
+    componentWillReceiveProps(){
+        if(this.props.gameList[0])
+        this.SetGameFieldValues(this.props.gameList[0])
+    }
+    SetGameFieldValues = (game) => {
+        this.setState({selectedGame: game})
+        let title = (game.title) ? ReplaceComa(game.title) : null
+        let releaseDate = (game && game.releasedate) ? game.releasedate.substring(0,10) : null
+        let synopsis = (game && game.synopsis) ? ReplaceComa(game.synopsis) : null
+        let engineId = (game.engineid) ? game.engineid : null
+        let parentAdvisoryId = (game.parentadvisoryid) ? game.parentadvisoryid : null
+        let companyId = (game.companyid) ? game.companyid : null
+        let sagaId = (game.sagaid) ? game.sagaid : null
+        this.title.value = title
+        this.releaseDate.value = releaseDate
+        this.synopsis.value = synopsis
+        this.setState({engineId: engineId})
+        this.setState({parentAdvisoryId: parentAdvisoryId})
+        this.setState({companyId: companyId})
+        this.setState({sagaId: sagaId})
+    }
     ChangeAlert(visible, message, variant) {
         this.setState({ alert: { visible: visible, message: message, variant: variant} })
     }
 
-    AddGame = (event) => {
+    UpdateGame = (event) => {
         event.preventDefault()
-        if(this.props.engineList[0] && this.props.parentAdvisoryList[0] && this.props.companyList[0] && this.props.sagaList[0]) {
-            let insertData = [
+        if(this.props.gameList[0] && this.props.engineList[0] && this.props.parentAdvisoryList[0] && this.props.companyList[0] && this.props.sagaList[0]) {
+            let updateData = [
                 { table: 'Game', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
+                    {field: 'id', data: this.state.selectedGame.id},
                     {field: 'title', data: this.title.value},
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'synopsis', data: this.synopsis.value},
@@ -47,8 +70,8 @@ class Game extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res, rej) => {
-                if(res) {    
+            Update(updateData, (res, rej) => {
+                if(res) {
                     if(res.error) {
                         this.ChangeAlert(true, res.error, 'danger')
                     } else {
@@ -65,6 +88,14 @@ class Game extends Component {
         }
     }
 
+    SetGameToEdit = (event) => {
+        this.props.gameList.forEach(game => {
+            if(game.id === Number(event.target.value)) {
+                this.SetGameFieldValues(game)
+            }
+        })
+    }
+
     SetEngine = (event) => {
         this.setState({ engineId: Number(event.target.value) })
     }
@@ -74,8 +105,8 @@ class Game extends Component {
     SetCompany = (event) => {
         this.setState({ companyId: Number(event.target.value) })
     }
-    SetSaga = (value) => {
-        this.setState({ sagaId: Number(value) })
+    SetSaga = (event) => {
+        this.setState({ sagaId: Number(event.target.value) })
     }
 
     ResetForm = () => {
@@ -91,7 +122,8 @@ class Game extends Component {
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
-                <Form onSubmit={this.AddGame} ref={(form) => this.formRef = form}>
+                <Form onSubmit={this.UpdateGame} ref={(form) => this.formRef = form}>
+                    <ComboBox header={'Jogos'} list={this.props.gameList} onChange={this.SetGameToEdit} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>
@@ -110,10 +142,10 @@ class Game extends Component {
                             <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.synopsis = input}}/>
                         </Col>
                     </Form.Group>
-                    <ComboBox header={'Engine'} list={this.props.engineList} onChange={this.SetEngine} />
-                    <ComboBox header={'Acon. Parental'} list={this.props.parentAdvisoryList} onChange={this.SetParentAdvisory} />
-                    <ComboBox header={'Empresa'} list={this.props.companyList} onChange={this.SetCompany} />
-                    <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSaga} />
+                    <ComboBox header={'Engine'} list={this.props.engineList} onChange={this.SetEngine} defaultValue={this.state.engineId} />
+                    <ComboBox header={'Acon. Parental'} list={this.props.parentAdvisoryList} onChange={this.SetParentAdvisory} defaultValue={this.state.parentAdvisoryId} />
+                    <ComboBox header={'Empresa'} list={this.props.companyList} onChange={this.SetCompany} defaultValue={this.state.companyId} />
+                    <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSaga} defaultValue={this.state.sagaId} />
                     <Row>
                         <Col>
                             <Button variant="primary" type="submit" block>Submit</Button>
