@@ -53,6 +53,7 @@ class ParentAdvisory extends Component {
                         this.formRef.reset()
                         this.ChangeAlert(true, `${res.result.message}`, 'success')
                         this.props.onSubmit()
+                        this.setState({selectedParentAdvisory: this.props.parentAdvisoryList[0]})
                     }
                 } else {
                     this.ChangeAlert(true, `${rej}`, 'danger')

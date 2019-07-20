@@ -49,6 +49,7 @@ class PublishingCompany extends Component {
                     this.formRef.reset()
                     this.ChangeAlert(true, res.result.message, 'success')
                     this.props.onSubmit()
+                    this.setState({selectedPublishingCompany: this.props.publishingCompanyList[0]})
                 }
             } else {
                 this.ChangeAlert(true, `${rej}`, 'danger')

@@ -44,6 +44,8 @@ class Developers extends Component {
                     } else {
                         this.ResetForm()
                         this.ChangeAlert(true, `${res.result.message}`, 'success')
+                        this.props.onSubmit()
+                        this.setState({selectedDevelopers: this.props.developersList[0]})
                     }
                 } else {
                     this.ChangeAlert(true, `${rej}`, 'danger')

@@ -21,11 +21,9 @@ class UserPage extends Component {
             alert: { visible: false, message: '', variant: '' }
         }
     }
-
     ChangeAlert(visible, message, variant) {
         this.setState({ alert: { visible: visible, message: message, variant: variant} })
     }
-
     FormName = () => {
         return (
             <Form onSubmit={this.UpdateUserName}>
@@ -154,7 +152,6 @@ class UserPage extends Component {
         )
     }
 
-    //TODO: Por estas 4 funções a funcionar
     UpdateUserName = (event) => {
         event.preventDefault()
         let updateData = [ { table: 'User', fieldData: [
@@ -172,8 +169,8 @@ class UserPage extends Component {
     }
     UpdateUserEmail = (event) => {
         event.preventDefault()
-        if(this.currentEmail.value === this.state.user.email) {
-            if( this.email.value !== this.state.user.email) {
+        if(this.currentEmail.value === this.state.user.email) { //TODO: Mudei == para ===
+            if( this.email.value !== this.state.user.email) { //TODO: Mudei != para !==
                 let updateData = [ { table: 'User', fieldData: [
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.currentPasswordEmail.value},
@@ -194,7 +191,7 @@ class UserPage extends Component {
     }
     UpdateUserPassword = (event) => {
         event.preventDefault()
-        if(this.currentEmail.value === this.state.user.email) {
+        if(this.currentEmail.value === this.state.user.email) { //TODO: Mudei == para ===
             let updateData = [ { table: 'User', fieldData: [
                 {field: 'userEmail', data: this.state.user.email},
                 {field: 'userPassword', data: this.currentPasswordPassword.value},
@@ -245,7 +242,6 @@ class UserPage extends Component {
         })
     }
 
-
     render() { 
         if(!this.state.user) {
             return (<Redirect to='/user/login'/>)
@@ -290,6 +286,4 @@ class UserPage extends Component {
         );
     }
 }
- 
-
 export default UserPage;

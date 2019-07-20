@@ -19,8 +19,10 @@ class Season extends Component {
         }
     }
     componentWillReceiveProps(){
-        if(this.props.seasonList[0])
-        this.SetSeasonFieldValues(this.props.seasonList[0])
+        if(this.props.seasonList[0]) {
+            this.SetSeasonFieldValues(this.props.seasonList[0])
+            this.setState({seriesId: this.props.seriesList[0].id})
+        }
     }
     SetSeasonFieldValues = (season) => {
         this.setState({selectedSeason: season})
@@ -60,6 +62,7 @@ class Season extends Component {
                         this.ResetForm()
                         this.ChangeAlert(true, res.result.message, 'success')
                         this.props.onSubmit(this.state.seriesId)
+                        this.setState({selectedSeason: this.props.seasonList[0]})
                     }
                 } else {
                     this.ChangeAlert(true, `${rej}`, 'danger')

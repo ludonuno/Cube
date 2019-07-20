@@ -222,9 +222,10 @@ class Create extends Component {
                         <Tab eventKey="saga" title="Saga"><Saga onSubmit={this.GetSagaList} /></Tab>
                         <Tab eventKey="celebrity" title="Celebridade"><Celebrity onSubmit={this.GetCelebrityList} /></Tab>
                         <Tab eventKey="assignment" title="Função"><Assignment onSubmit={this.GetAssignmentList} /></Tab>
+                        <Tab eventKey="genres" title="Géneros"><Genres onSubmit={this.GetGenresList} /></Tab>
+                        
                         <Tab eventKey="createRelateAssignment" title="Funções das Celebridades"><RelateAssignment assignmentList={this.state.assignmentList} celebrityList={this.state.celebrityList} bookList={this.state.bookList} gameList={this.state.gameList} movieList={this.state.movieList} seriesList={this.state.seriesList} /></Tab>
                         <Tab eventKey="createVideo" title="Vídeos"><Video bookList={this.state.bookList} gameList={this.state.gameList} movieList={this.state.movieList} seriesList={this.state.seriesList} seasonList={this.state.seasonList} episodeList={this.state.episodeList} GetSeasonList={this.GetSeasonList} GetEpisodeList={this.GetEpisodeList} /></Tab>
-                        <Tab eventKey="genres" title="Géneros"><Genres onSubmit={this.GetGenresList} /></Tab>
                         <Tab eventKey="createRelateGenres" title="Associar Géneros"><RelateGenres genresList={this.state.genresList} bookList={this.state.bookList} gameList={this.state.gameList} movieList={this.state.movieList} seriesList={this.state.seriesList} /></Tab>
                         <Tab eventKey="developers" title="Desenvolvedores"><Developers gameList={this.state.gameList} companyList={this.state.companyList} /></Tab>
                     </Tabs>

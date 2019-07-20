@@ -53,6 +53,7 @@ class Saga extends Component {
                         this.formRef.reset()
                         this.ChangeAlert(true, res.result.message, 'success')
                         this.props.onSubmit()
+                        this.setState({selectedSaga: this.props.sagaList[0]})
                     }
                 } else {
                     this.ChangeAlert(true, `${rej}`, 'danger')

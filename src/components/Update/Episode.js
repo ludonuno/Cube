@@ -27,8 +27,9 @@ class Episode extends Component {
         }
     }
     componentWillReceiveProps(){
-        if(this.props.episodeList[0])
-        this.SetEpisodeFieldValues(this.props.episodeList[0])
+        if(this.props.seriesList[0]) this.setState({seriesId: this.props.seriesList[0].id})
+        if(this.props.seasonList[0]) this.setState({seasonId: this.props.seasonList[0].id})
+        if(this.props.episodeList[0]) this.SetEpisodeFieldValues(this.props.episodeList[0])
     }
     SetEpisodeFieldValues = (episode) => {
         this.setState({selectedEpisode: episode})
@@ -68,6 +69,7 @@ class Episode extends Component {
                         this.ResetForm()
                         this.ChangeAlert(true, res.result.message, 'success')
                         this.props.onSubmit(this.state.seasonId)
+                        this.setState({selectedEpisode: this.props.episodeList[0]})
                     }
                 } else {
                     this.ChangeAlert(true, `${rej}`, 'danger')

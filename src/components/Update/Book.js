@@ -21,8 +21,7 @@ class Book extends Component {
         }
     }
     componentWillReceiveProps(){
-        if(this.props.bookList[0])
-        this.SetBookFieldValues(this.props.bookList[0])
+        if(this.props.bookList[0]) this.SetBookFieldValues(this.props.bookList[0])
     }
     SetBookFieldValues = (book) => {
         this.setState({selectedBook: book})
@@ -65,6 +64,7 @@ class Book extends Component {
                         this.ResetForm()
                         this.ChangeAlert(true, res.result.message, 'success')
                         this.props.onSubmit()
+                        this.setState({selectedBook: this.props.bookList[0]})
                     }
                 } else {
                     this.ChangeAlert(true, `${rej}`, 'danger')
@@ -74,7 +74,6 @@ class Book extends Component {
             this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
         }
     }
-
     SetBookToEdit = (event) => {
         this.props.bookList.forEach(book => {
             if(book.id === Number(event.target.value)) {
@@ -82,15 +81,12 @@ class Book extends Component {
             }
         })
     }
-
     SetPublishingCompany = (event) => {
         this.setState({ publishingCompanyId: Number(event.target.value) })
     }
-
     SetSaga = (event) => {
         this.setState({ sagaId: Number(event.target.value) })
     }
-
     ResetForm = () => {
         this.formRef.reset()        
         this.setState({publishingCompanyId: this.props.publishingCompanyList[0] ? this.props.publishingCompanyList[0].id : undefined})

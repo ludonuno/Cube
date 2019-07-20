@@ -67,6 +67,7 @@ class Series extends Component {
                         this.ResetForm()
                         this.ChangeAlert(true, res.result.message, 'success')
                         this.props.onSubmit()
+                        this.setState({selectedSeries: this.props.seriesList[0]})
                     }
                 } else {
                     this.ChangeAlert(true, `${rej}`, 'danger')

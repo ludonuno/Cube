@@ -18,9 +18,6 @@ import Engine from './Update/Engine'
 import ParentAdvisory from './Update/ParentAdvisory'
 import PublishingCompany from './Update/PublishingCompany'
 import Saga from './Update/Saga'
-// import Genres from './Update/Genres'
-// import RelateGenres from './Update/RelateGenres'
-// import Developers from './Update/Developers'
 
 class Update extends Component {
     constructor(props) {
@@ -220,9 +217,6 @@ class Update extends Component {
                         <Tab eventKey="saga" title="Saga"><Saga sagaList={this.state.sagaList} onSubmit={this.GetSagaList} /></Tab>
                         <Tab eventKey="celebrity" title="Celebridade"><Celebrity celebrityList={this.state.celebrityList} onSubmit={this.GetCelebrityList} /></Tab>
                         <Tab eventKey="assignment" title="Função"><Assignment assignmentList={this.state.assignmentList} onSubmit={this.GetAssignmentList} /></Tab>
-                        {/* <Tab eventKey="genres" title="Géneros"><Genres onSubmit={this.GetGenresList} /></Tab> */}
-                        {/* <Tab eventKey="createRelateGenres" title="Associar Géneros"><RelateGenres genresList={this.state.genresList} bookList={this.state.bookList} gameList={this.state.gameList} movieList={this.state.movieList} seriesList={this.state.seriesList} /></Tab> */}
-                        {/* <Tab eventKey="developers" title="Desenvolvedores"><Developers gameList={this.state.gameList} companyList={this.state.companyList} /></Tab> */}
                     </Tabs>
                 </Container>
             </React.Fragment>

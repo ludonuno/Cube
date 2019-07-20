@@ -78,6 +78,7 @@ class Game extends Component {
                         this.ResetForm()
                         this.ChangeAlert(true, res.result.message, 'success')
                         this.props.onSubmit()
+                        this.setState({selectedGame: this.props.gameList[0]})
                     }
                 } else {
                     this.ChangeAlert(true, `${rej}`, 'danger')

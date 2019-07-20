@@ -71,6 +71,7 @@ class Movie extends Component {
                         this.ResetForm()
                         this.ChangeAlert(true, res.result.message, 'success')
                         this.props.onSubmit()
+                        this.setState({selectedMovie: this.props.movieList[0]})
                     }
                 } else {
                     this.ChangeAlert(true, `${rej}`, 'danger')
