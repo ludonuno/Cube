@@ -39,9 +39,7 @@ class Series extends Component {
         this.setState({parentAdvisoryId: parentAdvisoryId})
         this.setState({sagaId: sagaId})
     }
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     UpdateSeries = (event) => {
         event.preventDefault()

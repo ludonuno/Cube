@@ -28,9 +28,7 @@ class Assignment extends Component {
         this.assignment.value = assig
         this.description.value = description
     }
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     UpdateAssignment = (event) => {
         event.preventDefault()

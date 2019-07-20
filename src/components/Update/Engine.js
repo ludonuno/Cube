@@ -26,9 +26,7 @@ class Engine extends Component {
         let name = (engine.name) ? ReplaceComa(engine.name) : null
         this.name.value = name
     }
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     UpdateEngine = (event) => {
         event.preventDefault()

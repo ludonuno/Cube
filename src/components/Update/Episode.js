@@ -42,9 +42,7 @@ class Episode extends Component {
         this.synopsis.value = synopsis
         this.setState({seasonId: seasonId})
     }
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     AddEpisode = (event) => {
         event.preventDefault()

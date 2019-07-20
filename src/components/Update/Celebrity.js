@@ -31,9 +31,7 @@ class Celebrity extends Component {
         this.birthday.value = birthday
         this.biography.value = biography
     }
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     AddCelebrity = (event) => {
         event.preventDefault()
@@ -54,7 +52,6 @@ class Celebrity extends Component {
                     if(res.error) {
                         this.ChangeAlert(true, res.error, 'danger')
                     } else {
-                        this.ResetForm()
                         this.ChangeAlert(true, res.result.message, 'success')
                         this.props.onSubmit()
                         this.setState({selectedCelebrity: this.props.celebrityList[0]})

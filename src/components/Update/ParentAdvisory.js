@@ -28,9 +28,7 @@ class ParentAdvisory extends Component {
         this.rate.value = rate
         this.description.value = description
     }
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     UpdateParentAdvisory = (event) => {
         event.preventDefault()

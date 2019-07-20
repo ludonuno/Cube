@@ -42,9 +42,7 @@ class Movie extends Component {
         this.setState({sagaId: sagaId})
         this.setState({parentAdvisoryId: parentAdvisoryId})
     }
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     UpdateMovie = (event) => {
         event.preventDefault()

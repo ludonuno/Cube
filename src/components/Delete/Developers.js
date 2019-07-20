@@ -21,9 +21,7 @@ class Developers extends Component {
         }
     }
     
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     AddDevelopers = (event) => {
         event.preventDefault()
@@ -44,6 +42,8 @@ class Developers extends Component {
                     } else {
                         this.ResetForm()
                         this.ChangeAlert(true, `${res.result.message}`, 'success')
+                        this.props.onSubmit()
+                        this.setState({selectedDevelopers: this.props.developersList[0]})
                     }
                 } else {
                     this.ChangeAlert(true, `${rej}`, 'danger')

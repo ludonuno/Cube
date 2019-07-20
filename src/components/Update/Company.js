@@ -26,9 +26,7 @@ class Company extends Component {
         this.name.value = name
     }
 
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     UpdateCompany = (event) => {
         event.preventDefault()

@@ -26,9 +26,7 @@ class Game extends Component {
         }
     }
 
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     AddGame = (event) => {
         event.preventDefault()

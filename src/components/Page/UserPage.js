@@ -21,9 +21,7 @@ class UserPage extends Component {
             alert: { visible: false, message: '', variant: '' }
         }
     }
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
     FormName = () => {
         return (
             <Form onSubmit={this.UpdateUserName}>

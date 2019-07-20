@@ -28,9 +28,7 @@ class Saga extends Component {
         this.name.value = name
         this.description.value = description
     }
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     UpdateSaga = (event) => {
         event.preventDefault()

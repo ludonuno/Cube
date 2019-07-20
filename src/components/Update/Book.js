@@ -36,9 +36,7 @@ class Book extends Component {
         this.setState({publishingCompanyId: publishingCompanyId})
         this.setState({sagaId: sagaId})
     }
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     UpdateBook = (event) => {
         event.preventDefault()

@@ -22,9 +22,7 @@ class Home extends Component {
             alert: { visible: false, message: '', variant: '' }
         }
     }
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     GetBookList = (value) => {
         let searchData = [ { table: 'Book', fieldData: [

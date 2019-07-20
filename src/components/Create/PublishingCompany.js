@@ -14,9 +14,7 @@ class PublishingCompany extends Component {
         }
     }
 
-    ChangeAlert(visible, message, variant) {
-        this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    }
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     AddPublishingCompany = (event) => {
         event.preventDefault()
@@ -55,7 +53,11 @@ class PublishingCompany extends Component {
                             <Form.Control type="text" ref={(input) => {this.name = input}} required/>
                         </Col>
                     </Form.Group>
-                    <Button variant="primary" type="submit" block>Submit</Button>
+                    <Row>
+                        <Col>
+                            <Button variant="primary" type="submit" block>Submit</Button>
+                        </Col>
+                    </Row>
                 </Form>
             </React.Fragment>
         );
