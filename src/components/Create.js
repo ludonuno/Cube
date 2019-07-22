@@ -62,12 +62,14 @@ class Create extends Component {
     }
 
     componentDidMount() {
+        this.LoadData()
+    }
+    LoadData() {
         this.GetPublishingCompanyList()
         this.GetEngineList()
         this.GetCompanyList()
         this.GetParentAdvisoryList()
         this.GetSagaList()
-        
         this.GetAssignmentList()
         this.GetCelebrityList()
         this.GetSeriesList()
@@ -76,7 +78,6 @@ class Create extends Component {
         this.GetMovieList()
         this.GetGenresList()
     }
-
     GetPublishingCompanyList = () => {
         let searchData = [ { table: 'PublishingCompany', fieldData: undefined } ]
         Get(searchData,(res) => {
@@ -198,6 +199,10 @@ class Create extends Component {
         })
     }
 
+    ChangeTab = (key) => {
+        this.setState({ key })
+        this.LoadData()
+    }
 
     render() { 
         if(!this.state.user || !this.state.user.canedit) {
@@ -208,7 +213,7 @@ class Create extends Component {
                 <Navbar props={this.props} />
                 <br/>
                 <Container>
-                    <Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.setState({ key })}>
+                    <Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.ChangeTab(key)}>
                         <Tab eventKey="book" title="Livro"><Book publishingCompanyList={this.state.publishingCompanyList} sagaList={this.state.sagaList} onSubmit={this.GetBookList} /></Tab>
                         <Tab eventKey="game" title="Jogo"><Game engineList={this.state.engineList} companyList={this.state.companyList} parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetGameList} /></Tab>
                         <Tab eventKey="movie" title="Filme"><Movie parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetMovieList} /></Tab>

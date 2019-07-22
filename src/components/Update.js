@@ -55,14 +55,15 @@ class Update extends Component {
             genresList: []
         }
     }
-
     componentDidMount() {
+        this.LoadData()
+    }
+    LoadData() {
         this.GetPublishingCompanyList()
         this.GetEngineList()
         this.GetCompanyList()
         this.GetParentAdvisoryList()
         this.GetSagaList()
-        
         this.GetAssignmentList()
         this.GetCelebrityList()
         this.GetSeriesList()
@@ -71,7 +72,6 @@ class Update extends Component {
         this.GetMovieList()
         this.GetGenresList()
     }
-
     GetPublishingCompanyList = () => {
         let searchData = [ { table: 'PublishingCompany', fieldData: undefined } ]
         Get(searchData,(res) => {
@@ -86,6 +86,7 @@ class Update extends Component {
             else this.setState({ engineList: [] })
         })
     }
+    
     GetCompanyList = () => {
         let searchData = [ { table: 'Company', fieldData: undefined } ]
         Get(searchData,(res) => {
@@ -93,6 +94,7 @@ class Update extends Component {
             else this.setState({ companyList: [] })
         })
     }
+    
     GetParentAdvisoryList = () => {
         let searchData = [ { table: 'ParentAdvisory', fieldData: undefined } ]
         Get(searchData,(res) => {
@@ -100,14 +102,15 @@ class Update extends Component {
             else this.setState({ parentAdvisoryList: [] })
         })
     }
+    
     GetSagaList = () => {
         let searchData = [ { table: 'Saga', fieldData: undefined } ]
         Get(searchData,(res) => {
             if(res && res.result) this.setState({ sagaList: res.result })
-            else  this.setState({ sagaList: [] })
+            else this.setState({ sagaList: [] })
         })
     }
-
+    
     GetAssignmentList = () => {
         let searchData = [ { table: 'Assignment', fieldData: undefined } ]
         Get(searchData,(res) => {
@@ -115,6 +118,7 @@ class Update extends Component {
             else this.setState({ assignmentList: [] })
         })
     }
+    
     GetCelebrityList = () => {
         let searchData = [ { table: 'Celebrity', fieldData: undefined } ]
         Get(searchData,(res) => {
@@ -122,8 +126,8 @@ class Update extends Component {
             else this.setState({ celebrityList: [] })
         })
     }
-
-    GetEpisodeList = (seasonId) => {
+    
+    GetEpisodeList = (seasonId) => { // FIXME: BUG AO MUDAR A SÉRIE NUMA TAB MUDA AS COMBOBOX DAS OUTRAS TABS SERIES, SEASON, EPISODE
         let searchData = [ { table: 'Episode', fieldData: [
             { field: 'seasonId', data: seasonId }
         ] } ]
@@ -132,8 +136,8 @@ class Update extends Component {
             else this.setState({ episodeList: [] })
         })
     }
-
-    GetSeasonList = (seriesId) => {
+    
+    GetSeasonList = (seriesId) => { // FIXME: BUG AO MUDAR A SÉRIE NUMA TAB MUDA AS COMBOBOX DAS OUTRAS TABS SERIES, SEASON, EPISODE
         let searchData = [ { table: 'Season', fieldData: [
             { field: 'seriesId', data: seriesId }
         ] } ]
@@ -148,8 +152,8 @@ class Update extends Component {
             }
         })
     }
-
-    GetSeriesList = () => {
+    
+    GetSeriesList = () => { // FIXME: BUG AO MUDAR A SÉRIE NUMA TAB MUDA AS COMBOBOX DAS OUTRAS TABS SERIES, SEASON, EPISODE
         let searchData = [ { table: 'Series', fieldData: undefined } ]
         Get(searchData,(res) => {
             if(res && res.result) {
@@ -164,6 +168,7 @@ class Update extends Component {
             }
         })
     }
+    
     GetBookList = () => {
         let searchData = [ { table: 'Book', fieldData: undefined } ]
         Get(searchData,(res) => {
@@ -171,6 +176,7 @@ class Update extends Component {
             else this.setState({ bookList: [] })
         })
     }
+    
     GetGameList = () => {
         let searchData = [ { table: 'Game', fieldData: undefined } ]
         Get(searchData,(res) => {
@@ -178,6 +184,7 @@ class Update extends Component {
             else this.setState({ gameList: [] })
         })
     }
+    
     GetMovieList = () => {
         let searchData = [ { table: 'Movie', fieldData: undefined } ]
         Get(searchData,(res) => {
@@ -185,6 +192,7 @@ class Update extends Component {
             else this.setState({ movieList: [] })
         })
     }
+    
     GetGenresList = () => {
         let searchData = [ { table: 'Genres', fieldData: undefined } ]
         Get(searchData,(res) => {
@@ -193,6 +201,10 @@ class Update extends Component {
         })
     }
 
+    ChangeTab = (key) => {
+        this.setState({ key })
+        this.LoadData()
+    }
 
     render() { 
         if(!this.state.user || !this.state.user.canedit) {
@@ -203,13 +215,15 @@ class Update extends Component {
                 <Navbar props={this.props} />
                 <br/>
                 <Container>
-                    <Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.setState({ key })}>
+                    <Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.ChangeTab(key)}>
                         <Tab eventKey="book" title="Livro"><Book bookList={this.state.bookList} publishingCompanyList={this.state.publishingCompanyList} sagaList={this.state.sagaList} onSubmit={this.GetBookList} /></Tab>
                         <Tab eventKey="game" title="Jogo"><Game gameList={this.state.gameList} engineList={this.state.engineList} companyList={this.state.companyList} parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetGameList} /></Tab>
                         <Tab eventKey="movie" title="Filme"><Movie movieList={this.state.movieList} parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetMovieList} /></Tab>
+                        
                         <Tab eventKey="series" title="Séries"><Series seriesList={this.state.seriesList} parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetSeriesList} /></Tab>
-                        <Tab eventKey="season" title="Temporada"><Season seasonList={this.state.seasonList} seriesList={this.state.seriesList} onSubmit={this.GetSeasonList}/></Tab>
-                        <Tab eventKey="episode" title="Episódio"><Episode episodeList={this.state.episodeList} seriesList={this.state.seriesList} seasonList={this.state.seasonList} GetSeasonList={this.GetSeasonList} onSubmit={this.GetEpisodeList}/></Tab>
+                        <Tab eventKey="season" title="Temporada"><Season seriesList={this.state.seriesList} seasonList={this.state.seasonList} onSubmit={this.GetSeasonList}/></Tab>
+                        <Tab eventKey="episode" title="Episódio"><Episode seriesList={this.state.seriesList} seasonList={this.state.seasonList} episodeList={this.state.episodeList} GetSeasonList={this.GetSeasonList} onSubmit={this.GetEpisodeList}/></Tab>
+                       
                         <Tab eventKey="parentAdvisory" title="Aconselhamento Parental"><ParentAdvisory parentAdvisoryList={this.state.parentAdvisoryList} onSubmit={this.GetParentAdvisoryList} /></Tab>
                         <Tab eventKey="company" title="Empresa"><Company companyList={this.state.companyList} onSubmit={this.GetCompanyList} /></Tab>
                         <Tab eventKey="engine" title="Engine"><Engine engineList={this.state.engineList} onSubmit={this.GetEngineList} /></Tab>

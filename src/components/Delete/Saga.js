@@ -4,75 +4,66 @@ import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CB'
 
 class Saga extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.DeleteSaga = this.DeleteSaga.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            selectedSaga: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
     }
+
+    componentDidUpdate() {
+        if(this.props.sagaList[0]) this.SetSagaFieldValues(this.props.sagaList[0])
+        else this.SetSagaFieldValues({})
+    }
+
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
     
-    componentWillReceiveProps(){
-        if(this.props.sagaList[0])
-        this.SetSagaFieldValues(this.props.sagaList[0])
+    DeleteSaga = (event) => {
+        event.preventDefault()
+        if(this.props.sagaList[0]){
+            let deleteData = [
+                { table: 'Saga', fieldData: [ 
+                    {field: 'userEmail', data: this.state.user.email},
+                    {field: 'userPassword', data: this.state.user.password},
+                    {field: 'id', data: JSON.parse(this.cbDelete.value).id}
+                ] }
+            ]
+            this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
+            Delete(deleteData, (res, rej) => {
+                if(res) {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRef.reset()
+                        this.props.onSubmit()
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
+            })
+        } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
     }
     
     SetSagaFieldValues = (saga) => {
-        this.setState({selectedSaga: saga})
         let name = (saga.name) ? ReplaceComa(saga.name) : null
         let description = (saga && saga.description) ? ReplaceComa(saga.description) : null
         this.name.value = name
         this.description.value = description
     }
 
-    DeleteSaga = (event) => {
-        event.preventDefault()
-        if(this.props.sagaList[0]){
-            let updateData = [
-                { table: 'Saga', fieldData: [ 
-                    {field: 'userEmail', data: this.state.user.email},
-                    {field: 'userPassword', data: this.state.user.password},
-                    {field: 'id', data: this.state.selectedSaga.id}
-                ] }
-            ]
-            this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Delete(updateData, (res, rej) => {
-                if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.formRef.reset()
-                        this.ChangeAlert(true, res.result.message, 'success')
-                        this.props.onSubmit()
-                        this.setState({selectedSaga: this.props.sagaList[0]})
-                    }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
-            })
-        }
+    LoadDataToFields = () => {
+        this.SetSagaFieldValues(JSON.parse(this.cbDelete.value))
     }
-    SetSagaToEdit = (event) => {
-        this.props.sagaList.forEach(saga => {
-            if(saga.id === Number(event.target.value)) {
-                this.SetSagaFieldValues(saga)
-            }
-        })
-    }
+
     render() {
         return ( 
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.DeleteSaga} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSagaToEdit} />
+                    <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.LoadDataToFields} ref={(input) => this.cbDelete = input} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Nome</Form.Label>
                         <Col>

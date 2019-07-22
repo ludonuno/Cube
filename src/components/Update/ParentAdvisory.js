@@ -19,7 +19,7 @@ class ParentAdvisory extends Component {
     }
     componentWillReceiveProps(){
         if(this.props.parentAdvisoryList[0])
-        this.SetParentAdvisoryFieldValues(this.props.parentAdvisoryList[0])
+            this.SetParentAdvisoryFieldValues(this.props.parentAdvisoryList[0])
     }
     SetParentAdvisoryFieldValues = (parentAdvisory) => {
         this.setState({selectedParentAdvisory: parentAdvisory})
@@ -37,7 +37,7 @@ class ParentAdvisory extends Component {
                 { table: 'ParentAdvisory', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'id', data: this.state.selectedParentAdvisory.id},
+                    {field: 'id', data: this.state.selectedParentAdvisory ? this.state.selectedParentAdvisory.id : this.props.parentAdvisoryList[0].id},
                     {field: 'rate', data: this.rate.value},
                     {field: 'description', data: this.description.value}
                 ] }

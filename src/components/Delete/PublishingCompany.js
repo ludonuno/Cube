@@ -4,69 +4,64 @@ import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CB'
 
 class PublishingCompany extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddPublishingCompany = this.AddPublishingCompany.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            selectedPublishingCompany: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
     }
 
-    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
-    componentWillReceiveProps(){
-        if(this.props.publishingCompanyList[0])
-        this.SetPublishingCompanyFieldValues(this.props.publishingCompanyList[0])
+    componentDidUpdate() { 
+        if(this.props.publishingCompanyList[0]) this.SetPublishingCompanyFieldValues(this.props.publishingCompanyList[0])
+        else this.SetPublishingCompanyFieldValues({})
     }
+
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
+    
+    DeletePublishingCompany = (event) => {
+        event.preventDefault()
+        if(this.props.publishingCompanyList[0]) {
+            let deleteData = [
+                { table: 'PublishingCompany', fieldData: [ 
+                    {field: 'userEmail', data: this.state.user.email},
+                    {field: 'userPassword', data: this.state.user.password},
+                    {field: 'id', data: JSON.parse(this.cbDelete.value).id}
+                ] }
+            ]
+            this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
+            Delete(deleteData, (res, rej) => {
+                if(res) {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRef.reset()
+                        this.props.onSubmit()
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
+            })
+        } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
+    }
+    
     SetPublishingCompanyFieldValues = (publishingCompany) => {
-        this.setState({selectedPublishingCompany: publishingCompany})
         let name = (publishingCompany.name) ? ReplaceComa(publishingCompany.name) : null
         this.name.value = name
     }
-    AddPublishingCompany = (event) => {
-        event.preventDefault()
-        let updateData = [
-            { table: 'PublishingCompany', fieldData: [ 
-                {field: 'userEmail', data: this.state.user.email},
-                {field: 'userPassword', data: this.state.user.password},
-                {field: 'id', data: this.state.selectedPublishingCompany.id}
-            ] }
-        ]
-        this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-        Delete(updateData, (res, rej) => {
-            if(res) {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
-                } else {
-                    this.formRef.reset()
-                    this.ChangeAlert(true, res.result.message, 'success')
-                    this.props.onSubmit()
-                    this.setState({selectedPublishingCompany: this.props.publishingCompanyList[0]})
-                }
-            } else {
-                this.ChangeAlert(true, `${rej}`, 'danger')
-            }
-        })
+
+    LoadDataToFields = () => {
+        this.SetPublishingCompanyFieldValues(JSON.parse(this.cbDelete.value))
     }
-    SetPublishingCompanyToEdit = (event) => {
-        this.props.publishingCompanyList.forEach(publishingCompany => {
-            if(publishingCompany.id === Number(event.target.value)) {
-                this.SetPublishingCompanyFieldValues(publishingCompany)
-            }
-        })
-    }
+
     render() {
         return ( 
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
-                <Form onSubmit={this.AddPublishingCompany} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Livros'} list={this.props.publishingCompanyList} onChange={this.SetPublishingCompanyToEdit} />
+                <Form onSubmit={this.DeletePublishingCompany} ref={(form) => this.formRef = form}>
+                    <ComboBox header={'Editoras'} list={this.props.publishingCompanyList} onChange={this.LoadDataToFields} ref={(input) => this.cbDelete = input} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Nome</Form.Label>
                         <Col>

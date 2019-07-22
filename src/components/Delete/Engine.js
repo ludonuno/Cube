@@ -4,71 +4,63 @@ import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CB'
 
 class Engine extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.DeleteEngine = this.DeleteEngine.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            selectedEngine: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
     }
-    componentWillReceiveProps(){
-        if(this.props.engineList[0])
-        this.SetEngineFieldValues(this.props.engineList[0])
+    componentDidUpdate() {
+        if(this.props.engineList[0]) this.SetEngineFieldValues(this.props.engineList[0])
+        else this.SetEngineFieldValues({})
     }
-    SetEngineFieldValues = (engine) => {
-        this.setState({selectedEngine: engine})
-        let name = (engine.name) ? ReplaceComa(engine.name) : null
-        this.name.value = name
-    }
+
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     DeleteEngine = (event) => {
         event.preventDefault()
         if(this.props.engineList[0]) {
-            let updateData = [
+            let deleteData = [
                 { table: 'Engine', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'id', data: this.state.selectedEngine.id}
+                    {field: 'id', data: JSON.parse(this.cbDelete.value).id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao servidor...', 'info')
-            Delete(updateData, (res, rej) => {
+            Delete(deleteData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, `${res.error}`, 'danger')
-                    } else {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
                         this.formRef.reset()
-                        this.ChangeAlert(true, `${res.result.message}`, 'success')
                         this.props.onSubmit()
-                        this.setState({selectedEngine: this.props.engineList[0]})
+                        this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        }
+        } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
     }
-    SetEngineToEdit = (event) => {
-        this.props.engineList.forEach(engine => {
-            if(engine.id === Number(event.target.value)) {
-                this.SetEngineFieldValues(engine)
-            }
-        })
+    
+    SetEngineFieldValues = (engine) => {
+        let name = (engine.name) ? ReplaceComa(engine.name) : null
+        this.name.value = name
     }
+    
+    LoadDataToFields = () => {
+        this.SetEngineFieldValues(JSON.parse(this.cbDelete.value))
+    }
+
     render() {
         return ( 
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.DeleteEngine} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Livros'} list={this.props.engineList} onChange={this.SetEngineToEdit} />
+                    <ComboBox header={'Livros'} list={this.props.engineList} onChange={this.LoadDataToFields} ref={(input) => this.cbDelete = input} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Nome</Form.Label>
                         <Col>

@@ -8,8 +8,6 @@ import ComboBox from '../utils/ComboBox'
 class Company extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.UpdateCompany = this.UpdateCompany.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },

@@ -1,250 +1,229 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Button, Accordion, Card } from 'react-bootstrap'
-import { Create /*, Get */ } from '../../scripts/api'
+import { Row, Col, Form, Button, Accordion, Card, Jumbotron } from 'react-bootstrap'
+import { Delete } from '../../scripts/api'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CBVideo'
+import InfoVideo from '../utils/InfoVideo'
+import { GetVideoId } from '../../scripts/utils'
 
-//TODO: change api to return a more meaningfull message when the data is already in the database
 class Video extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddVideoBook = this.AddVideoBook.bind(this)
-        this.AddVideoGame = this.AddVideoGame.bind(this)
-        this.AddVideoMovie = this.AddVideoMovie.bind(this)
-        this.AddVideoSeries = this.AddVideoSeries.bind(this)
-        this.SetBook = this.SetBook.bind(this)
-        this.SetGame = this.SetGame.bind(this)
-        this.SetMovie = this.SetMovie.bind(this)
-        this.SetSeries = this.SetSeries.bind(this)
-        this.ResetForm = this.ResetForm.bind(this)
         this.state = { 
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            seasonList: [],
-            episodeList: [],
-            bookId: undefined,
-            gameId: undefined,
-            movieId: undefined,
-            seriesId: undefined,
-            seasonId: undefined,
-            episodeId: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
+    }
+    componentDidUpdate() {
+        if(this.props.videoBookList[0]) this.LoadVideoBookDataToFields(this.props.videoBookList[0])
+        else this.LoadVideoBookDataToFields({})
+        if(this.props.videoGameList[0]) this.LoadVideoGameDataToFields(this.props.videoGameList[0])
+        else this.LoadVideoGameDataToFields({}) 
+        if(this.props.videoMovieList[0]) this.LoadVideoMovieDataToFields(this.props.videoMovieList[0])
+        else this.LoadVideoMovieDataToFields({}) 
+        if(this.props.videoSeriesList[0]) this.LoadVideoSeriesDataToFields(this.props.videoSeriesList[0])
+        else this.LoadVideoSeriesDataToFields({}) 
+        if(this.props.videoSeasonList[0]) this.LoadVideoSeasonDataToFields(this.props.videoSeasonList[0])
+        else this.LoadVideoSeasonDataToFields({}) 
+        if(this.props.videoEpisodeList[0]) this.LoadVideoEpisodeDataToFields(this.props.videoEpisodeList[0])
+        else this.LoadVideoEpisodeDataToFields({}) 
     }
 
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
-    AddVideoBook = (event) => {
+    DeleteVideoBook = (event) => {
         event.preventDefault()
-        if(this.props.bookList[0]) {
-            let insertData = [
+        if(this.props.videoBookList[0]) {
+            let deleteData = [
                 { table: 'VideoBook', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'link', data: this.linkBook.value},
-                    {field: 'bookId', data: this.state.bookId ? this.state.bookId : this.props.bookList[0].id},
+                    {field: 'id', data: JSON.parse(this.cbDeleteVideoBook.value).id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res, rej) => {
-                if(res) {  
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.formRefBook.reset()
+            Delete(deleteData, (res, rej) => {
+                if(res) {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
+        } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
     }
 
-    AddVideoGame = (event) => {
+    DeleteVideoGame = (event) => {
         event.preventDefault()
-        if(this.props.gameList[0]) {
-            let insertData = [
+        if(this.props.videoGameList[0]) {
+            let deleteData = [
                 { table: 'VideoGame', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'link', data: this.linkGame.value},
-                    {field: 'gameId', data: this.state.gameId ? this.state.gameId : this.props.gameList[0].id},
+                    {field: 'id', data: JSON.parse(this.cbDeleteVideoGame.value).id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res, rej) => {
-                if(res) {  
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.formRefGame.reset()
+            Delete(deleteData, (res, rej) => {
+                if(res) {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
+        } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
     }
 
-    AddVideoMovie = (event) => {
+    DeleteVideoMovie = (event) => {
         event.preventDefault()
-        if(this.props.movieList[0]) {
-            let insertData = [
+        if(this.props.videoMovieList[0]) {
+            let deleteData = [
                 { table: 'VideoMovie', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'link', data: this.linkMovie.value},
-                    {field: 'movieId', data: this.state.movieId ? this.state.movieId : this.props.movieList[0].id},
+                    {field: 'id', data: JSON.parse(this.cbDeleteVideoMovie.value).id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res, rej) => {
-                if(res) {  
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.formRefMovie.reset()
+            Delete(deleteData, (res, rej) => {
+                if(res) {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
+        } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
     }
 
-    AddVideoSeries = (event) => {
+    DeleteVideoSeries = (event) => {
         event.preventDefault()
-        if(this.props.seriesList[0]) {
-            let insertData = [
+        if(this.props.videoSeriesList[0]) {
+            let deleteData = [
                 { table: 'VideoSeries', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'link', data: this.linkSeries.value},
-                    {field: 'seriesId', data: this.state.seriesId ? this.state.seriesId : this.props.seriesList[0].id},
+                    {field: 'id', data: JSON.parse(this.cbDeleteVideoSeries.value).id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res, rej) => {
-                if(res) {  
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.formRefSeries.reset()
+            Delete(deleteData, (res, rej) => {
+                if(res) {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
+        } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
     }
-    AddVideoSeason = (event) => {
+
+    DeleteVideoSeason = (event) => {
         event.preventDefault()
-        if(this.props.seriesList[0] && this.props.seasonList[0]) {
-            let insertData = [
-                { table: 'VideoSeasons', fieldData: [ 
+        if(this.props.videoSeasonList[0]) {
+            let deleteData = [
+                { table: 'VideoSeason', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'link', data: this.linkSeries.value},
-                    {field: 'seriesId', data: this.state.seriesId ? this.state.seriesId : this.props.seriesList[0].id},
+                    {field: 'id', data: JSON.parse(this.cbDeleteVideoSeason.value).id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Create(insertData, (res, rej) => {
-                if(res) {  
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.formRefSeries.reset()
+            Delete(deleteData, (res, rej) => {
+                if(res) {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
+        } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
+    }
+
+    DeleteVideoEpisode = (event) => {
+    event.preventDefault()
+    if(this.props.videoEpisodeList[0]) {
+        let deleteData = [
+            { table: 'VideoEpisode', fieldData: [ 
+                {field: 'userEmail', data: this.state.user.email},
+                {field: 'userPassword', data: this.state.user.password},
+                {field: 'id', data: JSON.parse(this.cbDeleteVideoEpisode.value).id}
+            ] }
+        ]
+        this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
+        Delete(deleteData, (res, rej) => {
+            if(res) {
+                if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                else {
+                    this.props.onSubmit()
+                    this.ChangeAlert(true, res.result.message, 'success')
+                }
+            } else this.ChangeAlert(true, `${rej}`, 'danger')
+        })
+    } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
+}
+
+    LoadVideoMovieDataToFields = (videoMovie) =>{
+        if(this.iframeVideoMovie) {
+            let link = videoMovie.link ? GetVideoId(videoMovie.link) : null
+            let id = videoMovie.id
+            this.iframeVideoMovie.src = `https://www.youtube.com/embed/${link}`
+            this.iframeVideoMovie.title = id
+        }
+    }
+    LoadVideoBookDataToFields = (videoBook) =>{
+        if(this.iframeVideoBook) {
+            let link = videoBook.link ? GetVideoId(videoBook.link) : null
+            let id = videoBook.id
+            this.iframeVideoBook.src = `https://www.youtube.com/embed/${link}`
+            this.iframeVideoBook.title = id
+        }
+    }
+    LoadVideoGameDataToFields = (videoGame) =>{
+        if(this.iframeVideoGame) {
+            let link = videoGame.link ? GetVideoId(videoGame.link) : null
+            let id = videoGame.id
+            this.iframeVideoGame.src = `https://www.youtube.com/embed/${link}`
+            this.iframeVideoGame.title = id
+        }
+    }
+    LoadVideoSeriesDataToFields = (videoSeries) =>{
+        if(this.iframeVideoSeries) {
+            let link = videoSeries.link ? GetVideoId(videoSeries.link) : null
+            let id = videoSeries.id
+            this.iframeVideoSeries.src = `https://www.youtube.com/embed/${link}`
+            this.iframeVideoSeries.title = id
+        }
+    }
+    LoadVideoSeasonDataToFields = (videoSeason) =>{
+        if(this.iframeVideoSeason) {
+            let link = videoSeason.link ? GetVideoId(videoSeason.link) : null
+            let id = videoSeason.id
+            this.iframeVideoSeason.src = `https://www.youtube.com/embed/${link}`
+            this.iframeVideoSeason.title = id
+        }
+    }
+    LoadVideoEpisodeDataToFields = (videoEpisode) =>{
+        if(this.iframeVideoEpisode) {
+            let link = videoEpisode.link ? GetVideoId(videoEpisode.link) : null
+            let id = videoEpisode.id
+            this.iframeVideoEpisode.src = `https://www.youtube.com/embed/${link}`
+            this.iframeVideoEpisode.title = id
         }
     }
 
-    SetBook = (event) => {
-        this.setState({ bookId: Number(event.target.value) })
-    }
-    SetGame = (event) => {
-        this.setState({ gameId: Number(event.target.value) })
-    }
-    SetMovie = (event) => {
-        this.setState({ movieId: Number(event.target.value) })
-    }
-    SetSeries = (event) => {
-        this.setState({ seriesId: Number(event.target.value) })
-        this.props.GetSeasonList(Number(event.target.value))
-    }
-    SetSeason = (event) => {
-        this.setState({ seasonId: Number(event.target.value) })
-        this.props.GetEpisodeList(Number(event.target.value))
-    }
-    SetEpisode = (event) => {
-        this.setState({ episodeId: Number(event.target.value) })
-    }
-
-    ResetForm = () => {
-        this.formRefBook.reset()
-        this.formRefGame.reset()
-        this.formRefMovie.reset()
-        this.formRefSeries.reset()
-        if (this.formRefSeason) this.formRefSeason.reset()
-        if (this.formRefEpisode) this.formRefEpisode.reset()
-
-        this.props.GetSeasonList(this.props.seriesList[0].id)
-        if(this.props.seasonList[0]) this.props.GetEpisodeList(this.props.seasonList[0].id)
-
-        this.setState({bookId: this.props.bookList[0] ? this.props.bookList[0].id : undefined})
-        this.setState({gameId: this.props.gameList[0] ? this.props.gameList[0].id : undefined})
-        this.setState({movieId: this.props.movieList[0] ? this.props.movieList[0].id : undefined})
-        this.setState({seriesId: this.props.seriesList[0] ? this.props.seriesList[0].id : undefined})
-        this.setState({seasonId: this.props.seasonList[0] ? this.props.seasonList[0].id : undefined})
-        this.setState({episodeId: this.props.episodeList[0] ? this.props.episodeList[0].id : undefined})
-    }
-
-    HasSeasons = () => {
-        if(this.props.seasonList[0])
-            return (<ComboBox header={'Temporada'} list={this.props.seasonList} onChange={this.SetSeason} />)
-        else
-            return (
-                <Form.Group as={Row}> 
-                    <Form.Label column lg={12} xl={2}>Temporada</Form.Label>
-                    <Col>
-                        <Alert variant={'danger'} message={'A série selecionada não tem temporadas'} visible={true} />
-                    </Col>
-                </Form.Group>
-            )
-    }
-
-    HasEpisodes = () => {
-        if(this.props.episodeList[0])
-            return (<ComboBox header={'Episódio'} list={this.props.episodeList} onChange={this.SetEpisode} />)
-        else
-            return (
-                <Form.Group as={Row}> 
-                    <Form.Label column lg={12} xl={2}>Temporada</Form.Label>
-                    <Col>
-                        <Alert variant={'danger'} message={'A temporada selecionada não tem episódios'} visible={true} />
-                    </Col>
-                </Form.Group>
-            )
-    }
+    SetVideoMovie = () => { this.LoadVideoMovieDataToFields(JSON.parse(this.cbDeleteVideoMovie.value)) }
+    SetVideoBook = () => { this.LoadVideoBookDataToFields(JSON.parse(this.cbDeleteVideoBook.value)) }
+    SetVideoGame = () => { this.LoadVideoGameDataToFields(JSON.parse(this.cbDeleteVideoGame.value)) }
+    SetVideoSeries = () => { this.LoadVideoSeriesDataToFields(JSON.parse(this.cbDeleteVideoSeries.value)) }
+    SetVideoSeason = () => { this.LoadVideoSeasonDataToFields(JSON.parse(this.cbDeleteVideoSeason.value)) }
+    SetVideoEpisode = () => { this.LoadVideoEpisodeDataToFields(JSON.parse(this.cbDeleteVideoEpisode.value)) }
 
     render() { 
         return ( 
@@ -254,141 +233,108 @@ class Video extends Component {
                 <Accordion defaultActiveKey="0">
                     <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="0"  id="accordionBook" ref={(accordion) => this.accordionPage = accordion} onClick={this.ResetForm}>
-                            Adicionar um vídeo a um Livro
+                            Eliminar um vídeo a um Livro
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="0">
                             <Card.Body>
-                                <Form onSubmit={this.AddVideoBook} ref={(form) => this.formRefBook = form}>
-                                    <Form.Group as={Row}> 
-                                        <Form.Label column lg={12} xl={2}>Link do vídeo</Form.Label>
-                                        <Col>
-                                            <Form.Control type="text" ref={(input) => {this.linkBook = input}} required/>
-                                        </Col>
-                                    </Form.Group>
-                                    <ComboBox header={'Livro'} list={this.props.bookList} onChange={this.SetBook} />
+                                <Form onSubmit={this.DeleteVideoBook} ref={(form) => this.formRefBook = form}>
+                                    <ComboBox header={'Videos livros'} list={this.props.videoBookList} onChange={this.SetVideoBook} ref={(input) => this.cbDeleteVideoBook = input} />
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="danger" type="submit" block>Apagar</Button>
                                         </Col>
                                     </Row>
+                                    <InfoVideo list={this.props.videoBookList} ref={(iframe) => this.iframeVideoBook = iframe} />
                                 </Form>
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>
                     <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="1"  id="accordionGame" ref={(accordion) => this.accordionPage = accordion} onClick={this.ResetForm}>
-                            Adicionar um vídeo a um Jogo
+                            Eliminar um vídeo a um Jogo
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="1">
                             <Card.Body>
-                                <Form onSubmit={this.AddVideoGame} ref={(form) => this.formRefGame = form}>
-                                    <Form.Group as={Row}> 
-                                        <Form.Label column lg={12} xl={2}>Link do vídeo</Form.Label>
-                                        <Col>
-                                            <Form.Control type="text" ref={(input) => {this.linkGame = input}} required/>
-                                        </Col>
-                                    </Form.Group>
-                                    <ComboBox header={'Jogo'} list={this.props.gameList} onChange={this.SetGame} />
+                                <Form onSubmit={this.DeleteVideoGame} ref={(form) => this.formRefGame = form}>
+                                    <ComboBox header={'Videos jogos'} list={this.props.videoGameList} onChange={this.SetVideoGame} ref={(input) => this.cbDeleteVideoGame = input} />
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="danger" type="submit" block>Apagar</Button>
                                         </Col>
                                     </Row>
+                                    <InfoVideo list={this.props.videoGameList} ref={(iframe) => this.iframeVideoGame = iframe} />
                                 </Form>
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>
                     <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="2" id="accordionMovie" ref={(accordion) => this.accordionPage = accordion} onClick={this.ResetForm}>
-                            Adicionar um vídeo a um Filme
+                            Eliminar um vídeo a um Filme
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="2">
                             <Card.Body>
-                                <Form onSubmit={this.AddVideoMovie} ref={(form) => this.formRefMovie = form}>
-                                    <Form.Group as={Row}> 
-                                        <Form.Label column lg={12} xl={2}>Link do vídeo</Form.Label>
-                                        <Col>
-                                            <Form.Control type="text" ref={(input) => {this.linkMovie = input}} required/>
-                                        </Col>
-                                    </Form.Group>
-                                    <ComboBox header={'Filme'} list={this.props.movieList} onChange={this.SetMovie} />
+                                <Form onSubmit={this.DeleteVideoMovie} ref={(form) => this.formRefMovie = form}>
+                                    <ComboBox header={'Videos filmes'} list={this.props.videoMovieList} onChange={this.SetVideoMovie} ref={(input) => this.cbDeleteVideoMovie = input} />
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="danger" type="submit" block>Apagar</Button>
                                         </Col>
                                     </Row>
+                                    <InfoVideo list={this.props.videoMovieList} ref={(iframe) => this.iframeVideoMovie = iframe} />
                                 </Form>
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>
                     <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="3" id="accordionSeries" ref={(accordion) => this.accordionPage = accordion} onClick={this.ResetForm}>
-                            Adicionar um vídeo a uma Série
+                            Eliminar um vídeo a uma Série
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="3">
                             <Card.Body>
-                                <Form onSubmit={this.AddVideoSeries} ref={(form) => this.formRefSeries = form}>
-                                    <Form.Group as={Row}> 
-                                        <Form.Label column lg={12} xl={2}>Link do vídeo</Form.Label>
-                                        <Col>
-                                            <Form.Control type="text" ref={(input) => {this.linkSeries = input}} required/>
-                                        </Col>
-                                    </Form.Group>
-                                    <ComboBox header={'Séries'} list={this.props.seriesList} onChange={this.SetSeries} />
+                                <Form onSubmit={this.DeleteVideoSeries} ref={(form) => this.formRefSeries = form}>
+                                    <ComboBox header={'Videos séries'} list={this.props.videoSeriesList} onChange={this.SetVideoSeries} ref={(input) => this.cbDeleteVideoSeries = input} />
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="danger" type="submit" block>Apagar</Button>
                                         </Col>
                                     </Row>
+                                    <InfoVideo list={this.props.videoSeriesList} ref={(iframe) => this.iframeVideoSeries = iframe} />
                                 </Form>
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>
                     <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="4" id="accordionSeason" ref={(accordion) => this.accordionPage = accordion} onClick={this.ResetForm}>
-                            Adicionar um vídeo a uma Temporada
+                            Eliminar um vídeo a uma Temporada
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="4">
                             <Card.Body>
-                                <Form onSubmit={this.AddVideoSeason} ref={(form) => this.formRefSeason = form}>
-                                    <Form.Group as={Row}> 
-                                        <Form.Label column lg={12} xl={2}>Link do vídeo</Form.Label>
-                                        <Col>
-                                            <Form.Control type="text" ref={(input) => {this.link = input}} required/>
-                                        </Col>
-                                    </Form.Group>
-                                    <ComboBox header={'Séries'} list={this.props.seriesList} onChange={this.SetSeries} />
-                                    <this.HasSeasons />
+                                <Form onSubmit={this.DeleteVideoSeason} ref={(form) => this.formRefSeason = form}>
+                                    <ComboBox header={'Videos temporada'} list={this.props.videoSeasonList} onChange={this.SetVideoSeason} ref={(input) => this.cbDeleteVideoSeason = input} />
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="danger" type="submit" block>Apagar</Button>
                                         </Col>
                                     </Row>
+                                    <InfoVideo list={this.props.videoSeasonList} ref={(iframe) => this.iframeVideoSeason = iframe} />
                                 </Form>
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>
                     <Card>
                         <Accordion.Toggle as={Card.Header} eventKey="5" id="accordionEpisode" ref={(accordion) => this.accordionPage = accordion} onClick={this.ResetForm}>
-                            Adicionar um vídeo a um Episódio
+                            Eliminar um vídeo a um Episódio
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="5">
                             <Card.Body>
-                                <Form onSubmit={this.AddVideoEpisode} ref={(form) => this.formRefEpisode = form}>
-                                    <Form.Group as={Row}> 
-                                        <Form.Label column lg={12} xl={2}>Link do vídeo</Form.Label>
-                                        <Col>
-                                            <Form.Control type="text" ref={(input) => {this.link = input}} required/>
-                                        </Col>
-                                    </Form.Group>
-                                    <ComboBox header={'Séries'} list={this.props.seriesList} onChange={this.SetSeries} />
-                                    <this.HasSeasons />
-                                    <this.HasEpisodes />
+                                <Form onSubmit={this.DeleteVideoEpisode} ref={(form) => this.formRefEpisode = form}>
+                                    <ComboBox header={'Videos episódios'} list={this.props.videoEpisodeList} onChange={this.SetVideoEpisode} ref={(input) => this.cbDeleteVideoEpisode = input} />
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="danger" type="submit" block>Apagar</Button>
                                         </Col>
                                     </Row>
+                                    <InfoVideo list={this.props.videoEpisodeList} ref={(iframe) => this.iframeVideoEpisode = iframe} />
                                 </Form>
                             </Card.Body>
                         </Accordion.Collapse>

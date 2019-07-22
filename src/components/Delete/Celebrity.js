@@ -4,26 +4,49 @@ import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CB'
 
 class Celebrity extends Component {
 
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddCelebrity = this.AddCelebrity.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            selectedCelebrity: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
     }
-    componentWillReceiveProps(){
-        if(this.props.celebrityList[0])
-        this.SetCelebrityFieldValues(this.props.celebrityList[0])
+    componentDidUpdate() { 
+        if(this.props.celebrityList[0]) this.SetCelebrityFieldValues(this.props.celebrityList[0])
+        else this.SetCelebrityFieldValues({})
     }
+    
+    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
+
+    AddCelebrity = (event) => {
+        event.preventDefault()
+        if(this.props.celebrityList[0]) {
+            let deleteData = [
+                { table: 'Celebrity', fieldData: [ 
+                    {field: 'userEmail', data: this.state.user.email},
+                    {field: 'userPassword', data: this.state.user.password},
+                    {field: 'id', data: JSON.parse(this.cbDelete.value).id}
+                ] }
+            ]
+            this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
+            Delete(deleteData, (res, rej) => {
+                if(res) {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRef.reset()
+                        this.props.onSubmit()
+                        this.ChangeAlert(true, res.result.message, 'success')
+                    }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
+            })
+        } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
+    }
+    
     SetCelebrityFieldValues = (celebrity) => {
-        this.setState({selectedCelebrity: celebrity})
         let name = (celebrity.name) ? ReplaceComa(celebrity.name) : null
         let birthday = (celebrity && celebrity.birthday) ? celebrity.birthday.substring(0,10) : null
         let biography = (celebrity && celebrity.biography) ? ReplaceComa(celebrity.biography) : null
@@ -31,48 +54,18 @@ class Celebrity extends Component {
         this.birthday.value = birthday
         this.biography.value = biography
     }
-    ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
+    
+    LoadDataToFields = () => {
+        this.SetCelebrityFieldValues(JSON.parse(this.cbDelete.value))
+    }
 
-    AddCelebrity = (event) => {
-        event.preventDefault()
-        if(this.props.celebrityList[0]) {
-            let updateData = [
-                { table: 'Celebrity', fieldData: [ 
-                    {field: 'userEmail', data: this.state.user.email},
-                    {field: 'userPassword', data: this.state.user.password},
-                    {field: 'id', data: this.state.selectedCelebrity.id}
-                ] }
-            ]
-            this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Delete(updateData, (res, rej) => {
-                if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.ChangeAlert(true, res.result.message, 'success')
-                        this.props.onSubmit()
-                        this.setState({selectedCelebrity: this.props.celebrityList[0]})
-                    }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
-            })
-        }
-    }
-    SetCelebrityToEdit = (event) => {
-        this.props.celebrityList.forEach(celebrity => {
-            if(celebrity.id === Number(event.target.value)) {
-                this.SetCelebrityFieldValues(celebrity)
-            }
-        })
-    }
     render() {
         return ( 
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddCelebrity} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Celebridades'} list={this.props.celebrityList} onChange={this.SetCelebrityToEdit} />
+                    <ComboBox header={'Celebridades'} list={this.props.celebrityList} onChange={this.LoadDataToFields} ref={(input) => this.cbDelete = input} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Nome</Form.Label>
                         <Col>

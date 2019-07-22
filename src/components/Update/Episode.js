@@ -6,18 +6,9 @@ import { ReplaceComa } from '../../scripts/utils'
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/ComboBox'
 
-//FIXME: Bugs na alteração de episódio com temporada
-//FIXME: Os registos permanecem mesmo quando a temproada não tem episódio
-
-
 class Episode extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddEpisode = this.AddEpisode.bind(this)
-        this.SetSeries = this.SetSeries.bind(this)
-        this.SetSeason = this.SetSeason.bind(this)
-        this.ResetForm = this.ResetForm.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },

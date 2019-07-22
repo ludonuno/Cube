@@ -4,104 +4,81 @@ import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
-
-//FIXME: Bugs na alteração de episódio com temporada
-//FIXME: Os registos permanecem mesmo quando a temproada não tem episódio
-
+import ComboBox from '../utils/CB'
 
 class Episode extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddEpisode = this.AddEpisode.bind(this)
-        this.SetSeries = this.SetSeries.bind(this)
-        this.SetSeason = this.SetSeason.bind(this)
-        this.ResetForm = this.ResetForm.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            seriesId: undefined,
-            seasonId: undefined,
-            selectedEpisode: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
     }
-    componentWillReceiveProps(){
-        if(this.props.seriesList[0]) this.setState({seriesId: this.props.seriesList[0].id})
-        if(this.props.seasonList[0]) this.setState({seasonId: this.props.seasonList[0].id})
-        if(this.props.episodeList[0]) this.SetEpisodeFieldValues(this.props.episodeList[0])
+
+    componentDidUpdate() {
+        if(this.props.seriesList[0]) {
+            if(this.props.seasonList[0]) {
+                if(this.props.episodeList[0]) this.SetEpisodeFieldValues(this.props.episodeList[0])
+                else this.SetEpisodeFieldValues({}) 
+            } else this.SetEpisodeFieldValues({})
+        } else this.SetEpisodeFieldValues({})
     }
-    SetEpisodeFieldValues = (episode) => {
-        this.setState({selectedEpisode: episode})
-        let title = (episode.title) ? ReplaceComa(episode.title) : null
-        let releaseDate = (episode && episode.releasedate) ? episode.releasedate.substring(0,10) : null
-        let synopsis = (episode && episode.synopsis) ? ReplaceComa(episode.synopsis) : null
-        let seasonId = (episode.seasonid) ? episode.seasonid : null
-        this.title.value = title
-        this.releaseDate.value = releaseDate
-        this.synopsis.value = synopsis
-        this.setState({seasonId: seasonId})
-    }
+
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
-    AddEpisode = (event) => {
+    DeleteEpisode = (event) => {
         event.preventDefault()
-        if(this.props.seriesList[0] && this.props.seasonList[0] && this.props.episodeList[0]) {
-            let updateData = [
+        if(this.props.episodeList[0]) {
+            let deleteData = [
                 { table: 'Episode', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'id', data: this.state.selectedEpisode.id}
+                    {field: 'id', data: JSON.parse(this.cbDeleteEpisode.value).id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Delete(updateData, (res, rej) => {
+            Delete(deleteData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.ResetForm()
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRef.reset()
+                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
-                        this.props.onSubmit(this.state.seasonId)
-                        this.setState({selectedEpisode: this.props.episodeList[0]})
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
+        } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
     }
-    SetEpisodeToEdit = (event) => {
-        this.props.episodeList.forEach(episode => {
-            if(episode.id === Number(event.target.value)) {
-                this.SetEpisodeFieldValues(episode)
-            }
-        })
+    
+    SetEpisodeFieldValues = (episode) => {
+        let title = (episode.title) ? ReplaceComa(episode.title) : null
+        let releaseDate = (episode && episode.releasedate) ? episode.releasedate.substring(0,10) : null
+        let synopsis = (episode && episode.synopsis) ? ReplaceComa(episode.synopsis) : null
+        this.title.value = title
+        this.releaseDate.value = releaseDate
+        this.synopsis.value = synopsis
     }
-    SetSeries = (event) => {
-        this.setState({ seriesId: Number(event.target.value) })
-        this.props.GetSeasonList(Number(event.target.value))
+
+    LoadSeasonData = () => {
+        this.props.GetSeasonList(JSON.parse(this.cbDeleteSeries.value).id)
     }
-    SetSeason = (event) => {
-        this.setState({ seasonId: Number(event.target.value) })
-        this.props.onSubmit(Number(event.target.value))
-    }    
-    ResetForm = () => {
-        this.formRef.reset()        
-        this.setState({seriesId: (this.props.seriesList && this.props.seriesList[0]) ? this.props.seriesList[0].id : undefined})
-        this.setState({seasonId: (this.props.seasonList && this.props.seasonList[0]) ? this.props.seasonList[0].id : undefined})
+    LoadEpisodeData = () => {
+        this.props.GetEpisodeList(JSON.parse(this.cbDeleteSeason.value).id)
     }
+
+    LoadDataToFields = () => {
+        this.SetEpisodeFieldValues(JSON.parse(this.cbDeleteEpisode.value))
+    }
+
     render() {
         return ( 
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
-                <Form onSubmit={this.AddEpisode} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Série'} list={this.props.seriesList} onChange={this.SetSeries} />
-                    <ComboBox header={'Temporada'} list={this.props.seasonList} onChange={this.SetSeason} />
-                    <ComboBox header={'Episódio'} list={this.props.episodeList} onChange={this.SetEpisodeToEdit} />
+                <Form onSubmit={this.DeleteEpisode} ref={(form) => this.formRef = form}>
+                    <ComboBox header={'Série'} list={this.props.seriesList} onChange={this.LoadSeasonData} ref={(input) => this.cbDeleteSeries = input} />
+                    <ComboBox header={'Temporada'} list={this.props.seasonList} onChange={this.LoadEpisodeData} ref={(input) => this.cbDeleteSeason = input} />
+                    <ComboBox header={'Episódio'} list={this.props.episodeList} onChange={this.LoadDataToFields} ref={(input) => this.cbDeleteEpisode = input} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>

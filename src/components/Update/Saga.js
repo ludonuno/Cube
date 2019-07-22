@@ -17,12 +17,18 @@ class Saga extends Component {
             selectedSaga: undefined
         }
     }
-    componentWillReceiveProps(){
-        if(this.props.sagaList[0])
-        this.SetSagaFieldValues(this.props.sagaList[0])
+    componentDidUpdate() { //FIXME: FOI AQUI QUE ALTEREI PARA RESOLVER O BUG 3 (VER NOTAS)
+        if(!this.state.selectedSaga) {
+            if(this.props.sagaList[0]) {
+                this.SetSagaFieldValues(this.props.sagaList[0])
+            }
+        } else {
+            this.SetSagaFieldValues(this.state.selectedSaga)
+        }
     }
+    componentWillReceiveProps(){ if(this.props.sagaList[0]) this.SetSagaFieldValues(this.props.sagaList[0]) }
+
     SetSagaFieldValues = (saga) => {
-        this.setState({selectedSaga: saga})
         let name = (saga.name) ? ReplaceComa(saga.name) : null
         let description = (saga && saga.description) ? ReplaceComa(saga.description) : null
         this.name.value = name
@@ -37,7 +43,7 @@ class Saga extends Component {
                 { table: 'Saga', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'id', data: this.state.selectedSaga.id},
+                    {field: 'id', data: this.state.selectedSaga ? this.state.selectedSaga.id : this.props.sagaList[0].id},
                     {field: 'name', data: this.name.value},
                     {field: 'description', data: this.description.value}
                 ] }
@@ -51,7 +57,7 @@ class Saga extends Component {
                         this.formRef.reset()
                         this.ChangeAlert(true, res.result.message, 'success')
                         this.props.onSubmit()
-                        this.setState({selectedSaga: this.props.sagaList[0]})
+                        this.setState({selectedSaga: undefined})
                     }
                 } else {
                     this.ChangeAlert(true, `${rej}`, 'danger')
@@ -59,13 +65,8 @@ class Saga extends Component {
             })
         }
     }
-    SetSagaToEdit = (event) => {
-        this.props.sagaList.forEach(saga => {
-            if(saga.id === Number(event.target.value)) {
-                this.SetSagaFieldValues(saga)
-            }
-        })
-    }
+    SetSagaToEdit = (event) => { this.props.sagaList.forEach(saga => { if(saga.id === Number(event.target.value)) { this.setState({selectedSaga: saga}) } }) }
+    
     render() {
         return ( 
             <React.Fragment>

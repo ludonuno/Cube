@@ -9,8 +9,6 @@ import ComboBox from '../utils/ComboBox'
 class Engine extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.UpdateEngine = this.UpdateEngine.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },

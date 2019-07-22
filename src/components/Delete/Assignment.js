@@ -4,30 +4,23 @@ import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CB'
 
 class Assignment extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.DeleteAssignment = this.DeleteAssignment.bind(this)
         this.state = { 
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },
             selectedAssignment: undefined
         }
     }
-    componentWillReceiveProps(){
-        if(this.props.assignmentList[0])
-        this.SetAssignmentFieldValues(this.props.assignmentList[0])
+    
+    componentDidUpdate() {
+        if(this.props.assignmentList[0]) this.SetAssignmentFieldValues(this.props.assignmentList[0])
+        else this.SetAssignmentFieldValues({})
     }
-    SetAssignmentFieldValues = (assignment) => {
-        this.setState({selectedAssignment: assignment})
-        let assig = (assignment.assignment) ? ReplaceComa(assignment.assignment) : null
-        let description = (assignment && assignment.description) ? ReplaceComa(assignment.description) : null
-        this.assignment.value = assig
-        this.description.value = description
-    }
+
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     DeleteAssignment = (event) => {
@@ -37,40 +30,41 @@ class Assignment extends Component {
                 { table: 'Assignment', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'id', data: this.state.selectedAssignment.id}
+                    {field: 'id', data: JSON.parse(this.cbDelete.value).id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao servidor...', 'info')
             Delete(deleteData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, `${res.error}`, 'danger')
-                    } else {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
                         this.formRef.reset()
-                        this.ChangeAlert(true, `${res.result.message}`, 'success')
                         this.props.onSubmit()
-                        this.setState({selectedAssignment: this.props.assignmentList[0]})
+                        this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        }
+        } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
     }
-    SetAssignmentToEdit = (event) => {
-        this.props.assignmentList.forEach(assignment => {
-            if(assignment.id === Number(event.target.value)) {
-                this.SetAssignmentFieldValues(assignment)
-            }
-        })
+    
+    SetAssignmentFieldValues = (assignment) => {
+        let assig = (assignment.assignment) ? ReplaceComa(assignment.assignment) : null
+        let description = (assignment && assignment.description) ? ReplaceComa(assignment.description) : null
+        this.assignment.value = assig
+        this.description.value = description
     }
+
+    LoadDataToFields = () => {
+        this.SetAssignmentFieldValues(JSON.parse(this.cbDelete.value))
+    }
+
     render() { 
         return ( 
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.DeleteAssignment} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Função'} list={this.props.assignmentList} onChange={this.SetAssignmentToEdit} />
+                    <ComboBox header={'Função'} list={this.props.assignmentList} onChange={this.LoadDataToFields} ref={(input) => this.cbDelete = input} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Função</Form.Label>
                         <Col>

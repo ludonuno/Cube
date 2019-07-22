@@ -1,23 +1,15 @@
 import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
-import { Create } from '../../scripts/api'
+import { Delete } from '../../scripts/api'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CBDevelopers'
 
-//TODO: ADD RESET FORM
 class Developers extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddDevelopers = this.AddDevelopers.bind(this)
-        this.SetGame = this.SetGame.bind(this)
-        this.SetCompany = this.SetCompany.bind(this)
-        this.ResetForm = this.ResetForm.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            gameId: undefined,
-            companyId: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
     }
     
@@ -25,60 +17,39 @@ class Developers extends Component {
 
     AddDevelopers = (event) => {
         event.preventDefault()
-        if(this.props.gameList[0] && this.props.companyList[0]) {
-            let insertData = [
+        if(this.props.developersList[0]) {
+            let deleteData = [
                 { table: 'Developers', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'gameId', data: this.state.gameId ? this.state.gameId : this.props.gameList[0].id},
-                    {field: 'companyId', data: this.state.companyId ? this.state.companyId : this.props.companyList[0].id},
+                    {field: 'gameId', data: JSON.parse(this.cbDelete.value).gameid},
+                    {field: 'companyId', data: JSON.parse(this.cbDelete.value).companyid},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao servidor...', 'info')
-            Create(insertData, (res, rej) => {
+            Delete(deleteData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, `${res.error}`, 'danger')
-                    } else {
-                        this.ResetForm()
-                        this.ChangeAlert(true, `${res.result.message}`, 'success')
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRef.reset()
                         this.props.onSubmit()
-                        this.setState({selectedDevelopers: this.props.developersList[0]})
+                        this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
+        } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
     }
     
-    SetGame = (event) => {
-        this.setState({ gameId: Number(event.target.value) })
-    }
-    
-    SetCompany = (event) => {
-        this.setState({ companyId: Number(event.target.value) })
-    }
-
-    ResetForm = () => {
-        this.formRef.reset()
-        this.setState({gameId: this.props.gameList[0] ? this.props.gameList[0].id : undefined})
-        this.setState({companyId: this.props.companyList[0] ? this.props.companyList[0].id : undefined})
-    }
-
     render() {
         return ( 
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddDevelopers} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Jogo'} list={this.props.gameList} onChange={this.SetGame} />
-                    <ComboBox header={'Empresa'} list={this.props.companyList} onChange={this.SetCompany} />
+                    <ComboBox header={'Desenvolvedores'} list={this.props.developersList} onChange={this.LoadDataToFields} ref={(input) => this.cbDelete = input} />
                     <Row>
                         <Col>
-                            <Button variant="primary" type="submit" block>Submit</Button>
+                            <Button variant="danger" type="submit" block>Apagar</Button>
                         </Col>
                     </Row>
                 </Form>

@@ -9,25 +9,31 @@ import ComboBox from '../utils/ComboBox'
 class Assignment extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.UpdateAssignment = this.UpdateAssignment.bind(this)
         this.state = { 
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' },
             selectedAssignment: undefined
         }
     }
-    componentWillReceiveProps(){
-        if(this.props.assignmentList[0])
-        this.SetAssignmentFieldValues(this.props.assignmentList[0])
+    componentDidUpdate() { //FIXME: FOI AQUI QUE ALTEREI PARA RESOLVER O BUG 3 (VER NOTAS)
+        if(!this.state.selectedAssignment) {
+            if(this.props.assignmentList[0]) {
+                this.SetAssignmentFieldValues(this.props.assignmentList[0])
+            }
+        } else {
+            this.SetAssignmentFieldValues(this.state.selectedAssignment)
+        }
     }
+
+    componentWillReceiveProps(){ if(this.props.assignmentList[0]) this.SetAssignmentFieldValues(this.props.assignmentList[0]) }
+
     SetAssignmentFieldValues = (assignment) => {
-        this.setState({selectedAssignment: assignment})
         let assig = (assignment.assignment) ? ReplaceComa(assignment.assignment) : null
         let description = (assignment && assignment.description) ? ReplaceComa(assignment.description) : null
         this.assignment.value = assig
         this.description.value = description
     }
+
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     UpdateAssignment = (event) => {
@@ -37,7 +43,7 @@ class Assignment extends Component {
                 { table: 'Assignment', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'id', data: this.state.selectedAssignment.id},
+                    {field: 'id', data: this.state.selectedAssignment ? this.state.selectedAssignment.id : this.props.assignmentList[0].id},
                     {field: 'assignment', data: this.assignment.value},
                     {field: 'description', data: this.description.value}
                 ] }
@@ -51,7 +57,7 @@ class Assignment extends Component {
                         this.formRef.reset()
                         this.ChangeAlert(true, `${res.result.message}`, 'success')
                         this.props.onSubmit()
-                        this.setState({selectedAssignment: this.props.assignmentList[0]})
+                        this.setState({selectedAssignment: undefined}) //FIXME: FOI AQUI QUE ALTEREI PARA RESOLVER O BUG 3 (VER NOTAS)
                     }
                 } else {
                     this.ChangeAlert(true, `${rej}`, 'danger')
@@ -59,13 +65,8 @@ class Assignment extends Component {
             })
         }
     }
-    SetAssignmentToEdit = (event) => {
-        this.props.assignmentList.forEach(assignment => {
-            if(assignment.id === Number(event.target.value)) {
-                this.SetAssignmentFieldValues(assignment)
-            }
-        })
-    }
+    SetAssignmentToEdit = (event) => { this.props.assignmentList.forEach(assignment => { if(assignment.id === Number(event.target.value)) { this.setState({selectedAssignment: assignment}) } }) }
+   
     render() { 
         return ( 
             <React.Fragment>
