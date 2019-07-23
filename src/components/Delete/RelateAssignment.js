@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Form, Button, Accordion, Card } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CBRelateGenres'
+import ComboBox from '../utils/CBRelateAssignment'
 
 class RelateAssignment extends Component {
     constructor(props) {
@@ -11,6 +11,13 @@ class RelateAssignment extends Component {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' }
         }
+    }
+    
+    componentDidUpdate() {
+        this.formRefBook.reset()
+        this.formRefGame.reset()
+        this.formRefMovie.reset()
+        this.formRefSeries.reset()
     }
 
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
@@ -22,9 +29,9 @@ class RelateAssignment extends Component {
                 { table: 'CelebrityAssignmentBook', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAB.value).idCelebrity},
-                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAB.value).idAssignment},
-                    {field: 'bookId', data: JSON.parse(this.cbDeleteCAB.value).id},
+                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAB.value).celebrityid},
+                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAB.value).assignmentid},
+                    {field: 'bookId', data: JSON.parse(this.cbDeleteCAB.value).bookid},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -48,9 +55,9 @@ class RelateAssignment extends Component {
                 { table: 'CelebrityAssignmentGame', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAG.value).idCelebrity},
-                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAG.value).idAssignment},
-                    {field: 'gameId', data: JSON.parse(this.cbDeleteCAG.value).id},
+                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAG.value).celebrityid},
+                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAG.value).assignmentid},
+                    {field: 'gameId', data: JSON.parse(this.cbDeleteCAG.value).gameid},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -74,9 +81,9 @@ class RelateAssignment extends Component {
                 { table: 'CelebrityAssignmentMovie', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAM.value).idCelebrity},
-                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAM.value).idAssignment},
-                    {field: 'movieId', data: JSON.parse(this.cbDeleteCAM.value).id},
+                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAM.value).celebrityid},
+                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAM.value).assignmentid},
+                    {field: 'movieId', data: JSON.parse(this.cbDeleteCAM.value).movieid},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -100,9 +107,9 @@ class RelateAssignment extends Component {
                 { table: 'CelebrityAssignmentSeries', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAS.value).idCelebrity},
-                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAS.value).idAssignment},
-                    {field: 'seriesId', data: JSON.parse(this.cbDeleteCAS.value).id},
+                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAS.value).celebrityid},
+                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAS.value).assignmentid},
+                    {field: 'seriesId', data: JSON.parse(this.cbDeleteCAS.value).seriesid},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -117,6 +124,13 @@ class RelateAssignment extends Component {
                 } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
         } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
+    }
+
+    ClickEvent = () => {
+        this.formRefBook.reset()
+        this.formRefGame.reset()
+        this.formRefMovie.reset()
+        this.formRefSeries.reset()
     }
 
     render() { 
@@ -149,10 +163,7 @@ class RelateAssignment extends Component {
                         <Accordion.Collapse eventKey="1">
                             <Card.Body>
                                 <Form onSubmit={this.DeleteAssignmentGame} ref={(form) => this.formRefGame = form}> 
-                                    <ComboBox 
-                                        list={this.props.celebrityAssignmentGameList}
-                                        header={'Celebridade e jogos'}
-                                        ref={(input) => this.cbDeleteCAG = input} />
+                                    <ComboBox list={this.props.celebrityAssignmentGameList} header={'Celebridade e jogos'} ref={(input) => this.cbDeleteCAG = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="danger" type="submit" block>Apagar</Button>

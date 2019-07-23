@@ -7,6 +7,7 @@ const SliderCelebrities = (props) => {
         let toRender = []
         let howMany = undefined
         props.list.forEach((v, i) => {
+            console.log(v)
             let id = v.id ? v.id : undefined
             let name = v.name ? ReplaceComa(v.name) : undefined
             let birthday = v.birthday ? v.birthday.substring(0,10) : 'Sem aniversário'

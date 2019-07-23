@@ -4,50 +4,23 @@ import { Update } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CB'
 
 class Game extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.UpdateGame = this.UpdateGame.bind(this)
-        this.SetEngine = this.SetEngine.bind(this)
-        this.SetParentAdvisory = this.SetParentAdvisory.bind(this)
-        this.SetCompany = this.SetCompany.bind(this)
-        this.SetSaga = this.SetSaga.bind(this)
-        this.ResetForm = this.ResetForm.bind(this)
-
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            engineId: undefined,
-            parentAdvisoryId: undefined,
-            companyId: undefined,
-            sagaId: undefined,
-            selectedGame: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
     }
-    componentWillReceiveProps(){
-        if(this.props.gameList[0])
-        this.SetGameFieldValues(this.props.gameList[0])
+
+    componentDidUpdate() {
+        this.formRef.reset()
+        if(this.props.gameList[0]) this.SetGameFieldValues(this.props.gameList[0])
+        else this.SetGameFieldValues({})
     }
-    SetGameFieldValues = (game) => {
-        this.setState({selectedGame: game})
-        let title = (game.title) ? ReplaceComa(game.title) : null
-        let releaseDate = (game && game.releasedate) ? game.releasedate.substring(0,10) : null
-        let synopsis = (game && game.synopsis) ? ReplaceComa(game.synopsis) : null
-        let engineId = (game.engineid) ? game.engineid : null
-        let parentAdvisoryId = (game.parentadvisoryid) ? game.parentadvisoryid : null
-        let companyId = (game.companyid) ? game.companyid : null
-        let sagaId = (game.sagaid) ? game.sagaid : null
-        this.title.value = title
-        this.releaseDate.value = releaseDate
-        this.synopsis.value = synopsis
-        this.setState({engineId: engineId})
-        this.setState({parentAdvisoryId: parentAdvisoryId})
-        this.setState({companyId: companyId})
-        this.setState({sagaId: sagaId})
-    }
+    
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     UpdateGame = (event) => {
@@ -57,63 +30,52 @@ class Game extends Component {
                 { table: 'Game', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'id', data: this.state.selectedGame.id},
+                    {field: 'id', data: JSON.parse(this.cbGame.value).id},
                     {field: 'title', data: this.title.value},
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'synopsis', data: this.synopsis.value},
-                    {field: 'engineId', data: this.state.engineId ? this.state.engineId : this.props.engineList[0].id},
-                    {field: 'parentAdvisoryId', data: this.state.parentAdvisoryId ? this.state.parentAdvisoryId : this.props.parentAdvisoryList[0].id},
-                    {field: 'publicadorId', data: this.state.companyId ? this.state.companyId : this.props.companyList[0].id}, //Tem nome diferente porque na base de dados este campo refere-se a quem publicou o jogo
-                    {field: 'sagaId', data: this.state.sagaId ? this.state.sagaId : this.props.sagaList[0].id}
+                    {field: 'engineId', data: JSON.parse(this.cbEngineList.value).id},
+                    {field: 'parentAdvisoryId', data: JSON.parse(this.cbParentAdvisoryList.value).id},
+                    {field: 'publicadorId', data: JSON.parse(this.cbCompanyList.value).id},
+                    {field: 'sagaId', data: JSON.parse(this.cbSagaList.value).id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Update(updateData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.ResetForm()
-                        this.ChangeAlert(true, res.result.message, 'success')
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRef.reset()
                         this.props.onSubmit()
-                        this.setState({selectedGame: this.props.gameList[0]})
+                        this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
+    }
+
+    SetGameToEdit = () => {
+        this.SetGameFieldValues(JSON.parse(this.cbGame.value))
+    }
+
+    SetGameFieldValues = (game) => {
+        if(game && this.cbEngineList && this.cbParentAdvisoryList && this.cbCompanyList && this.cbSagaList) {
+            let title = game.title ? ReplaceComa(game.title) : null
+            let releaseDate = game.releasedate ? game.releasedate.substring(0,10) : null
+            let synopsis = game.synopsis ? ReplaceComa(game.synopsis) : null
+            let engineId = game.engineid ? game.engineid : null
+            let parentAdvisoryId = game.parentadvisoryid ? game.parentadvisoryid : null
+            let companyId = game.publicadorid ? game.publicadorid : null
+            let sagaId = game.sagaid ? game.sagaid : null
+
+            this.title.value = title
+            this.releaseDate.value = releaseDate
+            this.synopsis.value = synopsis
+            this.cbEngineList.value = JSON.stringify(this.props.engineList.find((e) => { return e.id === engineId }))
+            this.cbParentAdvisoryList.value = JSON.stringify(this.props.parentAdvisoryList.find((e) => { return e.id === parentAdvisoryId }))
+            this.cbCompanyList.value = JSON.stringify(this.props.companyList.find((e) => { return e.id === companyId }))
+            this.cbSagaList.value = JSON.stringify(this.props.sagaList.find((e) => { return e.id === sagaId }))
         }
-    }
-
-    SetGameToEdit = (event) => {
-        this.props.gameList.forEach(game => {
-            if(game.id === Number(event.target.value)) {
-                this.SetGameFieldValues(game)
-            }
-        })
-    }
-
-    SetEngine = (event) => {
-        this.setState({ engineId: Number(event.target.value) })
-    }
-    SetParentAdvisory = (event) => {
-        this.setState({ parentAdvisoryId: Number(event.target.value) })
-    }
-    SetCompany = (event) => {
-        this.setState({ companyId: Number(event.target.value) })
-    }
-    SetSaga = (event) => {
-        this.setState({ sagaId: Number(event.target.value) })
-    }
-
-    ResetForm = () => {
-        this.formRef.reset()        
-        this.setState({engineId: this.props.engineList[0] ? this.props.engineList[0].id : undefined})
-        this.setState({parentAdvisoryId: this.props.parentAdvisoryList[0] ? this.props.parentAdvisoryList[0].id : undefined})
-        this.setState({companyId: this.props.companyList[0] ? this.props.companyList[0].id : undefined})
-        this.setState({sagaId: this.props.sagaList[0] ? this.props.sagaList[0].id : undefined})
     }
 
     render() {
@@ -122,7 +84,7 @@ class Game extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.UpdateGame} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Jogos'} list={this.props.gameList} onChange={this.SetGameToEdit} />
+                    <ComboBox list={this.props.gameList} header={'Jogos'} ref={(input) => this.cbGame = input} onChange={this.SetGameToEdit}/>
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>
@@ -141,13 +103,13 @@ class Game extends Component {
                             <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.synopsis = input}}/>
                         </Col>
                     </Form.Group>
-                    <ComboBox header={'Engine'} list={this.props.engineList} onChange={this.SetEngine} defaultValue={this.state.engineId} />
-                    <ComboBox header={'Acon. Parental'} list={this.props.parentAdvisoryList} onChange={this.SetParentAdvisory} defaultValue={this.state.parentAdvisoryId} />
-                    <ComboBox header={'Empresa'} list={this.props.companyList} onChange={this.SetCompany} defaultValue={this.state.companyId} />
-                    <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSaga} defaultValue={this.state.sagaId} />
+                    <ComboBox list={this.props.engineList} header={'Engine'} ref={(input) => this.cbEngineList = input} />
+                    <ComboBox list={this.props.parentAdvisoryList} header={'Acon. Parental'} ref={(input) => this.cbParentAdvisoryList = input} />
+                    <ComboBox list={this.props.companyList} header={'Empresa'} ref={(input) => this.cbCompanyList = input} />
+                    <ComboBox list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSagaList = input} />
                     <Row>
                         <Col>
-                            <Button variant="primary" type="submit" block>Submit</Button>
+                            <Button variant="primary" type="submit" block>Atualizar</Button>
                         </Col>
                     </Row>
                 </Form>

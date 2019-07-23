@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
-
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/CB'
 
@@ -47,20 +46,20 @@ class Movie extends Component {
     }
 
     SetMovieFieldValues = (movie) => {
-        let title = (movie.title) ? ReplaceComa(movie.title) : null
-        let releaseDate = (movie && movie.releasedate) ? movie.releasedate.substring(0,10) : null
-        let duration = (movie && movie.duration) ? movie.duration : null
-        let synopsis = (movie && movie.synopsis) ? ReplaceComa(movie.synopsis) : null
-        let sagaId = null, parentAdvisoryId = null
-        this.props.sagaList.forEach(saga => {if(saga.id === movie.sagaid) sagaId = ReplaceComa(saga.name)})
-        this.props.parentAdvisoryList.forEach(parentAdvisory => {if(parentAdvisory.id === movie.parentadvisoryid) parentAdvisoryId = ReplaceComa(parentAdvisory.rate)})
-
-        this.title.value = title
-        this.releaseDate.value = releaseDate
-        this.duration.value = duration
-        this.synopsis.value = synopsis
-        this.saga.value = sagaId
-        this.parentAdvisory.value = parentAdvisoryId
+        if(movie) {
+            let title = movie.title ? ReplaceComa(movie.title) : null
+            let releaseDate = movie.releasedate ? movie.releasedate.substring(0,10) : null
+            let duration = movie.duration ? movie.duration : null
+            let synopsis = movie.synopsis ? ReplaceComa(movie.synopsis) : null
+            let sagaName = movie.sagaName ? ReplaceComa(movie.sagaName) : null
+            let parentAdvisoryRate = movie.parentAdvisoryRate ? ReplaceComa(movie.parentAdvisoryRate) : null
+            this.title.value = title
+            this.releaseDate.value = releaseDate
+            this.duration.value = duration
+            this.synopsis.value = synopsis
+            this.saga.value = sagaName
+            this.parentAdvisory.value = parentAdvisoryRate
+        }
     }
 
     LoadDataToFields = () => {

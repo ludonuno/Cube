@@ -2,32 +2,24 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Update } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
-
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CB'
 
 class ParentAdvisory extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.UpdateParentAdvisory = this.UpdateParentAdvisory.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            selectedParentAdvisory: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
     }
-    componentWillReceiveProps(){
-        if(this.props.parentAdvisoryList[0])
-            this.SetParentAdvisoryFieldValues(this.props.parentAdvisoryList[0])
+
+    componentDidUpdate() {
+        this.formRef.reset()
+        if(this.props.parentAdvisoryList[0]) this.SetParentAdvisoryFieldValues(this.props.parentAdvisoryList[0])
+        else this.SetParentAdvisoryFieldValues({})
     }
-    SetParentAdvisoryFieldValues = (parentAdvisory) => {
-        this.setState({selectedParentAdvisory: parentAdvisory})
-        let rate = (parentAdvisory.rate) ? parentAdvisory.rate : null
-        let description = (parentAdvisory && parentAdvisory.description) ? ReplaceComa(parentAdvisory.description) : null
-        this.rate.value = rate
-        this.description.value = description
-    }
+    
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     UpdateParentAdvisory = (event) => {
@@ -37,7 +29,7 @@ class ParentAdvisory extends Component {
                 { table: 'ParentAdvisory', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'id', data: this.state.selectedParentAdvisory ? this.state.selectedParentAdvisory.id : this.props.parentAdvisoryList[0].id},
+                    {field: 'id', data: JSON.parse(this.cbParentAdvisory.value).id},
                     {field: 'rate', data: this.rate.value},
                     {field: 'description', data: this.description.value}
                 ] }
@@ -45,34 +37,37 @@ class ParentAdvisory extends Component {
             this.ChangeAlert(true, 'A ligar ao servidor...', 'info')
             Update(updateData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, `${res.error}`, 'danger')
-                    } else {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
                         this.formRef.reset()
-                        this.ChangeAlert(true, `${res.result.message}`, 'success')
                         this.props.onSubmit()
-                        this.setState({selectedParentAdvisory: this.props.parentAdvisoryList[0]})
+                        this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
+    }
+    
+    SetParentAdvisoryToEdit = () => {
+        this.SetParentAdvisoryFieldValues(JSON.parse(this.cbParentAdvisory.value))
+    }
+
+    SetParentAdvisoryFieldValues = (parentAdvisory) => {
+        if(parentAdvisory) {
+            let rate = parentAdvisory.rate ? parentAdvisory.rate : null
+            let description = parentAdvisory.description ? ReplaceComa(parentAdvisory.description) : null
+            this.rate.value = rate
+            this.description.value = description
         }
     }
-    SetParentAdvisoryToEdit = (event) => {
-        this.props.parentAdvisoryList.forEach(parentAdvisory => {
-            if(parentAdvisory.id === Number(event.target.value)) {
-                this.SetParentAdvisoryFieldValues(parentAdvisory)
-            }
-        })
-    }
+
     render() {
         return ( 
             <React.Fragment>
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.UpdateParentAdvisory} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Acom. Parental'} list={this.props.parentAdvisoryList} onChange={this.SetParentAdvisoryToEdit} />
+                    <ComboBox list={this.props.parentAdvisoryList} header={'Acom. Parental'} ref={(input) => this.cbParentAdvisory = input} onChange={this.SetParentAdvisoryToEdit}/>
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Avaliação</Form.Label>
                         <Col>
@@ -87,7 +82,7 @@ class ParentAdvisory extends Component {
                     </Form.Group>
                     <Row>
                         <Col>
-                            <Button variant="primary" type="submit" block>Submit</Button>
+                            <Button variant="primary" type="submit" block>Atualizar</Button>
                         </Col>
                     </Row>
                 </Form>

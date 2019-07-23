@@ -2,35 +2,23 @@ import React, { Component } from 'react';
 import { Row, Col, Form, Button, Accordion, Card } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CB'
 
 //TODO: change api to return a more meaningfull message when the data is already in the database
 class RelateAssignment extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddAssignmentBook = this.AddAssignmentBook.bind(this)
-        this.AddAssignmentGame = this.AddAssignmentGame.bind(this)
-        this.AddAssignmentMovie = this.AddAssignmentMovie.bind(this)
-        this.AddAssignmentSeries = this.AddAssignmentSeries.bind(this)
-        this.SetAssignment = this.SetAssignment.bind(this)
-        this.SetCelebrity = this.SetCelebrity.bind(this)
-        this.SetBook = this.SetBook.bind(this)
-        this.SetGame = this.SetGame.bind(this)
-        this.SetMovie = this.SetMovie.bind(this)
-        this.SetSeries = this.SetSeries.bind(this)
-        this.ClickEvent = this.ClickEvent.bind(this)
-        this.ResetForm = this.ResetForm.bind(this)
         this.state = { 
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            celebrityId: undefined,
-            assignmentId: undefined,
-            gameId: undefined,
-            seriesId: undefined,
-            movieId: undefined,
-            bookId: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
+    }
+
+    componentDidUpdate() {
+        this.formRefBook.reset()
+        this.formRefGame.reset()
+        this.formRefMovie.reset()
+        this.formRefSeries.reset()
     }
 
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
@@ -42,27 +30,22 @@ class RelateAssignment extends Component {
                 { table: 'CelebrityAssignmentBook', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'celebrityId', data: this.state.celebrityId ? this.state.celebrityId : this.props.celebrityList[0].id},
-                    {field: 'assignmentId', data: this.state.assignmentId ? this.state.assignmentId : this.props.assignmentList[0].id},
-                    {field: 'bookId', data: this.state.bookId ? this.state.bookId : this.props.bookList[0].id},
+                    {field: 'celebrityId', data: JSON.parse(this.cbBookCelebrity.value).id},
+                    {field: 'assignmentId', data: JSON.parse(this.cbBookAssignment.value).id},
+                    {field: 'bookId', data: JSON.parse(this.cbBook.value).id},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.ResetForm(true, false, false, false)
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRefBook.reset()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
     }
 
     AddAssignmentGame = (event) => {
@@ -72,27 +55,22 @@ class RelateAssignment extends Component {
                 { table: 'CelebrityAssignmentGame', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'celebrityId', data: this.state.celebrityId ? this.state.celebrityId : this.props.celebrityList[0].id},
-                    {field: 'assignmentId', data: this.state.assignmentId ? this.state.assignmentId : this.props.assignmentList[0].id},
-                    {field: 'gameId', data: this.state.gameId ? this.state.gameId : this.props.gameList[0].id},
+                    {field: 'celebrityId', data: JSON.parse(this.cbGameCelebrity.value).id},
+                    {field: 'assignmentId', data: JSON.parse(this.cbGameAssignment.value).id},
+                    {field: 'gameId', data: JSON.parse(this.cbGame.value).id},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.ResetForm(false, true, false, false)
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRefGame.reset()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
     }
 
     AddAssignmentMovie = (event) => {
@@ -102,27 +80,22 @@ class RelateAssignment extends Component {
                 { table: 'CelebrityAssignmentMovie', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'celebrityId', data: this.state.celebrityId ? this.state.celebrityId : this.props.celebrityList[0].id},
-                    {field: 'assignmentId', data: this.state.assignmentId ? this.state.assignmentId : this.props.assignmentList[0].id},
-                    {field: 'movieId', data: this.state.movieId ? this.state.movieId : this.props.movieList[0].id},
+                    {field: 'celebrityId', data: JSON.parse(this.cbMovieCelebrity.value).id},
+                    {field: 'assignmentId', data: JSON.parse(this.cbMovieAssignment.value).id},
+                    {field: 'movieId', data: JSON.parse(this.cbMovie.value).id},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.ResetForm(false, false, true, false)
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRefMovie.reset()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
     }
 
     AddAssignmentSeries = (event) => {
@@ -132,76 +105,29 @@ class RelateAssignment extends Component {
                 { table: 'CelebrityAssignmentSeries', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'celebrityId', data: this.state.celebrityId ? this.state.celebrityId : this.props.celebrityList[0].id},
-                    {field: 'assignmentId', data: this.state.assignmentId ? this.state.assignmentId : this.props.assignmentList[0].id},
-                    {field: 'seriesId', data: this.state.seriesId ? this.state.seriesId : this.props.seriesList[0].id},
+                    {field: 'celebrityId', data: JSON.parse(this.cbSeriesCelebrity.value).id},
+                    {field: 'assignmentId', data: JSON.parse(this.cbSeriesAssignment.value).id},
+                    {field: 'seriesId', data: JSON.parse(this.cbSeries.value).id},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.ResetForm(false, false, false, true)
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRefSeries.reset()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
-    }
-
-    SetAssignment = (event) =>{
-        this.setState({ assignmentId: Number(event.target.value) })
-    }
-
-    SetCelebrity = (event) =>{
-        this.setState({ celebrityId: Number(event.target.value) })
-    }
-
-    SetBook = (event) =>{
-        this.setState({ bookId: Number(event.target.value) })
-    }
-
-    SetGame = (event) =>{
-        this.setState({ gameId: Number(event.target.value) })
-    }
-
-    SetMovie = (event) =>{
-        this.setState({ movieId: Number(event.target.value) })
-    }
-
-    SetSeries = (event) =>{
-        this.setState({ seriesId: Number(event.target.value) })
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
     }
 
     ClickEvent = () => {
-        if(this.accordiongPage.id === 'accordionBook')
-            this.ResetForm(false, true, true, true)
-        if(this.accordiongPage.id === 'accordionGame')
-            this.ResetForm(true, false, true, true)
-        if(this.accordiongPage.id === 'accordionMovie')
-            this.ResetForm(true, true, false, true)
-        if(this.accordiongPage.id === 'accordionSeries')
-            this.ResetForm(true, true, true, false)
-    }
-
-    ResetForm = (book, game, movie, series) => {
-        if (book) this.formRefBook.reset()
-        if (game) this.formRefGame.reset()
-        if (movie) this.formRefMovie.reset()
-        if (series) this.formRefSeries.reset()
-
-        this.setState({celebrityId: this.props.celebrityList[0] ? this.props.celebrityList[0].id : undefined})
-        this.setState({assignmentId: this.props.assignmentList[0] ? this.props.assignmentList[0].id : undefined})
-        this.setState({gameId: this.props.gameList[0] ? this.props.gameList[0].id : undefined})
-        this.setState({seriesId: this.props.seriesList[0] ? this.props.seriesList[0].id : undefined})
-        this.setState({movieId: this.props.movieList[0] ? this.props.movieList[0].id : undefined})
-        this.setState({bookId: this.props.bookList[0] ? this.props.bookList[0].id : undefined})
+        this.formRefBook.reset()
+        this.formRefGame.reset()
+        this.formRefMovie.reset()
+        this.formRefSeries.reset()
     }
 
     render() { 
@@ -217,12 +143,12 @@ class RelateAssignment extends Component {
                         <Accordion.Collapse eventKey="0">
                             <Card.Body>
                                 <Form onSubmit={this.AddAssignmentBook} ref={(form) => this.formRefBook = form}>
-                                    <ComboBox header={'Função'} list={this.props.assignmentList} onChange={this.SetAssignment} />
-                                    <ComboBox header={'Celebridade'} list={this.props.celebrityList} onChange={this.SetCelebrity} />
-                                    <ComboBox header={'Livro'} list={this.props.bookList} onChange={this.SetBook} />
+                                    <ComboBox list={this.props.assignmentList} header={'Função'} ref={(input) => this.cbBookAssignment = input} />
+                                    <ComboBox list={this.props.celebrityList} header={'Celebridade'} ref={(input) => this.cbBookCelebrity = input} />
+                                    <ComboBox list={this.props.bookList} header={'Livro'} ref={(input) => this.cbBook = input} />
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="success" type="submit" block>Adicionar</Button>
                                         </Col>
                                     </Row>
                                 </Form>
@@ -236,12 +162,12 @@ class RelateAssignment extends Component {
                         <Accordion.Collapse eventKey="1">
                             <Card.Body>
                                 <Form onSubmit={this.AddAssignmentGame} ref={(form) => this.formRefGame = form}>
-                                    <ComboBox header={'Função'} list={this.props.assignmentList} onChange={this.SetAssignment} />
-                                    <ComboBox header={'Celebridade'} list={this.props.celebrityList} onChange={this.SetCelebrity} />
-                                    <ComboBox header={'Jogo'} list={this.props.gameList} onChange={this.SetGame} />
+                                    <ComboBox list={this.props.assignmentList} header={'Função'} ref={(input) => this.cbGameAssignment = input} />
+                                    <ComboBox list={this.props.celebrityList} header={'Celebridade'} ref={(input) => this.cbGameCelebrity = input} />
+                                    <ComboBox list={this.props.gameList} header={'Jogo'} ref={(input) => this.cbGame = input} />
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="success" type="submit" block>Adicionar</Button>
                                         </Col>
                                     </Row>
                                 </Form>
@@ -255,12 +181,12 @@ class RelateAssignment extends Component {
                         <Accordion.Collapse eventKey="2">
                             <Card.Body>
                                 <Form onSubmit={this.AddAssignmentMovie} ref={(form) => this.formRefMovie = form}>
-                                    <ComboBox header={'Função'} list={this.props.assignmentList} onChange={this.SetAssignment} />
-                                    <ComboBox header={'Celebridade'} list={this.props.celebrityList} onChange={this.SetCelebrity} />
-                                    <ComboBox header={'Filme'} list={this.props.movieList} onChange={this.SetMovie} />
+                                    <ComboBox list={this.props.assignmentList} header={'Função'} ref={(input) => this.cbMovieAssignment = input} />
+                                    <ComboBox list={this.props.celebrityList} header={'Celebridade'} ref={(input) => this.cbMovieCelebrity = input} />
+                                    <ComboBox list={this.props.movieList} header={'Filme'} ref={(input) => this.cbMovie = input} />
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="success" type="submit" block>Adicionar</Button>
                                         </Col>
                                     </Row>
                                 </Form>
@@ -274,12 +200,12 @@ class RelateAssignment extends Component {
                         <Accordion.Collapse eventKey="3">
                             <Card.Body>
                                 <Form onSubmit={this.AddAssignmentSeries} ref={(form) => this.formRefSeries = form}>
-                                    <ComboBox header={'Função'} list={this.props.assignmentList} onChange={this.SetAssignment} />
-                                    <ComboBox header={'Celebridade'} list={this.props.celebrityList} onChange={this.SetCelebrity} />
-                                    <ComboBox header={'Séries'} list={this.props.seriesList} onChange={this.SetSeries} />
+                                    <ComboBox list={this.props.assignmentList} header={'Função'} ref={(input) => this.cbSeriesAssignment = input} />
+                                    <ComboBox list={this.props.celebrityList} header={'Celebridade'} ref={(input) => this.cbSeriesCelebrity = input} />
+                                    <ComboBox list={this.props.seriesList} header={'Séries'} ref={(input) => this.cbSeries = input} />
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="success" type="submit" block>Adicionar</Button>
                                         </Col>
                                     </Row>
                                 </Form>

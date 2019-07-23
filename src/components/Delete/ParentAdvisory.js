@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
-
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/CB'
 
@@ -16,6 +15,7 @@ class ParentAdvisory extends Component {
     }
     
     componentDidUpdate() {
+        this.formRef.reset()
         if(this.props.parentAdvisoryList[0]) this.SetParentAdvisoryFieldValues(this.props.parentAdvisoryList[0])
         else this.SetParentAdvisoryFieldValues({})
     }
@@ -47,10 +47,12 @@ class ParentAdvisory extends Component {
     }
     
     SetParentAdvisoryFieldValues = (parentAdvisory) => {
-        let rate = (parentAdvisory.rate) ? parentAdvisory.rate : null
-        let description = (parentAdvisory && parentAdvisory.description) ? ReplaceComa(parentAdvisory.description) : null
-        this.rate.value = rate
-        this.description.value = description
+        if(parentAdvisory) {
+            let rate = parentAdvisory.rate ? parentAdvisory.rate : null
+            let description = parentAdvisory.description ? ReplaceComa(parentAdvisory.description) : null
+            this.rate.value = rate
+            this.description.value = description
+        }
     }
 
     LoadDataToFields = () => {

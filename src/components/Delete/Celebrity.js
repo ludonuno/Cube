@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
-
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/CB'
 
@@ -15,7 +14,8 @@ class Celebrity extends Component {
             alert: { visible: false, message: '', variant: '' }
         }
     }
-    componentDidUpdate() { 
+    componentDidUpdate() {
+        this.formRef.reset()
         if(this.props.celebrityList[0]) this.SetCelebrityFieldValues(this.props.celebrityList[0])
         else this.SetCelebrityFieldValues({})
     }
@@ -47,12 +47,14 @@ class Celebrity extends Component {
     }
     
     SetCelebrityFieldValues = (celebrity) => {
-        let name = (celebrity.name) ? ReplaceComa(celebrity.name) : null
-        let birthday = (celebrity && celebrity.birthday) ? celebrity.birthday.substring(0,10) : null
-        let biography = (celebrity && celebrity.biography) ? ReplaceComa(celebrity.biography) : null
-        this.name.value = name
-        this.birthday.value = birthday
-        this.biography.value = biography
+        if(celebrity) {
+            let name = celebrity.name ? ReplaceComa(celebrity.name) : null
+            let birthday = celebrity.birthday ? celebrity.birthday.substring(0,10) : null
+            let biography = celebrity.biography ? ReplaceComa(celebrity.biography) : null
+            this.name.value = name
+            this.birthday.value = birthday
+            this.biography.value = biography
+        }
     }
     
     LoadDataToFields = () => {

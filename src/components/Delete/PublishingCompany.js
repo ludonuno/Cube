@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
-
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/CB'
 
@@ -47,8 +46,10 @@ class PublishingCompany extends Component {
     }
     
     SetPublishingCompanyFieldValues = (publishingCompany) => {
-        let name = (publishingCompany.name) ? ReplaceComa(publishingCompany.name) : null
-        this.name.value = name
+        if(publishingCompany) {
+            let name = publishingCompany.name ? ReplaceComa(publishingCompany.name) : null
+            this.name.value = name
+        }
     }
 
     LoadDataToFields = () => {

@@ -13,6 +13,10 @@ class Developers extends Component {
         }
     }
     
+    componentDidUpdate() {
+        this.formRef.reset()
+    }
+
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     AddDevelopers = (event) => {

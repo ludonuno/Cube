@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
-
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/CB'
 
@@ -15,6 +14,7 @@ class Engine extends Component {
         }
     }
     componentDidUpdate() {
+        this.formRef.reset()
         if(this.props.engineList[0]) this.SetEngineFieldValues(this.props.engineList[0])
         else this.SetEngineFieldValues({})
     }
@@ -46,8 +46,10 @@ class Engine extends Component {
     }
     
     SetEngineFieldValues = (engine) => {
-        let name = (engine.name) ? ReplaceComa(engine.name) : null
-        this.name.value = name
+        if(engine) {
+            let name = engine.name ? ReplaceComa(engine.name) : null
+            this.name.value = name
+        }
     }
     
     LoadDataToFields = () => {

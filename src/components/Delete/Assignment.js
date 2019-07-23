@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
-
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/CB'
 
@@ -11,12 +10,12 @@ class Assignment extends Component {
         super(props);
         this.state = { 
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            selectedAssignment: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
     }
     
     componentDidUpdate() {
+        this.formRef.reset()
         if(this.props.assignmentList[0]) this.SetAssignmentFieldValues(this.props.assignmentList[0])
         else this.SetAssignmentFieldValues({})
     }
@@ -48,10 +47,12 @@ class Assignment extends Component {
     }
     
     SetAssignmentFieldValues = (assignment) => {
-        let assig = (assignment.assignment) ? ReplaceComa(assignment.assignment) : null
-        let description = (assignment && assignment.description) ? ReplaceComa(assignment.description) : null
-        this.assignment.value = assig
-        this.description.value = description
+        if(assignment) {
+            let assig = assignment.assignment ? ReplaceComa(assignment.assignment) : null
+            let description = assignment.description ? ReplaceComa(assignment.description) : null
+            this.assignment.value = assig
+            this.description.value = description
+        }
     }
 
     LoadDataToFields = () => {

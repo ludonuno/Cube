@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
-
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/CB'
 
@@ -16,6 +15,7 @@ class Saga extends Component {
     }
 
     componentDidUpdate() {
+        this.formRef.reset()
         if(this.props.sagaList[0]) this.SetSagaFieldValues(this.props.sagaList[0])
         else this.SetSagaFieldValues({})
     }
@@ -47,10 +47,12 @@ class Saga extends Component {
     }
     
     SetSagaFieldValues = (saga) => {
-        let name = (saga.name) ? ReplaceComa(saga.name) : null
-        let description = (saga && saga.description) ? ReplaceComa(saga.description) : null
-        this.name.value = name
-        this.description.value = description
+        if(saga) {
+            let name = saga.name ? ReplaceComa(saga.name) : null
+            let description = saga.description ? ReplaceComa(saga.description) : null
+            this.name.value = name
+            this.description.value = description
+        }
     }
 
     LoadDataToFields = () => {

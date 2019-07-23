@@ -2,31 +2,14 @@ import React, { Component } from 'react';
 import { Row, Col, Form, Button, Accordion, Card } from 'react-bootstrap'
 import { Create /*, Get */ } from '../../scripts/api'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CB'
 
-//TODO: change api to return a more meaningfull message when the data is already in the database
 class Video extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddVideoBook = this.AddVideoBook.bind(this)
-        this.AddVideoGame = this.AddVideoGame.bind(this)
-        this.AddVideoMovie = this.AddVideoMovie.bind(this)
-        this.AddVideoSeries = this.AddVideoSeries.bind(this)
-        this.SetBook = this.SetBook.bind(this)
-        this.SetGame = this.SetGame.bind(this)
-        this.SetMovie = this.SetMovie.bind(this)
-        this.SetSeries = this.SetSeries.bind(this)
-        this.ResetForm = this.ResetForm.bind(this)
         this.state = { 
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            bookId: undefined,
-            gameId: undefined,
-            movieId: undefined,
-            seriesId: undefined,
-            seasonId: undefined,
-            episodeId: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
     }
 
@@ -45,20 +28,16 @@ class Video extends Component {
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res, rej) => {
-                if(res) {  
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
+                if(res) {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
                         this.formRefBook.reset()
+                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
     }
 
     AddVideoGame = (event) => {
@@ -74,20 +53,16 @@ class Video extends Component {
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res, rej) => {
-                if(res) {  
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
+                if(res) {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
                         this.formRefGame.reset()
+                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
     }
 
     AddVideoMovie = (event) => {
@@ -103,20 +78,16 @@ class Video extends Component {
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res, rej) => {
-                if(res) {  
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
+                if(res) {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
                         this.formRefMovie.reset()
+                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
     }
 
     AddVideoSeries = (event) => {
@@ -132,21 +103,18 @@ class Video extends Component {
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res, rej) => {
-                if(res) {  
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
+                if(res) {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
                         this.formRefSeries.reset()
+                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
     }
+
     AddVideoSeason = (event) => {
         event.preventDefault()
         if(this.props.seriesList[0] && this.props.seasonList[0]) {
@@ -160,20 +128,16 @@ class Video extends Component {
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res, rej) => {
-                if(res) {  
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.formRefSeries.reset()
+                if(res) {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRefSeason.reset()
+                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
     }
 
     AddVideoEpisode = (event) => {
@@ -189,60 +153,16 @@ class Video extends Component {
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res, rej) => {
-                if(res) {  
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.formRefSeries.reset()
+                if(res) {
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRefEpisode.reset()
+                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
-    }
-
-    SetBook = (event) => {
-        this.setState({ bookId: Number(event.target.value) })
-    }
-    SetGame = (event) => {
-        this.setState({ gameId: Number(event.target.value) })
-    }
-    SetMovie = (event) => {
-        this.setState({ movieId: Number(event.target.value) })
-    }
-    SetSeries = (event) => {
-        this.setState({ seriesId: Number(event.target.value) })
-        this.props.GetSeasonList(Number(event.target.value))
-    }
-    SetSeason = (event) => {
-        this.setState({ seasonId: Number(event.target.value) })
-        this.props.GetEpisodeList(Number(event.target.value))
-    }
-    SetEpisode = (event) => {
-        this.setState({ episodeId: Number(event.target.value) })
-    }
-
-    ResetForm = () => {
-        this.formRefBook.reset()
-        this.formRefGame.reset()
-        this.formRefMovie.reset()
-        this.formRefSeries.reset()
-        if (this.formRefSeason) this.formRefSeason.reset()
-        if (this.formRefEpisode) this.formRefEpisode.reset()
-
-        this.props.GetSeasonList(this.props.seriesList[0].id)
-        if(this.props.seasonList[0]) this.props.GetEpisodeList(this.props.seasonList[0].id)
-
-        this.setState({bookId: this.props.bookList[0] ? this.props.bookList[0].id : undefined})
-        this.setState({gameId: this.props.gameList[0] ? this.props.gameList[0].id : undefined})
-        this.setState({movieId: this.props.movieList[0] ? this.props.movieList[0].id : undefined})
-        this.setState({seriesId: this.props.seriesList[0] ? this.props.seriesList[0].id : undefined})
-        this.setState({seasonId: this.props.seasonList[0] ? this.props.seasonList[0].id : undefined})
-        this.setState({episodeId: this.props.episodeList[0] ? this.props.episodeList[0].id : undefined})
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
     }
 
     HasSeasons = () => {

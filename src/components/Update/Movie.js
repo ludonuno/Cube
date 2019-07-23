@@ -4,43 +4,23 @@ import { Update } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CB'
 
 class Movie extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.UpdateMovie = this.UpdateMovie.bind(this)
-        this.SetParentAdvisory = this.SetParentAdvisory.bind(this)
-        this.SetSaga = this.SetSaga.bind(this)
-        this.ResetForm = this.ResetForm.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            parentAdvisoryId: undefined,
-            sagaId: undefined,
-            selectedMovie: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
     }
-    componentWillReceiveProps(){
-        if(this.props.movieList[0])
-        this.SetMovieFieldValues(this.props.movieList[0])
+
+    componentDidUpdate() {
+        this.formRef.reset()
+        if(this.props.movieList[0]) this.SetMovieFieldValues(this.props.movieList[0])
+        else this.SetMovieFieldValues({})
     }
-    SetMovieFieldValues = (movie) => {
-        this.setState({selectedMovie: movie})
-        let title = (movie.title) ? ReplaceComa(movie.title) : null
-        let releaseDate = (movie && movie.releasedate) ? movie.releasedate.substring(0,10) : null
-        let duration = (movie && movie.duration) ? movie.duration : null
-        let synopsis = (movie && movie.synopsis) ? ReplaceComa(movie.synopsis) : null
-        let sagaId = (movie.sagaid) ? movie.sagaid : null
-        let parentAdvisoryId = (movie.parentadvisoryid) ? movie.parentadvisoryid : null
-        this.title.value = title
-        this.releaseDate.value = releaseDate
-        this.duration.value = duration
-        this.synopsis.value = synopsis
-        this.setState({sagaId: sagaId})
-        this.setState({parentAdvisoryId: parentAdvisoryId})
-    }
+
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     UpdateMovie = (event) => {
@@ -50,55 +30,49 @@ class Movie extends Component {
                 { table: 'Movie', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'id', data: this.state.selectedMovie.id},
+                    {field: 'id', data: JSON.parse(this.cbMovie.value).id},
                     {field: 'title', data: this.title.value},
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'duration', data: this.duration.value},
                     {field: 'synopsis', data: this.synopsis.value},
-                    {field: 'sagaId', data: this.state.sagaId ? this.state.sagaId : this.props.sagaList[0].id},
-                    {field: 'parentAdvisoryId', data: this.state.parentAdvisoryId ? this.state.parentAdvisoryId : this.props.parentAdvisoryList[0].id}
+                    {field: 'parentAdvisoryId', data: JSON.parse(this.cbParentAdvisory.value).id},
+                    {field: 'sagaId', data: JSON.parse(this.cbSaga.value).id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Update(updateData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.ResetForm()
-                        this.ChangeAlert(true, res.result.message, 'success')
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRef.reset()
                         this.props.onSubmit()
-                        this.setState({selectedMovie: this.props.movieList[0]})
+                        this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
+    }
+
+    SetMovieToEdit = () => {
+        this.SetMovieFieldValues(JSON.parse(this.cbMovie.value))
+    }
+
+    SetMovieFieldValues = (movie) => {
+        if(movie && this.cbParentAdvisory && this.cbSaga) {
+            let title = movie.title ? ReplaceComa(movie.title) : null
+            let releaseDate = movie.releasedate ? movie.releasedate.substring(0,10) : null
+            let duration = movie.duration ? movie.duration : null
+            let synopsis = movie.synopsis ? ReplaceComa(movie.synopsis) : null
+            let parentAdvisoryId = movie.parentadvisoryid ? movie.parentadvisoryid : null
+            let sagaId = movie.sagaid ? movie.sagaid : null
+            this.title.value = title
+            this.releaseDate.value = releaseDate
+            this.duration.value = duration
+            this.synopsis.value = synopsis
+            this.cbParentAdvisory.value = JSON.stringify(this.props.parentAdvisoryList.find((e) => { return e.id === parentAdvisoryId }))
+            this.cbSaga.value = JSON.stringify(this.props.sagaList.find((e) => { return e.id === sagaId }))
         }
-    }
-
-    SetMovieToEdit = (event) => {
-        this.props.movieList.forEach(movie => {
-            if(movie.id === Number(event.target.value)) {
-                this.SetMovieFieldValues(movie)
-            }
-        })
-    }
-
-    SetParentAdvisory = (event) => {
-        this.setState({ parentAdvisoryId: Number(event.target.value) })
-    }
-
-    SetSaga = (event) => {
-        this.setState({ sagaId: Number(event.target.value) })
-    }
-    
-    ResetForm = () => {
-        this.formRef.reset()        
-        this.setState({parentAdvisoryId: this.props.parentAdvisoryList[0] ? this.props.parentAdvisoryList[0].id : undefined})
-        this.setState({sagaId: this.props.sagaList[0] ? this.props.sagaList[0].id : undefined})
+        
     }
     
     render() {
@@ -107,7 +81,7 @@ class Movie extends Component {
                 <br/>   
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.UpdateMovie} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Filmes'} list={this.props.movieList} onChange={this.SetMovieToEdit} />
+                    <ComboBox list={this.props.movieList} header={'Filmes'} ref={(input) => this.cbMovie = input} onChange={this.SetMovieToEdit}/>
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>
@@ -132,11 +106,11 @@ class Movie extends Component {
                             <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.synopsis = input}}/>
                         </Col>
                     </Form.Group>
-                    <ComboBox header={'Acon. Parental'} list={this.props.parentAdvisoryList} onChange={this.SetParentAdvisory} defaultValue={this.state.parentAdvisoryId} />
-                    <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSaga} defaultValue={this.state.sagaId} />
+                    <ComboBox list={this.props.parentAdvisoryList} header={'Acon. Parental'} ref={(input) => this.cbParentAdvisory = input}/>
+                    <ComboBox list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSaga = input}/>
                     <Row>
                         <Col>
-                            <Button variant="primary" type="submit" block>Submit</Button>
+                            <Button variant="primary" type="submit" block>Atualizar</Button>
                         </Col>
                     </Row>
                 </Form>

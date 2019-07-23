@@ -236,13 +236,13 @@ class Delete extends Component {
         })
         let searchDataSeries = [ { table: 'GenresSeries', fieldData: undefined } ]
         Get(searchDataSeries,(res) => {
-            if(res && res.result) this.setState({ genresBookList: res.result })
-            else this.setState({ genresBookList: [] })
+            if(res && res.result) this.setState({ genresSeriesList: res.result })
+            else this.setState({ genresSeriesList: [] })
         })
         let searchDataBook = [ { table: 'GenresBook', fieldData: undefined } ]
         Get(searchDataBook,(res) => {
-            if(res && res.result) this.setState({ genresSeriesList: res.result })
-            else this.setState({ genresSeriesList: [] })
+            if(res && res.result) this.setState({ genresBookList: res.result })
+            else this.setState({ genresBookList: [] })
         })
     }
 

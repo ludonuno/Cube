@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
-
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/CB'
-
 class Book extends Component {
     constructor(props) {
         super(props);
@@ -16,6 +14,7 @@ class Book extends Component {
     }
 
     componentDidUpdate() {
+        this.formRef.reset()
         if(this.props.bookList[0]) this.SetBookFieldValues(this.props.bookList[0])
         else this.SetBookFieldValues({})
     }
@@ -47,18 +46,18 @@ class Book extends Component {
     }
     
     SetBookFieldValues = (book) => {
-        let title = (book.title) ? ReplaceComa(book.title) : null
-        let releaseDate = (book && book.releasedate) ? book.releasedate.substring(0,10) : null
-        let synopsis = (book && book.synopsis) ? ReplaceComa(book.synopsis) : null
-        let publishingCompanyId = null, sagaId = null
-        this.props.publishingCompanyList.forEach(publishingCompany => {if(publishingCompany.id === book.publishingcompanyid) publishingCompanyId = publishingCompany.name})
-        this.props.sagaList.forEach(saga => {if(saga.id === book.sagaid) sagaId = saga.name})
-
-        this.title.value = title
-        this.releaseDate.value = releaseDate
-        this.synopsis.value = synopsis
-        this.publishingCompany.value = publishingCompanyId
-        this.saga.value = sagaId
+        if(book) {
+            let title = book.title ? ReplaceComa(book.title) : null
+            let releaseDate = book.releasedate ? book.releasedate.substring(0,10) : null
+            let synopsis = book.synopsis ? ReplaceComa(book.synopsis) : null
+            let publishingCompanyName = book.publishingCompanyName ? ReplaceComa(book.publishingCompanyName) : null
+            let sagaName = book.sagaName ? ReplaceComa(book.sagaName) : null
+            this.title.value = title
+            this.releaseDate.value = releaseDate
+            this.synopsis.value = synopsis
+            this.publishingCompany.value = publishingCompanyName
+            this.saga.value = sagaName
+        }
     }
 
     LoadDataToFields = () => {

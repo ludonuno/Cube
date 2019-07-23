@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
-
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/CB'
 class Company extends Component {
@@ -13,7 +12,9 @@ class Company extends Component {
             alert: { visible: false, message: '', variant: '' }
         }
     }
+
     componentDidUpdate() {
+        this.formRef.reset()
         if(this.props.companyList[0]) this.SetCompanyFieldValues(this.props.companyList[0])
         else this.SetCompanyFieldValues({})
     }
@@ -45,8 +46,10 @@ class Company extends Component {
     }
 
     SetCompanyFieldValues = (company) => {
-        let name = (company.name) ? ReplaceComa(company.name) : null
-        this.name.value = name
+        if(company) {
+            let name = company.name ? ReplaceComa(company.name) : null
+            this.name.value = name
+        }
     }
 
     LoadDataToFields = () => {

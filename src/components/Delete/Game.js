@@ -16,6 +16,7 @@ class Game extends Component {
     }
     
     componentDidUpdate() {
+        this.formRef.reset()
         if(this.props.gameList[0]) this.SetGameFieldValues(this.props.gameList[0])
         else this.SetGameFieldValues({})
     }
@@ -47,22 +48,23 @@ class Game extends Component {
     }
 
     SetGameFieldValues = (game) => {
-        let title = (game.title) ? ReplaceComa(game.title) : null
-        let releaseDate = (game && game.releasedate) ? game.releasedate.substring(0,10) : null
-        let synopsis = (game && game.synopsis) ? ReplaceComa(game.synopsis) : null
-        let engineId = null, parentAdvisoryId = null, publicadorId = null, sagaId = null
-        this.props.engineList.forEach(engine => {if(engine.id === game.engineid) engineId = ReplaceComa(engine.name)})
-        this.props.parentAdvisoryList.forEach(parentAdvisory => {if(parentAdvisory.id === game.parentadvisoryid) parentAdvisoryId = ReplaceComa(parentAdvisory.rate)})
-        this.props.companyList.forEach(company => {if(company.id === game.publicadorid) publicadorId = ReplaceComa(company.name)})
-        this.props.sagaList.forEach(saga => {if(saga.id === game.sagaid) sagaId = ReplaceComa(saga.name)})
-
-        this.title.value = title
-        this.releaseDate.value = releaseDate
-        this.synopsis.value = synopsis
-        this.engine.value = engineId
-        this.parentAdvisory.value = parentAdvisoryId
-        this.publicador.value = publicadorId
-        this.saga.value = sagaId
+        if(game) {
+            let title = game.title ? ReplaceComa(game.title) : null
+            let releaseDate = game.releasedate ? game.releasedate.substring(0,10) : null
+            let synopsis = game.synopsis ? ReplaceComa(game.synopsis) : null
+            let engineName = game.engineName ? game.engineName : null
+            let parentAdvisoryRate = game.parentAdvisoryRate ? game.parentAdvisoryRate : null
+            let publicadorName = game.PublicadorName ? game.PublicadorName : null
+            let sagaName = game.sagaName ? game.sagaName : null
+    
+            this.title.value = title
+            this.releaseDate.value = releaseDate
+            this.synopsis.value = synopsis
+            this.engine.value = engineName
+            this.parentAdvisory.value = parentAdvisoryRate
+            this.publicador.value = publicadorName
+            this.saga.value = sagaName
+        }
     }
 
     LoadDataToFields = () => {

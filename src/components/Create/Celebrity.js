@@ -3,19 +3,20 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
 import Alert from '../utils/Alert'
 
-//TODO: ADD RESET FORM
 class Celebrity extends Component {
 
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddCelebrity = this.AddCelebrity.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             alert: { visible: false, message: '', variant: '' }
         }
     }
     
+    componentDidUpdate() {
+        this.formRef.reset()
+    }
+
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     AddCelebrity = (event) => {
@@ -32,16 +33,13 @@ class Celebrity extends Component {
         this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
         Create(insertData, (res, rej) => {
             if(res) {
-                if(res.error) {
-                    this.ChangeAlert(true, res.error, 'danger')
-                } else {
+                if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                else {
                     this.formRef.reset()
-                    this.ChangeAlert(true, res.result.message, 'success')
                     this.props.onSubmit()
+                    this.ChangeAlert(true, res.result.message, 'success')
                 }
-            } else {
-                this.ChangeAlert(true, `${rej}`, 'danger')
-            }
+            } else this.ChangeAlert(true, `${rej}`, 'danger')
         })
     }
 
@@ -71,7 +69,7 @@ class Celebrity extends Component {
                     </Form.Group>
                     <Row>
                         <Col>
-                            <Button variant="primary" type="submit" block>Submit</Button>
+                            <Button variant="success" type="submit" block>Adicionar</Button>
                         </Col>
                     </Row>
                 </Form>

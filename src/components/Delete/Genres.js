@@ -14,7 +14,8 @@ class Genres extends Component {
         }
     }
     
-    componentDidUpdate() { 
+    componentDidUpdate() {
+        this.formRef.reset()
         if(this.props.genresList[0]) this.SetGenresFieldValues(this.props.genresList[0])
         else this.SetGenresFieldValues({})
     }
@@ -46,8 +47,10 @@ class Genres extends Component {
     }
 
     SetGenresFieldValues = (genre) => {
-        let genero = (genre.genre) ? ReplaceComa(genre.genre) : null
-        this.genre.value = genero
+        if(genre) {
+            let genero = genre.genre ? ReplaceComa(genre.genre) : null
+            this.genre.value = genero
+        }
     }
 
     LoadDataToFields = () => {

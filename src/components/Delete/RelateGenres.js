@@ -4,7 +4,6 @@ import { Delete } from '../../scripts/api'
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/CBRelateGenres'
 
-//TODO: change api to return a more meaningfull message when the data is already in the database
 class RelateGenres extends Component {
     constructor(props) {
         super(props);

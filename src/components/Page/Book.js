@@ -14,24 +14,9 @@ import SliderCelebrities from '../utils/SliderCelebrities'
 class Book extends Component {
     constructor(props) {
         super(props);
-        this.GetBook = this.GetBook.bind(this)
-        this.GetPublishingCompany = this.GetPublishingCompany.bind(this)
-        this.GetSaga = this.GetSaga.bind(this)
-        this.GetSagaRelated = this.GetSagaRelated.bind(this)
-        this.GetGenresBook = this.GetGenresBook.bind(this)
-        this.GetComments = this.GetComments.bind(this)
-        this.GetResponseTo = this.GetResponseTo.bind(this)
-        this.GetCelebrities = this.GetCelebrities.bind(this)
-        this.BookInfo = this.BookInfo.bind(this)
-        this.OrderGenres = this.OrderGenres.bind(this)
-        this.AddRating = this.AddRating.bind(this)
-        this.GetRating = this.GetRating.bind(this)
-        this.FormRating = this.FormRating.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             book: undefined,
-            publishingCompany: undefined,
-            saga: undefined,
             sagaMovie: undefined,
             sagaGame: undefined,
             sagaSeries: undefined,
@@ -55,8 +40,6 @@ class Book extends Component {
         Get(searchData,(res) => {
             if(res.result) {
                 this.setState({ book: res.result[0] })
-                this.GetPublishingCompany(res.result[0].publishingcompanyid) //TODO: Deve ser devolvido o nome atraves do GetBook
-                this.GetSaga(res.result[0].sagaid) //TODO: Deve ser devolvido atraves do GetBook
                 this.GetGenresBook(res.result[0].id)
                 this.GetRating(res.result[0].id) //TODO: Deve ser devolvido atraves do GetBook
                 this.GetComments(res.result[0].id)
@@ -65,30 +48,6 @@ class Book extends Component {
             } else {
                 this.setState({ book: undefined })
                 this.props.history.push('/noMatch')
-            }
-        })
-    }
-    GetPublishingCompany = (value) => {
-        let searchData = [ { table: 'PublishingCompany', fieldData: [
-            {field: 'id', data: value},
-        ] } ]
-        Get(searchData,(res) => {
-            if(res.result) this.setState({ publishingCompany: res.result[0] })
-            else {
-                this.setState({ publishingCompany: undefined })
-            }
-        })
-    }
-    GetSaga = (value) => {
-        let searchData = [ { table: 'Saga', fieldData: [
-            {field: 'id', data: value},
-        ] } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                this.setState({ saga: res.result[0] })
-                this.GetSagaRelated(value) //TODO: Passar para o GetSeries com o id da saga devolvido
-            } else {
-                this.setState({ saga: undefined })
             }
         })
     }
@@ -166,6 +125,7 @@ class Book extends Component {
         ] } ]
         Get(searchData,(res) => {
             if(res.result) {
+                console.log(res.result)
                 this.setState({ celebritiesAssignment: res.result })
             } else {
                 this.setState({ celebritiesAssignment: undefined })
@@ -187,44 +147,46 @@ class Book extends Component {
 
     // Book
     BookInfo = () => {
-        let title = this.state.book ? ReplaceComa(this.state.book.title) : 'Título desconhecido'
-        let releaseDate = (this.state.book && this.state.book.releasedate) ? this.state.book.releasedate.substring(0,10) : 'Data de lançamento desconhecida'
-        let publishingCompany = this.state.publishingCompany ? ReplaceComa(this.state.publishingCompany.name) : 'Publicadora desconhecida'
-        let synopsis = (this.state.book && this.state.book.synopsis) ? ReplaceComa(this.state.book.synopsis) : 'Sínopse desconhecida'
-        let saga = this.state.saga ? ReplaceComa(this.state.saga.name) : 'Saga desconhecida'
-        let genres = this.state.genresBook ? this.OrderGenres() : 'Géneros associados desconhecidos'
-        let rating = this.state.rating ? this.state.rating.avg : null
-        return (
-            <React.Fragment>
-                <Row>
-                    <Col>
-                        <Row><h2>{ title }</h2></Row>
-                        <Row>
-                            <span className="sub-title">Data de lançamento: { releaseDate }</span>
-                            <span className="sub-title">| Editora: { publishingCompany }</span>
-                            <span className="sub-title">| Saga: { saga }</span>
-                        </Row>
-                        <Row><span className="sub-title">Géneros: { genres } </span></Row>
-                    </Col>
-                    <Col lg={12} xl={4} >
-                        <Jumbotron className="rating">
-                            Avaliação: { rating ? `${rating}/10` : 'Sem avaliações' }
-                            <br/>
-                            <this.FormRating />
-                        </Jumbotron>
-                    </Col>
-                </Row>
-                <br/>
-                <Row>
-                    <Col>
-                        <Row><h4>Sínopse</h4></Row>
-                        <Row>
-                            <span>{ synopsis }</span>
-                        </Row>
-                    </Col>
-                </Row>
-            </React.Fragment>
-        )
+        if(this.state.book) {
+            let title = this.state.book.title ? ReplaceComa(this.state.book.title) : 'Título desconhecido'
+            let releaseDate = this.state.book.releasedate ? this.state.book.releasedate.substring(0,10) : 'Data de lançamento desconhecida'
+            let synopsis = this.state.book.synopsis ? ReplaceComa(this.state.book.synopsis) : 'Sínopse desconhecida'
+            let sagaName = this.state.book.sagaName ? ReplaceComa(this.state.book.sagaName) : 'Saga desconhecida'
+            let publishingCompanyName = this.state.book.publishingCompanyName ? ReplaceComa(this.state.book.publishingCompanyName) : 'Publicadora desconhecida'
+            let genres = this.state.genresBook ? this.OrderGenres() : 'Géneros associados desconhecidos'
+            let rating = this.state.rating ? this.state.rating.avg : null
+            return (
+                <React.Fragment>
+                    <Row>
+                        <Col>
+                            <Row><h2>{ title }</h2></Row>
+                            <Row>
+                                <span className="sub-title">Data de lançamento: { releaseDate }</span>
+                                <span className="sub-title">| Editora: { publishingCompanyName }</span>
+                                <span className="sub-title">| Saga: { sagaName }</span>
+                            </Row>
+                            <Row><span className="sub-title">Géneros: { genres } </span></Row>
+                        </Col>
+                        <Col lg={12} xl={4} >
+                            <Jumbotron className="rating">
+                                Avaliação: { rating ? `${rating}/10` : 'Sem avaliações' }
+                                <br/>
+                                <this.FormRating />
+                            </Jumbotron>
+                        </Col>
+                    </Row>
+                    <br/>
+                    <Row>
+                        <Col>
+                            <Row><h4>Sínopse</h4></Row>
+                            <Row>
+                                <span>{ synopsis }</span>
+                            </Row>
+                        </Col>
+                    </Row>
+                </React.Fragment>
+            )
+        } else return null
     }
     OrderGenres = () => {
         let genresBook = []

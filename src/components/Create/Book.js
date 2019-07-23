@@ -1,25 +1,22 @@
 import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
-
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CB'
 
 class Book extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddBook = this.AddBook.bind(this)
-        this.SetPublishingCompany = this.SetPublishingCompany.bind(this)
-        this.SetSaga = this.SetSaga.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            publishingCompanyId: undefined,
-            sagaId: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
     }
 
+    componentDidUpdate() {
+        this.formRef.reset()
+    }
+    
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     AddBook = (event) => {
@@ -32,41 +29,22 @@ class Book extends Component {
                     {field: 'title', data: this.title.value},
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'synopsis', data: this.synopsis.value},
-                    {field: 'sagaId', data: this.state.sagaId ? this.state.sagaId : this.props.sagaList[0].id},
-                    {field: 'publishingCompanyId', data: this.state.publishingCompanyId ? this.state.publishingCompanyId : this.props.publishingCompanyList[0].id}
+                    {field: 'publishingCompanyId', data: JSON.parse(this.cbEditora.value).id},
+                    {field: 'sagaId', data: JSON.parse(this.cbSaga.value).id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.ResetForm()
-                        this.ChangeAlert(true, res.result.message, 'success')
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRef.reset()
                         this.props.onSubmit()
+                        this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
-    }
-
-    SetPublishingCompany = (event) => {
-        this.setState({ publishingCompanyId: Number(event.target.value) })
-    }
-
-    SetSaga = (event) => {
-        this.setState({ sagaId: Number(event.target.value) })
-    }
-
-    ResetForm = () => {
-        this.formRef.reset()        
-        this.setState({publishingCompanyId: this.props.publishingCompanyList[0] ? this.props.publishingCompanyList[0].id : undefined})
-        this.setState({sagaId: this.props.sagaList[0] ? this.props.sagaList[0].id : undefined})
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
     }
 
     render() {
@@ -93,11 +71,11 @@ class Book extends Component {
                             <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.synopsis = input}}/> 
                         </Col>
                     </Form.Group>
-                    <ComboBox header={'Editora'} list={this.props.publishingCompanyList} onChange={this.SetPublishingCompany}/>
-                    <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSaga}/>
+                    <ComboBox list={this.props.publishingCompanyList} header={'Editora'} ref={(input) => this.cbEditora = input} />
+                    <ComboBox list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSaga = input} />
                     <Row>
                         <Col>
-                            <Button variant="primary" type="submit" block>Submit</Button>
+                            <Button variant="success" type="submit" block>Adicionar</Button>
                         </Col>
                     </Row>
                 </Form>

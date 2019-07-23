@@ -46,7 +46,6 @@ class Celebrity extends Component {
             {field: 'celebrityId', data: value},
         ] } ]
         Get(searchDataMovie,(res) => {
-            console.log('Movie', res)
             if(res.result) this.setState({ celebrityWorkMovie: res.result })
             else this.setState({ celebrityWorkMovie: undefined })
         })
@@ -54,7 +53,6 @@ class Celebrity extends Component {
             {field: 'celebrityId', data: value},
         ] } ]
         Get(searchDataGame,(res) => {
-            console.log('Game', res)
             if(res.result) this.setState({ celebrityWorkGame: res.result })
             else this.setState({ celebrityWorkGame: undefined })
         })
@@ -62,7 +60,6 @@ class Celebrity extends Component {
             {field: 'celebrityId', data: value},
         ] } ]
         Get(searchDataSeries,(res) => {
-            console.log('Series', res)
             if(res.result) this.setState({ celebrityWorkSeries: res.result })
             else this.setState({ celebrityWorkSeries: undefined })
         })
@@ -70,7 +67,6 @@ class Celebrity extends Component {
             {field: 'celebrityId', data: value},
         ] } ]
         Get(searchDataBook,(res) => {
-            console.log('Book', res)
             if(res.result) this.setState({ celebrityWorkBook: res.result })
             else this.setState({ celebrityWorkBook: undefined })
         })
