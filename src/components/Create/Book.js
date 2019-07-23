@@ -46,6 +46,7 @@ class Book extends Component {
             })
         } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
     }
+    
 
     render() {
         return ( 
