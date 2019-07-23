@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
-
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CB'
 class Season extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddSeason = this.AddSeason.bind(this)
-        this.ResetForm = this.ResetForm.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            seriesId: undefined,
+            alert: { visible: false, message: '', variant: '' }
         }
+    }
+
+    componentDidUpdate() {
+        this.formRef.reset()
     }
 
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
@@ -29,35 +28,21 @@ class Season extends Component {
                     {field: 'title', data: this.title.value},
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'synopsis', data: this.synopsis.value},
-                    {field: 'seriesId', data: this.state.seriesId ? this.state.seriesId : this.props.seriesList[0].id}
+                    {field: 'seriesId', data: JSON.parse(this.cbSeries.value).id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.ResetForm()
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRef.reset()
+                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
-                        this.props.onSubmit(this.state.seriesId ? this.state.seriesId : this.props.seriesList[0].id)
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
-    }
-    
-    SetSeries = (event) => {
-        this.setState({ seriesId: Number(event.target.value) })
-    }
-    
-    ResetForm = () => {
-        this.formRef.reset()        
-        this.setState({seriesId: (this.props.series && this.props.series[0]) ? this.props.series[0].id : undefined})
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
     }
     
     render() {
@@ -66,7 +51,7 @@ class Season extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddSeason} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Série'} list={this.props.seriesList} onChange={this.SetSeries} />
+                    <ComboBox list={this.props.seriesList} header={'Série'} ref={(input) => this.cbSeries = input}/>
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>
@@ -87,7 +72,7 @@ class Season extends Component {
                     </Form.Group>
                     <Row>
                         <Col>
-                            <Button variant="primary" type="submit" block>Submit</Button>
+                            <Button variant="success" type="submit" block>Adicionar</Button>
                         </Col>
                     </Row>
                 </Form>

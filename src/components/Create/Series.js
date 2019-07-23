@@ -3,21 +3,18 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CB'
 class Series extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.AddSeries = this.AddSeries.bind(this)
-        this.SetParentAdvisory = this.SetParentAdvisory.bind(this)
-        this.SetSaga = this.SetSaga.bind(this)
-        this.ResetForm = this.ResetForm.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            parentAdvisoryId: undefined,
-            sagaId: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
+    }
+
+    componentDidUpdate() {
+        this.formRef.reset()
     }
 
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
@@ -32,40 +29,22 @@ class Series extends Component {
                     {field: 'title', data: this.title.value},
                     {field: 'releaseDate', data: this.releaseDate.value},
                     {field: 'synopsis', data: this.synopsis.value},
-                    {field: 'sagaId', data: this.state.sagaId ? this.state.sagaId : this.props.sagaList[0].id},
-                    {field: 'parentAdvisoryId', data: this.state.parentAdvisoryId ? this.state.parentAdvisoryId : this.props.parentAdvisoryList[0].id}
+                    {field: 'sagaId', data: JSON.parse(this.cbSaga.value).id},
+                    {field: 'parentAdvisoryId', data: JSON.parse(this.cbParentAdvisory.value).id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
             Create(insertData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.ResetForm()
-                        this.ChangeAlert(true, res.result.message, 'success')
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRef.reset()
                         this.props.onSubmit()
+                        this.ChangeAlert(true, res.result.message, 'success')
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
-                }
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-        }
-    }
-    
-    SetParentAdvisory = (event) => {
-        this.setState({ parentAdvisoryId: Number(event.target.value) })
-    }
-    SetSaga = (event) => {
-        this.setState({ sagaId: Number(event.target.value) })
-    }
-    
-    ResetForm = () => {
-        this.formRef.reset()        
-        this.setState({parentAdvisoryId: this.props.parentAdvisoryList[0] ? this.props.parentAdvisoryList[0].id : undefined})
-        this.setState({sagaId: this.props.sagaList[0] ? this.props.sagaList[0].id : undefined})
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
     }
     
     render() {
@@ -92,11 +71,11 @@ class Series extends Component {
                             <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.synopsis = input}}/>
                         </Col>
                     </Form.Group>
-                    <ComboBox header={'Acon. Parental'} list={this.props.parentAdvisoryList} onChange={this.SetParentAdvisory} />
-                    <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.SetSaga} />
+                    <ComboBox list={this.props.parentAdvisoryList} header={'Acon. Parental'} ref={(input) => this.cbParentAdvisory = input} />
+                    <ComboBox list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSaga = input} />
                     <Row>
                         <Col>
-                            <Button variant="primary" type="submit" block>Submit</Button>
+                            <Button variant="success" type="submit" block>Adicionar</Button>
                         </Col>
                     </Row>
                 </Form>

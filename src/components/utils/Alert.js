@@ -1,18 +1,19 @@
 import React from 'react';
 import { Alert as AlertBootstrap } from 'react-bootstrap'
 
-const Alert = (props) => {
+const Alert = React.forwardRef((props, ref) => {
     if(props.visible) {
         return ( 
             <React.Fragment>
-                <AlertBootstrap variant={props.variant}>
-                    {props.message}
-                </AlertBootstrap>
+                <div ref={ref} >
+                    <AlertBootstrap variant={props.variant}>
+                        {props.message}
+                    </AlertBootstrap>
+                </div>
             </React.Fragment>
         )
     } else {
         return null
     }
-}
- 
+}) 
 export default Alert;

@@ -2,45 +2,32 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Update } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
-
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/ComboBox'
+import ComboBox from '../utils/CB'
+import ComboBox2 from '../utils/CB2'
+import { optionalCallExpression } from '@babel/types';
+
 class Season extends Component {
     constructor(props) {
         super(props);
-        this.ChangeAlert = this.ChangeAlert.bind(this)
-        this.UpdateSeason = this.UpdateSeason.bind(this)
-        this.ResetForm = this.ResetForm.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            seriesId: undefined,
-            selectedSeason: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
     }
-    componentWillReceiveProps(){
-        if(this.props.seasonList[0]) {
-            this.SetSeasonFieldValues(this.props.seasonList[0])
-            this.setState({seriesId: this.props.seriesList[0].id})
-        }
+
+    componentDidUpdate() {
+        this.formRef.reset()
+        if(this.props.seriesList[0]) this.ChangeCBSeasonOptions(this.props.seriesList[0])
+        else this.ChangeCBSeasonOptions({})
     }
-    SetSeasonFieldValues = (season) => {
-        this.setState({selectedSeason: season})
-        let title = (season.title) ? ReplaceComa(season.title) : null
-        let releaseDate = (season && season.releasedate) ? season.releasedate.substring(0,10) : null
-        let synopsis = (season && season.synopsis) ? ReplaceComa(season.synopsis) : null
-        let seriesId = (season.seriesid) ? season.seriesid : null
-        this.title.value = title
-        this.releaseDate.value = releaseDate
-        this.synopsis.value = synopsis
-        this.setState({seriesId: seriesId})
-    }
+    
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     UpdateSeason = (event) => {
         event.preventDefault()
         if(this.props.seasonList[0] && this.props.seriesList[0]) {
-            let insertData = [
+            let updateData = [
                 { table: 'Season', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
@@ -52,39 +39,80 @@ class Season extends Component {
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
-            Update(insertData, (res, rej) => {
+            Update(updateData, (res, rej) => {
                 if(res) {
-                    if(res.error) {
-                        this.ChangeAlert(true, res.error, 'danger')
-                    } else {
-                        this.ResetForm()
+                    if(res.error) this.ChangeAlert(true, res.error, 'danger')
+                    else {
+                        this.formRef.reset()
+                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
-                        this.props.onSubmit(this.state.seriesId)
-                        this.setState({selectedSeason: this.props.seasonList[0]})
                     }
-                } else {
-                    this.ChangeAlert(true, `${rej}`, 'danger')
+                } else this.ChangeAlert(true, `${rej}`, 'danger')
+            })
+        } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
+    }
+
+    SetSeries = () => {
+        this.ChangeCBSeasonOptions(JSON.parse(this.cbSeries.value))
+    }
+
+    ChangeCBSeasonOptions = (series) => {
+        if(this.cbSeason) {
+            //Apaga os dados existentes da cbSeason
+            let i = 0
+            while (this.cbSeason.length > 0) {
+                this.cbSeason[i] = null
+            }
+            //this.cbSeason.length = 0
+            
+            //Adiciona os dados filtrados à cbSeason
+            let seasonList = [...this.props.seasonList]
+            let nIndex = 0
+            seasonList.forEach((season, i) => {
+                if(season.seriesid === series.id){
+                    nIndex = i
+                    let option = new Option( season.title ? ReplaceComa(season.title) : null, JSON.stringify(season),)
+                    this.cbSeason.add(option)
                 }
             })
-        } else {
-            this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
+            console.log( this.alertSeason)
+
+            if(this.alertSeason) {
+                if(!nIndex) {
+                    //this.cbSeason.style.display = 'none'
+                    this.alertSeason.style.display = 'visible'
+                } else {
+                    //this.cbSeason.style.display = 'visible'
+                    this.alertSeason.style.display = 'none'
+                }
+
+            }
         }
     }
+
     SetSeasonToEdit = (event) => {
-        this.props.seasonList.forEach(season => {
-            if(season.id === Number(event.target.value)) {
-                this.SetSeasonFieldValues(season)
-            }
-        })
+
     }
-    SetSeries = (event) => {
-        this.setState({ seriesId: Number(event.target.value) })
-        this.props.onSubmit(Number(event.target.value))
+
+    SetSeasonFieldValues = (season) => {
+        this.setState({selectedSeason: season})
+        let title = (season.title) ? ReplaceComa(season.title) : null
+        let releaseDate = (season && season.releasedate) ? season.releasedate.substring(0,10) : null
+        let synopsis = (season && season.synopsis) ? ReplaceComa(season.synopsis) : null
+        let seriesId = (season.seriesid) ? season.seriesid : null
+        this.title.value = title
+        this.releaseDate.value = releaseDate
+        this.synopsis.value = synopsis
+        this.setState({seriesId: seriesId})
     }
-    
-    ResetForm = () => {
-        this.formRef.reset()        
-        this.setState({seriesId: (this.props.seriesList && this.props.seriesList[0]) ? this.props.seriesList[0].id : undefined})
+    Teste = () => {
+        
+        // console.log(this.cbSeries)
+        // console.log(this.cbSeries.length)
+        // console.log(this.cbSeries)
+        // console.log(this.cbSeries)
+        // console.log(this.cbSeries)
+        // console.log(this.cbSeries.value)
     }
     
     render() {
@@ -93,8 +121,9 @@ class Season extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.UpdateSeason} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Série'} list={this.props.seriesList} onChange={this.SetSeries} />
-                    <ComboBox header={'Temporada'} list={this.props.seasonList} onChange={this.SetSeasonToEdit} />
+                    <ComboBox list={this.props.seriesList} header={'Série'} ref={(input) => this.cbSeries = input} onChange={this.SetSeries}/>
+                    <ComboBox2 header={'Temporada'} ref={(input) => this.cbSeason = input} onChange={this.SetSeasonToEdit}/>
+                    <Alert ref={(input) => this.alertSeason = input} variant={'danger'} message={'Não tem temporadas, adicione uma.'} visible={true} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>
@@ -119,6 +148,7 @@ class Season extends Component {
                         </Col>
                     </Row>
                 </Form>
+                <Button variant="primary" type="submit" onClick={this.Teste} block>Submit</Button>
             </React.Fragment>
         );
     }

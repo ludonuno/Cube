@@ -1,7 +1,5 @@
 import React from 'react'
 import { Jumbotron } from 'react-bootstrap'
-import { ReplaceComa } from '../../scripts/utils'
-
 const InfoVideo = React.forwardRef((props, ref) => {
     if (props.list[0]) {
         return (

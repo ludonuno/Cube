@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
-
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/CB'
 class Series extends Component {
@@ -50,16 +49,18 @@ class Series extends Component {
     }
     
     SetSeriesFieldValues = (series) => {
-        let title = (series.title) ? ReplaceComa(series.title) : null
-        let releaseDate = (series && series.releasedate) ? series.releasedate.substring(0,10) : null
-        let synopsis = (series && series.synopsis) ? ReplaceComa(series.synopsis) : null
-        let parentAdvisoryRate = (series && series.parentAdvisoryRate) ? ReplaceComa(series.parentAdvisoryRate) : null
-        let sagaName = (series && series.sagaName) ? ReplaceComa(series.sagaName) : null
-        this.title.value = title
-        this.releaseDate.value = releaseDate
-        this.synopsis.value = synopsis
-        this.parentAdvisory.value = parentAdvisoryRate
-        this.saga.value = sagaName
+        if(series) {
+            let title = series.title ? ReplaceComa(series.title) : null
+            let releaseDate = series.releasedate ? series.releasedate.substring(0,10) : null
+            let synopsis = series.synopsis ? ReplaceComa(series.synopsis) : null
+            let parentAdvisoryRate = series.parentAdvisoryRate ? ReplaceComa(series.parentAdvisoryRate) : null
+            let sagaName = series.sagaName ? ReplaceComa(series.sagaName) : null
+            this.title.value = title
+            this.releaseDate.value = releaseDate
+            this.synopsis.value = synopsis
+            this.parentAdvisory.value = parentAdvisoryRate
+            this.saga.value = sagaName
+        }
     }
     
     LoadDataToFields = () => {

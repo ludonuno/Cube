@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Button, Accordion, Card, Jumbotron } from 'react-bootstrap'
+import { Row, Col, Form, Button, Accordion, Card } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import Alert from '../utils/Alert'
 import ComboBox from '../utils/CBVideo'
