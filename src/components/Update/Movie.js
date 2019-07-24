@@ -4,7 +4,7 @@ import { Update } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 
 class Movie extends Component {
     constructor(props) {
@@ -60,11 +60,11 @@ class Movie extends Component {
     SetMovieFieldValues = (movie) => {
         if(movie && this.cbParentAdvisory && this.cbSaga) {
             let title = movie.title ? ReplaceComa(movie.title) : null
-            let releaseDate = movie.releasedate ? movie.releasedate.substring(0,10) : null
+            let releaseDate = movie.releaseDate ? movie.releaseDate.substring(0,10) : null
             let duration = movie.duration ? movie.duration : null
             let synopsis = movie.synopsis ? ReplaceComa(movie.synopsis) : null
-            let parentAdvisoryId = movie.parentadvisoryid ? movie.parentadvisoryid : null
-            let sagaId = movie.sagaid ? movie.sagaid : null
+            let parentAdvisoryId = movie.parentAdvisoryId ? movie.parentAdvisoryId : null
+            let sagaId = movie.sagaId ? movie.sagaId : null
             this.title.value = title
             this.releaseDate.value = releaseDate
             this.duration.value = duration
@@ -81,7 +81,7 @@ class Movie extends Component {
                 <br/>   
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.UpdateMovie} ref={(form) => this.formRef = form}>
-                    <ComboBox list={this.props.movieList} header={'Filmes'} ref={(input) => this.cbMovie = input} onChange={this.SetMovieToEdit}/>
+                    <DropDown list={this.props.movieList} header={'Filmes'} ref={(input) => this.cbMovie = input} onChange={this.SetMovieToEdit}/>
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>
@@ -106,8 +106,8 @@ class Movie extends Component {
                             <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.synopsis = input}}/>
                         </Col>
                     </Form.Group>
-                    <ComboBox list={this.props.parentAdvisoryList} header={'Acon. Parental'} ref={(input) => this.cbParentAdvisory = input}/>
-                    <ComboBox list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSaga = input}/>
+                    <DropDown list={this.props.parentAdvisoryList} header={'Acon. Parental'} ref={(input) => this.cbParentAdvisory = input}/>
+                    <DropDown list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSaga = input}/>
                     <Row>
                         <Col>
                             <Button variant="primary" type="submit" block>Atualizar</Button>

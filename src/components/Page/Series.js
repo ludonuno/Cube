@@ -16,21 +16,9 @@ import SliderCelebrities from '../utils/SliderCelebrities'
 class Series extends Component {
     constructor(props) {
         super(props);
-        this.GetSeries = this.GetSeries.bind(this)
-        this.GetSaga = this.GetSaga.bind(this)
-        this.GetSagaRelated = this.GetSagaRelated.bind(this)
-        this.GetGenresSeries = this.GetGenresSeries.bind(this)
-        this.GetComments = this.GetComments.bind(this)
-        this.GetResponseTo = this.GetResponseTo.bind(this)
-        this.GetCelebrities = this.GetCelebrities.bind(this)
-        this.SeriesInfo = this.SeriesInfo.bind(this)
-        this.OrderGenres = this.OrderGenres.bind(this)
-        this.GetRating = this.GetRating.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             series: undefined,
-            publishingCompany: undefined,
-            saga: undefined,
             sagaMovie: undefined,
             sagaGame: undefined,
             sagaSeries: undefined,
@@ -56,10 +44,9 @@ class Series extends Component {
         Get(searchData,(res) => {
             if(res.result) {
                 this.setState({ series: res.result[0] })
-                this.GetSaga(res.result[0].sagaid) //TODO: Deve ser devolvido atraves do GetSeries
                 this.GetGenresSeries(res.result[0].id)
-                this.GetRating(res.result[0].id) //TODO: Deve ser devolvido atraves do GetSeries
-                this.GetParentAdvisory(res.result[0].parentadvisoryid) //TODO: Deve ser devolvido atraves do GetSeries
+                this.GetSagaRelated(res.result[0].sagaId)
+                this.GetRating(res.result[0].id) 
                 this.GetComments(res.result[0].id)
                 this.GetCelebrities(res.result[0].id)
                 this.GetVideos(res.result[0].id)
@@ -67,19 +54,6 @@ class Series extends Component {
             } else {
                 this.setState({ series: undefined })
                 this.props.history.push('/noMatch')
-            }
-        })
-    }
-    GetSaga = (value) => {
-        let searchData = [ { table: 'Saga', fieldData: [
-            {field: 'id', data: value},
-        ] } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                this.setState({ saga: res.result[0] })
-                this.GetSagaRelated(value) //TODO: Passar para o GetSeries com o id da saga devolvido
-            } else {
-                this.setState({ saga: undefined })
             }
         })
     }
@@ -207,18 +181,6 @@ class Series extends Component {
             }
         })
     }
-    GetParentAdvisory = (value) => {
-        let searchData = [ { table: 'ParentAdvisory', fieldData: [
-            {field: 'id', data: value},
-        ] } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                this.setState({ parentAdvisory: res.result[0] })
-            } else {
-                this.setState({ parentAdvisory: undefined })
-            }
-        })
-    }
 
     SeasonEpisode = () => {
         if(this.state.seasonList) {
@@ -231,7 +193,7 @@ class Series extends Component {
                             <Row key={i}>
                                 <Col lg={12}>
                                     <a href={`/Episode/${v.id}`}><h4>{v.title ? ReplaceComa(v.title) : 'Sem título'} </h4></a>
-                                    <span className="sub-title">{v.releasedate ? v.releasedate.substring(0,10) : 'Sem data de lançamento'} </span>
+                                    <span className="sub-title">{v.releaseDate ? v.releaseDate.substring(0,10) : 'Sem data de lançamento'} </span>
                                 </Col>
                                 <Col lg={12}>
                                     <p>{v.synopsis ? ReplaceComa(v.synopsis) : 'Sem sinópse' }</p>
@@ -250,7 +212,7 @@ class Series extends Component {
                                 <Row>
                                     <Col lg={12}>
                                         <a href={`/Season/${v.id}`}><h4>{v.title ? ReplaceComa(v.title) : 'Sem título'} </h4></a>
-                                        <span className="sub-title">{v.releasedate ? v.releasedate.substring(0,10) : 'Sem data de lançamento'} </span>
+                                        <span className="sub-title">{v.releaseDate ? v.releaseDate.substring(0,10) : 'Sem data de lançamento'} </span>
                                     </Col>
                                     <Col lg={12}>{v.synopsis ? ReplaceComa(v.synopsis) : 'Sem sinópse' } </Col>
                                 </Row>
@@ -270,44 +232,46 @@ class Series extends Component {
     }
     // Series
     SeriesInfo = () => {
-        let title = this.state.series ? ReplaceComa(this.state.series.title) : 'Título desconhecido'
-        let releaseDate = (this.state.series && this.state.series.releasedate) ? this.state.series.releasedate.substring(0,10) : 'Data de lançamento desconhecido'
-        let parentAdvisory = this.state.parentAdvisory ? this.state.parentAdvisory.rate : 'Aconselhamento parental desconhecido'
-        let parentAdvisoryTitle = this.state.parentAdvisory ? this.state.parentAdvisory.description : 'Descrição do Aconselhamento parental desconhecida'
-        let synopsis = (this.state.series && this.state.series.synopsis) ? ReplaceComa(this.state.series.synopsis) : 'Sínopse desconhecida'
-        let saga = this.state.saga ? this.state.saga.name : 'Saga desconhecida'
-        let genres = this.state.genresSeries ? this.OrderGenres() : 'Sem géneros associados'
-        let rating = this.state.rating ? this.state.rating.avg : null
-        return (
-            <React.Fragment>
-                <Row>
-                    <Col>
-                        <Row><h2>{ title }</h2></Row>
-                        <Row>
-                            <span className="sub-title">Data de lançamento: { releaseDate }</span>
-                            <span className="sub-title" title={parentAdvisoryTitle}>| Aconselhamento parental: { parentAdvisory }</span>
-                            <span className="sub-title">| Saga: { saga }</span>
-                        </Row>
-                        <Row><span className="sub-title">Géneros: { genres } </span></Row>
-                    </Col>
-                    <Col lg={12} xl={4} >
-                        <Jumbotron className="rating">
-                            Avaliação: { rating ? `${rating}/10` : 'Sem avaliações' }
-                            <br/>
-                        </Jumbotron>
-                    </Col>
-                </Row>
-                <br/>
-                <Row>
-                    <Col>
-                        <Row><h4>Sínopse</h4></Row>
-                        <Row>
-                            <span>{ synopsis }</span>
-                        </Row>
-                    </Col>
-                </Row>
-            </React.Fragment>
-        )
+        if(this.state.series) {
+            let title = this.state.series.title ? ReplaceComa(this.state.series.title) : 'Título desconhecido'
+            let releaseDate = this.state.series.releaseDate ? this.state.series.releaseDate.substring(0,10) : 'Data de lançamento desconhecido'
+            let parentAdvisory = this.state.series.parentAdvisoryRate ? this.state.series.parentAdvisoryRate : 'Aconselhamento parental desconhecido'
+            let parentAdvisoryDescription = this.state.series.parentAdvisoryDescription ? this.state.series.parentAdvisoryDescription : 'Descrição do Aconselhamento parental desconhecida'
+            let synopsis = this.state.series.synopsis ? ReplaceComa(this.state.series.synopsis) : 'Sínopse desconhecida'
+            let saga = this.state.series.sagaName ? this.state.series.sagaName : 'Saga desconhecida'
+            let genres = this.state.genresSeries ? this.OrderGenres() : 'Sem géneros associados'
+            let rating = this.state.rating ? this.state.rating.avg : null
+            return (
+                <React.Fragment>
+                    <Row>
+                        <Col>
+                            <Row><h2>{ title }</h2></Row>
+                            <Row>
+                                <span className="sub-title">Data de lançamento: { releaseDate }</span>
+                                <span className="sub-title" title={parentAdvisoryDescription}>| Aconselhamento parental: { parentAdvisory }</span>
+                                <span className="sub-title">| Saga: { saga }</span>
+                            </Row>
+                            <Row><span className="sub-title">Géneros: { genres } </span></Row>
+                        </Col>
+                        <Col lg={12} xl={4} >
+                            <Jumbotron className="rating">
+                                Avaliação: { rating ? `${rating}/10` : 'Sem avaliações' }
+                                <br/>
+                            </Jumbotron>
+                        </Col>
+                    </Row>
+                    <br/>
+                    <Row>
+                        <Col>
+                            <Row><h4>Sínopse</h4></Row>
+                            <Row>
+                                <span>{ synopsis }</span>
+                            </Row>
+                        </Col>
+                    </Row>
+                </React.Fragment>
+            )
+        } else return null
     }
     OrderGenres = () => {
         let genresSeries = []

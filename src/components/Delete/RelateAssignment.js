@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Form, Button, Accordion, Card } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CBRelateAssignment'
+import DropDown from '../utils/DPRelateAssignment'
 
 class RelateAssignment extends Component {
     constructor(props) {
@@ -29,9 +29,9 @@ class RelateAssignment extends Component {
                 { table: 'CelebrityAssignmentBook', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAB.value).celebrityid},
-                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAB.value).assignmentid},
-                    {field: 'bookId', data: JSON.parse(this.cbDeleteCAB.value).bookid},
+                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAB.value).celebrityId},
+                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAB.value).assignmentId},
+                    {field: 'bookId', data: JSON.parse(this.cbDeleteCAB.value).bookId},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -55,9 +55,9 @@ class RelateAssignment extends Component {
                 { table: 'CelebrityAssignmentGame', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAG.value).celebrityid},
-                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAG.value).assignmentid},
-                    {field: 'gameId', data: JSON.parse(this.cbDeleteCAG.value).gameid},
+                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAG.value).celebrityId},
+                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAG.value).assignmentId},
+                    {field: 'gameId', data: JSON.parse(this.cbDeleteCAG.value).gameId},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -81,9 +81,9 @@ class RelateAssignment extends Component {
                 { table: 'CelebrityAssignmentMovie', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAM.value).celebrityid},
-                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAM.value).assignmentid},
-                    {field: 'movieId', data: JSON.parse(this.cbDeleteCAM.value).movieid},
+                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAM.value).celebrityId},
+                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAM.value).assignmentId},
+                    {field: 'movieId', data: JSON.parse(this.cbDeleteCAM.value).movieId},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -107,9 +107,9 @@ class RelateAssignment extends Component {
                 { table: 'CelebrityAssignmentSeries', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAS.value).celebrityid},
-                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAS.value).assignmentid},
-                    {field: 'seriesId', data: JSON.parse(this.cbDeleteCAS.value).seriesid},
+                    {field: 'celebrityId', data: JSON.parse(this.cbDeleteCAS.value).celebrityId},
+                    {field: 'assignmentId', data: JSON.parse(this.cbDeleteCAS.value).assignmentId},
+                    {field: 'seriesId', data: JSON.parse(this.cbDeleteCAS.value).seriesId},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -146,7 +146,7 @@ class RelateAssignment extends Component {
                         <Accordion.Collapse eventKey="0">
                             <Card.Body>
                                 <Form onSubmit={this.DeleteAssignmentBook} ref={(form) => this.formRefBook = form}> 
-                                    <ComboBox list={this.props.celebrityAssignmentBookList} header={'Celebridade e livros'} ref={(input) => this.cbDeleteCAB = input} />
+                                    <DropDown list={this.props.celebrityAssignmentBookList} header={'Celebridade e livros'} ref={(input) => this.cbDeleteCAB = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="danger" type="submit" block>Apagar</Button>
@@ -163,7 +163,7 @@ class RelateAssignment extends Component {
                         <Accordion.Collapse eventKey="1">
                             <Card.Body>
                                 <Form onSubmit={this.DeleteAssignmentGame} ref={(form) => this.formRefGame = form}> 
-                                    <ComboBox list={this.props.celebrityAssignmentGameList} header={'Celebridade e jogos'} ref={(input) => this.cbDeleteCAG = input} />
+                                    <DropDown list={this.props.celebrityAssignmentGameList} header={'Celebridade e jogos'} ref={(input) => this.cbDeleteCAG = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="danger" type="submit" block>Apagar</Button>
@@ -180,7 +180,7 @@ class RelateAssignment extends Component {
                         <Accordion.Collapse eventKey="2">
                             <Card.Body>
                             <Form onSubmit={this.DeleteAssignmentMovie} ref={(form) => this.formRefMovie = form}> 
-                                    <ComboBox 
+                                    <DropDown 
                                         list={this.props.celebrityAssignmentMovieList}
                                         header={'Celebridade e filmes'}
                                         ref={(input) => this.cbDeleteCAM = input} />
@@ -200,7 +200,7 @@ class RelateAssignment extends Component {
                         <Accordion.Collapse eventKey="3">
                             <Card.Body>
                                 <Form onSubmit={this.DeleteAssignmentSeries} ref={(form) => this.formRefSeries = form}> 
-                                    <ComboBox 
+                                    <DropDown 
                                         list={this.props.celebrityAssignmentSeriesList}
                                         header={'Celebridade e séries'}
                                         ref={(input) => this.cbDeleteCAS = input} />

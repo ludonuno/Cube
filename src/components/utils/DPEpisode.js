@@ -3,16 +3,11 @@ import { Row, Col, Form } from 'react-bootstrap'
 import Alert from './Alert'
 import { ReplaceComa } from '../../scripts/utils'
 
-const CBDevelopers = React.forwardRef((props, ref) => {
+const DPEpisode = React.forwardRef((props, ref) => {
     if (props.list[0]) {
         let options = []
         props.list.forEach((element) => {
-            let title  = undefined, name = undefined
-            title = element.title ? ReplaceComa(element.title) : title
-            name = element.name ? ReplaceComa(element.name) : name
-            let show = `${title} | ${name}`
-            
-            options.push(<option key={element.id} value={JSON.stringify(element)} >{show}</option>)
+            options.push(<option key={element.id} value={JSON.stringify(element)} >{ReplaceComa(element.seriesTitle)} | {ReplaceComa(element.seasonTitle)} | {ReplaceComa(element.title)}</option>)
         })
         return (
             <Form.Group as={Row}> 
@@ -24,4 +19,4 @@ const CBDevelopers = React.forwardRef((props, ref) => {
         )
     } else return (<Alert visible={true} variant={'danger'} message={`Não existem ${props.header}, adicione uma.`} />)
 })
-export default CBDevelopers;
+export default DPEpisode;

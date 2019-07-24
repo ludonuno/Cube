@@ -3,7 +3,7 @@ import { Row, Col, Form } from 'react-bootstrap'
 import Alert from './Alert'
 import { ReplaceComa } from '../../scripts/utils'
 
-const ComboBox = (props) => {
+const DropDown = (props) => {
     if (props.list[0]) {
         let options = []
         props.list.forEach((element) => {
@@ -25,4 +25,4 @@ const ComboBox = (props) => {
         )
     } else return (<Alert visible={true} variant={'danger'} message={`Não existem ${props.header}, adicione uma.`} />)
 }
-export default ComboBox;
+export default DropDown;

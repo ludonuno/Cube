@@ -3,15 +3,16 @@ import { Row, Col, Form } from 'react-bootstrap'
 import Alert from './Alert'
 import { ReplaceComa } from '../../scripts/utils'
 
-const CBRelateGenres = React.forwardRef((props, ref) => {
+const DropDown = React.forwardRef((props, ref) => {
     if (props.list[0]) {
         let options = []
         props.list.forEach((element) => {
-            let title  = undefined, genre = undefined
-            title = element.title ? ReplaceComa(element.title) : title
-            genre = element.genre ? ReplaceComa(element.genre) : genre
-            let show = `${title} | ${genre}`
-            
+            let show = undefined
+            show = element.name ? ReplaceComa(element.name) : show
+            show = element.rate ? ReplaceComa(element.rate) : show
+            show = element.assignment ? ReplaceComa(element.assignment) : show
+            show = element.title ? ReplaceComa(element.title) : show
+            show = element.genre ? ReplaceComa(element.genre) : show
             options.push(<option key={element.id} value={JSON.stringify(element)} >{show}</option>)
         })
         return (
@@ -24,4 +25,4 @@ const CBRelateGenres = React.forwardRef((props, ref) => {
         )
     } else return (<Alert visible={true} variant={'danger'} message={`Não existem ${props.header}, adicione uma.`} />)
 })
-export default CBRelateGenres;
+export default DropDown;

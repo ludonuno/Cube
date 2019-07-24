@@ -5,7 +5,7 @@ const InfoVideo = React.forwardRef((props, ref) => {
         return (
             <Jumbotron className="info-slider" >
                 <div className="embed-responsive embed-responsive-16by9">
-                    <iframe className="embed-responsive-item" ref={ref} src="" title="" allowFullScreen></iframe>
+                    <iframe className="embed-responsive-item" ref={ref} src="" title="video" allowFullScreen></iframe>
                 </div>
             </Jumbotron>
         )

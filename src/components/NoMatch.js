@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Jumbotron } from 'react-bootstrap'
+import { Jumbotron, Container } from 'react-bootstrap'
 
 import Navbar from './CustomNavbar'
 
@@ -15,9 +15,11 @@ class NoMatch extends Component {
         return ( 
             <React.Fragment>
                 <Navbar props={this.props}/>
-                <Jumbotron>
-                    No Match
-                </Jumbotron>
+                <Container>
+                    <Jumbotron>
+                        <h2>Pedimos desculpa, mas a página que tentou aceder não existe ou não está disponível <span role="img" aria-label="Close">😟</span></h2>
+                    </Jumbotron>
+                </Container>
             </React.Fragment>
          );
     }

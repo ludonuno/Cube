@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Form, Button, Accordion, Card } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 
 //TODO: change api to return a more meaningfull message when the data is already in the database
 class RelateAssignment extends Component {
@@ -143,9 +143,9 @@ class RelateAssignment extends Component {
                         <Accordion.Collapse eventKey="0">
                             <Card.Body>
                                 <Form onSubmit={this.AddAssignmentBook} ref={(form) => this.formRefBook = form}>
-                                    <ComboBox list={this.props.assignmentList} header={'Função'} ref={(input) => this.cbBookAssignment = input} />
-                                    <ComboBox list={this.props.celebrityList} header={'Celebridade'} ref={(input) => this.cbBookCelebrity = input} />
-                                    <ComboBox list={this.props.bookList} header={'Livro'} ref={(input) => this.cbBook = input} />
+                                    <DropDown list={this.props.assignmentList} header={'Função'} ref={(input) => this.cbBookAssignment = input} />
+                                    <DropDown list={this.props.celebrityList} header={'Celebridade'} ref={(input) => this.cbBookCelebrity = input} />
+                                    <DropDown list={this.props.bookList} header={'Livro'} ref={(input) => this.cbBook = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="success" type="submit" block>Adicionar</Button>
@@ -162,9 +162,9 @@ class RelateAssignment extends Component {
                         <Accordion.Collapse eventKey="1">
                             <Card.Body>
                                 <Form onSubmit={this.AddAssignmentGame} ref={(form) => this.formRefGame = form}>
-                                    <ComboBox list={this.props.assignmentList} header={'Função'} ref={(input) => this.cbGameAssignment = input} />
-                                    <ComboBox list={this.props.celebrityList} header={'Celebridade'} ref={(input) => this.cbGameCelebrity = input} />
-                                    <ComboBox list={this.props.gameList} header={'Jogo'} ref={(input) => this.cbGame = input} />
+                                    <DropDown list={this.props.assignmentList} header={'Função'} ref={(input) => this.cbGameAssignment = input} />
+                                    <DropDown list={this.props.celebrityList} header={'Celebridade'} ref={(input) => this.cbGameCelebrity = input} />
+                                    <DropDown list={this.props.gameList} header={'Jogo'} ref={(input) => this.cbGame = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="success" type="submit" block>Adicionar</Button>
@@ -181,9 +181,9 @@ class RelateAssignment extends Component {
                         <Accordion.Collapse eventKey="2">
                             <Card.Body>
                                 <Form onSubmit={this.AddAssignmentMovie} ref={(form) => this.formRefMovie = form}>
-                                    <ComboBox list={this.props.assignmentList} header={'Função'} ref={(input) => this.cbMovieAssignment = input} />
-                                    <ComboBox list={this.props.celebrityList} header={'Celebridade'} ref={(input) => this.cbMovieCelebrity = input} />
-                                    <ComboBox list={this.props.movieList} header={'Filme'} ref={(input) => this.cbMovie = input} />
+                                    <DropDown list={this.props.assignmentList} header={'Função'} ref={(input) => this.cbMovieAssignment = input} />
+                                    <DropDown list={this.props.celebrityList} header={'Celebridade'} ref={(input) => this.cbMovieCelebrity = input} />
+                                    <DropDown list={this.props.movieList} header={'Filme'} ref={(input) => this.cbMovie = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="success" type="submit" block>Adicionar</Button>
@@ -200,9 +200,9 @@ class RelateAssignment extends Component {
                         <Accordion.Collapse eventKey="3">
                             <Card.Body>
                                 <Form onSubmit={this.AddAssignmentSeries} ref={(form) => this.formRefSeries = form}>
-                                    <ComboBox list={this.props.assignmentList} header={'Função'} ref={(input) => this.cbSeriesAssignment = input} />
-                                    <ComboBox list={this.props.celebrityList} header={'Celebridade'} ref={(input) => this.cbSeriesCelebrity = input} />
-                                    <ComboBox list={this.props.seriesList} header={'Séries'} ref={(input) => this.cbSeries = input} />
+                                    <DropDown list={this.props.assignmentList} header={'Função'} ref={(input) => this.cbSeriesAssignment = input} />
+                                    <DropDown list={this.props.celebrityList} header={'Celebridade'} ref={(input) => this.cbSeriesCelebrity = input} />
+                                    <DropDown list={this.props.seriesList} header={'Séries'} ref={(input) => this.cbSeries = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="success" type="submit" block>Adicionar</Button>

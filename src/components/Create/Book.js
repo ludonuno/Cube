@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 
 class Book extends Component {
     constructor(props) {
@@ -72,8 +72,8 @@ class Book extends Component {
                             <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.synopsis = input}}/> 
                         </Col>
                     </Form.Group>
-                    <ComboBox list={this.props.publishingCompanyList} header={'Editora'} ref={(input) => this.cbEditora = input} />
-                    <ComboBox list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSaga = input} />
+                    <DropDown list={this.props.publishingCompanyList} header={'Editora'} ref={(input) => this.cbEditora = input} />
+                    <DropDown list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSaga = input} />
                     <Row>
                         <Col>
                             <Button variant="success" type="submit" block>Adicionar</Button>

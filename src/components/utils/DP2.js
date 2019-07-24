@@ -1,7 +1,7 @@
 import React from 'react'
 import { Row, Col, Form } from 'react-bootstrap'
 
-const ComboBox = React.forwardRef((props, ref) => {
+const DropDown = React.forwardRef((props, ref) => {
     return (
         <Form.Group as={Row}> 
             <Form.Label column lg={12} xl={2}>{props.header}</Form.Label>
@@ -11,4 +11,4 @@ const ComboBox = React.forwardRef((props, ref) => {
         </Form.Group>
     )
 })
-export default ComboBox;
+export default DropDown;

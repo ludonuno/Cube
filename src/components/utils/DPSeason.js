@@ -3,17 +3,11 @@ import { Row, Col, Form } from 'react-bootstrap'
 import Alert from './Alert'
 import { ReplaceComa } from '../../scripts/utils'
 
-const ComboBox = React.forwardRef((props, ref) => {
+const DPSeason = React.forwardRef((props, ref) => {
     if (props.list[0]) {
         let options = []
         props.list.forEach((element) => {
-            let show = undefined
-            show = element.name ? ReplaceComa(element.name) : show
-            show = element.rate ? ReplaceComa(element.rate) : show
-            show = element.assignment ? ReplaceComa(element.assignment) : show
-            show = element.title ? ReplaceComa(element.title) : show
-            show = element.genre ? ReplaceComa(element.genre) : show
-            options.push(<option key={element.id} value={JSON.stringify(element)} >{show}</option>)
+            options.push(<option key={element.id} value={JSON.stringify(element)} >{ReplaceComa(element.seriesTitle)} | {ReplaceComa(element.title)}</option>)
         })
         return (
             <Form.Group as={Row}> 
@@ -25,4 +19,4 @@ const ComboBox = React.forwardRef((props, ref) => {
         )
     } else return (<Alert visible={true} variant={'danger'} message={`Não existem ${props.header}, adicione uma.`} />)
 })
-export default ComboBox;
+export default DPSeason;

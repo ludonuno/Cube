@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Row, Col, Form, Button, Accordion, Card } from 'react-bootstrap'
 import { Create /*, Get */ } from '../../scripts/api'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
+import DropDownSeason from '../utils/DPSeason'
+import DropDownEpisode from '../utils/DPEpisode'
 
 class Video extends Component {
     constructor(props) {
@@ -23,7 +25,7 @@ class Video extends Component {
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
                     {field: 'link', data: this.linkBook.value},
-                    {field: 'bookId', data: this.state.bookId ? this.state.bookId : this.props.bookList[0].id},
+                    {field: 'bookId', data: JSON.parse(this.cbBook.value).id},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -32,7 +34,6 @@ class Video extends Component {
                     if(res.error) this.ChangeAlert(true, res.error, 'danger')
                     else {
                         this.formRefBook.reset()
-                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
                 } else this.ChangeAlert(true, `${rej}`, 'danger')
@@ -48,7 +49,7 @@ class Video extends Component {
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
                     {field: 'link', data: this.linkGame.value},
-                    {field: 'gameId', data: this.state.gameId ? this.state.gameId : this.props.gameList[0].id},
+                    {field: 'gameId', data: JSON.parse(this.cbGame.value).id},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -57,7 +58,6 @@ class Video extends Component {
                     if(res.error) this.ChangeAlert(true, res.error, 'danger')
                     else {
                         this.formRefGame.reset()
-                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
                 } else this.ChangeAlert(true, `${rej}`, 'danger')
@@ -73,7 +73,7 @@ class Video extends Component {
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
                     {field: 'link', data: this.linkMovie.value},
-                    {field: 'movieId', data: this.state.movieId ? this.state.movieId : this.props.movieList[0].id},
+                    {field: 'movieId', data: JSON.parse(this.cbMovie.value).id},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -82,7 +82,6 @@ class Video extends Component {
                     if(res.error) this.ChangeAlert(true, res.error, 'danger')
                     else {
                         this.formRefMovie.reset()
-                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
                 } else this.ChangeAlert(true, `${rej}`, 'danger')
@@ -98,7 +97,7 @@ class Video extends Component {
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
                     {field: 'link', data: this.linkSeries.value},
-                    {field: 'seriesId', data: this.state.seriesId ? this.state.seriesId : this.props.seriesList[0].id},
+                    {field: 'seriesId', data: JSON.parse(this.cbSeries.value).id},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -107,7 +106,6 @@ class Video extends Component {
                     if(res.error) this.ChangeAlert(true, res.error, 'danger')
                     else {
                         this.formRefSeries.reset()
-                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
                 } else this.ChangeAlert(true, `${rej}`, 'danger')
@@ -117,13 +115,13 @@ class Video extends Component {
 
     AddVideoSeason = (event) => {
         event.preventDefault()
-        if(this.props.seriesList[0] && this.props.seasonList[0]) {
+        if(this.props.seasonList[0]) {
             let insertData = [
                 { table: 'VideoSeason', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
                     {field: 'link', data: this.linkSeason.value},
-                    {field: 'seasonId', data: this.state.seasonId ? this.state.seasonId : this.props.seasonId[0].id},
+                    {field: 'seasonId', data: JSON.parse(this.cbSeason.value).id},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -132,7 +130,6 @@ class Video extends Component {
                     if(res.error) this.ChangeAlert(true, res.error, 'danger')
                     else {
                         this.formRefSeason.reset()
-                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
                 } else this.ChangeAlert(true, `${rej}`, 'danger')
@@ -142,13 +139,13 @@ class Video extends Component {
 
     AddVideoEpisode = (event) => {
         event.preventDefault()
-        if(this.props.seriesList[0] && this.props.seasonList[0] && this.props.episodeList[0]) {
+        if(this.props.episodeList[0]) {
             let insertData = [
                 { table: 'VideoEpisode', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
                     {field: 'link', data: this.linkEpisode.value},
-                    {field: 'episodeId', data: this.state.episodeId ? this.state.episodeId : this.props.episodeList[0].id},
+                    {field: 'episodeId', data: JSON.parse(this.cbEpisode.value).id},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -157,40 +154,11 @@ class Video extends Component {
                     if(res.error) this.ChangeAlert(true, res.error, 'danger')
                     else {
                         this.formRefEpisode.reset()
-                        this.props.onSubmit()
                         this.ChangeAlert(true, res.result.message, 'success')
                     }
                 } else this.ChangeAlert(true, `${rej}`, 'danger')
             })
         } else this.ChangeAlert(true, 'Por favor adicione os campos em falta', 'warning')
-    }
-
-    HasSeasons = () => {
-        if(this.props.seasonList[0])
-            return (<ComboBox header={'Temporada'} list={this.props.seasonList} onChange={this.SetSeason} />)
-        else
-            return (
-                <Form.Group as={Row}> 
-                    <Form.Label column lg={12} xl={2}>Temporada</Form.Label>
-                    <Col>
-                        <Alert variant={'danger'} message={'A série selecionada não tem temporadas'} visible={true} />
-                    </Col>
-                </Form.Group>
-            )
-    }
-
-    HasEpisodes = () => {
-        if(this.props.episodeList[0])
-            return (<ComboBox header={'Episódio'} list={this.props.episodeList} onChange={this.SetEpisode} />)
-        else
-            return (
-                <Form.Group as={Row}> 
-                    <Form.Label column lg={12} xl={2}>Temporada</Form.Label>
-                    <Col>
-                        <Alert variant={'danger'} message={'A temporada selecionada não tem episódios'} visible={true} />
-                    </Col>
-                </Form.Group>
-            )
     }
 
     render() { 
@@ -212,10 +180,10 @@ class Video extends Component {
                                             <Form.Control type="text" ref={(input) => {this.linkBook = input}} required/>
                                         </Col>
                                     </Form.Group>
-                                    <ComboBox header={'Livro'} list={this.props.bookList} onChange={this.SetBook} />
+                                    <DropDown header={'Livro'} list={this.props.bookList} ref={(input) => this.cbBook= input} />
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="success" type="submit" block>Adicionar</Button>
                                         </Col>
                                     </Row>
                                 </Form>
@@ -235,10 +203,10 @@ class Video extends Component {
                                             <Form.Control type="text" ref={(input) => {this.linkGame = input}} required/>
                                         </Col>
                                     </Form.Group>
-                                    <ComboBox header={'Jogo'} list={this.props.gameList} onChange={this.SetGame} />
+                                    <DropDown header={'Jogo'} list={this.props.gameList} ref={(input) => this.cbGame= input} />
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="success" type="submit" block>Adicionar</Button>
                                         </Col>
                                     </Row>
                                 </Form>
@@ -258,10 +226,10 @@ class Video extends Component {
                                             <Form.Control type="text" ref={(input) => {this.linkMovie = input}} required/>
                                         </Col>
                                     </Form.Group>
-                                    <ComboBox header={'Filme'} list={this.props.movieList} onChange={this.SetMovie} />
+                                    <DropDown header={'Filme'} list={this.props.movieList} ref={(input) => this.cbMovie= input} />
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="success" type="submit" block>Adicionar</Button>
                                         </Col>
                                     </Row>
                                 </Form>
@@ -281,10 +249,10 @@ class Video extends Component {
                                             <Form.Control type="text" ref={(input) => {this.linkSeries = input}} required/>
                                         </Col>
                                     </Form.Group>
-                                    <ComboBox header={'Séries'} list={this.props.seriesList} onChange={this.SetSeries} />
+                                    <DropDown header={'Séries'} list={this.props.seriesList} ref={(input) => this.cbSeries= input} />
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="success" type="submit" block>Adicionar</Button>
                                         </Col>
                                     </Row>
                                 </Form>
@@ -304,11 +272,10 @@ class Video extends Component {
                                             <Form.Control type="text" ref={(input) => {this.linkSeason = input}} required/>
                                         </Col>
                                     </Form.Group>
-                                    <ComboBox header={'Séries'} list={this.props.seriesList} onChange={this.SetSeries} />
-                                    <this.HasSeasons />
+                                    <DropDownSeason header={'Temporada'} list={this.props.seasonList} ref={(input) => this.cbSeason= input}/>
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="success" type="submit" block>Adicionar</Button>
                                         </Col>
                                     </Row>
                                 </Form>
@@ -328,12 +295,10 @@ class Video extends Component {
                                             <Form.Control type="text" ref={(input) => {this.linkEpisode = input}} required/>
                                         </Col>
                                     </Form.Group>
-                                    <ComboBox header={'Séries'} list={this.props.seriesList} onChange={this.SetSeries} />
-                                    <this.HasSeasons />
-                                    <this.HasEpisodes />
+                                    <DropDownEpisode header={'Episódio'} list={this.props.episodeList} ref={(input) => this.cbEpisode= input}/>
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" type="submit" block>Submit</Button>
+                                            <Button variant="success" type="submit" block>Adicionar</Button>
                                         </Col>
                                     </Row>
                                 </Form>

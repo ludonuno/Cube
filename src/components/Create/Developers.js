@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 
 class Developers extends Component {
     constructor(props) {
@@ -49,8 +49,8 @@ class Developers extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.AddDevelopers} ref={(form) => this.formRef = form}>
-                    <ComboBox list={this.props.gameList} header={'Jogo'} ref={(input) => this.cbGame = input} />
-                    <ComboBox list={this.props.companyList} header={'Empresa'} ref={(input) => this.cbCompany = input} />
+                    <DropDown list={this.props.gameList} header={'Jogo'} ref={(input) => this.cbGame = input} />
+                    <DropDown list={this.props.companyList} header={'Empresa'} ref={(input) => this.cbCompany = input} />
                     <Row>
                         <Col>
                             <Button variant="success" type="submit" block>Adicionar</Button>

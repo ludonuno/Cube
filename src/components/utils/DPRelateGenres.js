@@ -3,14 +3,14 @@ import { Row, Col, Form } from 'react-bootstrap'
 import Alert from './Alert'
 import { ReplaceComa } from '../../scripts/utils'
 
-const CBVideo = React.forwardRef((props, ref) => {
+const DPRelateGenres = React.forwardRef((props, ref) => {
     if (props.list[0]) {
         let options = []
         props.list.forEach((element) => {
-            let title  = undefined, link = undefined
+            let title  = undefined, genre = undefined
             title = element.title ? ReplaceComa(element.title) : title
-            link = element.link ? ReplaceComa(element.link) : link
-            let show = `${title} | ${link}`
+            genre = element.genre ? ReplaceComa(element.genre) : genre
+            let show = `${title} | ${genre}`
             
             options.push(<option key={element.id} value={JSON.stringify(element)} >{show}</option>)
         })
@@ -24,4 +24,4 @@ const CBVideo = React.forwardRef((props, ref) => {
         )
     } else return (<Alert visible={true} variant={'danger'} message={`Não existem ${props.header}, adicione uma.`} />)
 })
-export default CBVideo;
+export default DPRelateGenres;

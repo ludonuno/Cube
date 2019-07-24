@@ -4,7 +4,7 @@ import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 
 class Game extends Component {
     constructor(props) {
@@ -50,11 +50,11 @@ class Game extends Component {
     SetGameFieldValues = (game) => {
         if(game) {
             let title = game.title ? ReplaceComa(game.title) : null
-            let releaseDate = game.releasedate ? game.releasedate.substring(0,10) : null
+            let releaseDate = game.releaseDate ? game.releaseDate.substring(0,10) : null
             let synopsis = game.synopsis ? ReplaceComa(game.synopsis) : null
             let engineName = game.engineName ? game.engineName : null
             let parentAdvisoryRate = game.parentAdvisoryRate ? game.parentAdvisoryRate : null
-            let publicadorName = game.PublicadorName ? game.PublicadorName : null
+            let companyName = game.companyName ? game.companyName : null
             let sagaName = game.sagaName ? game.sagaName : null
     
             this.title.value = title
@@ -62,7 +62,7 @@ class Game extends Component {
             this.synopsis.value = synopsis
             this.engine.value = engineName
             this.parentAdvisory.value = parentAdvisoryRate
-            this.publicador.value = publicadorName
+            this.publicador.value = companyName
             this.saga.value = sagaName
         }
     }
@@ -77,7 +77,7 @@ class Game extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.DeleteGame} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Jogos'} list={this.props.gameList} onChange={this.LoadDataToFields} ref={(input) => this.cbDelete = input} />
+                    <DropDown header={'Jogos'} list={this.props.gameList} onChange={this.LoadDataToFields} ref={(input) => this.cbDelete = input} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>

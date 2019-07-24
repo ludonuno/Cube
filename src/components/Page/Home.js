@@ -114,7 +114,7 @@ class Home extends Component {
                     let header = 'Sem registo', subTitle = 'Sem registo', body = 'Sem registo'
                     header = element.name ? ReplaceComa(element.name) :  header
                     header = element.title ? ReplaceComa(element.title) : header
-                    subTitle = element.releasedate ? element.releasedate.substring(0,10) : subTitle
+                    subTitle = element.releaseDate ? element.releaseDate.substring(0,10) : subTitle
                     subTitle = element.birthday ? element.birthday.substring(0,10) : subTitle
                     body = element.synopsis ? ReplaceComa(element.synopsis) : body
                     toRender.push(

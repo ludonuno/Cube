@@ -6,17 +6,18 @@ const SliderCelebrities = (props) => {
     if(props.list) {
         let toRender = []
         let howMany = undefined
-        props.list.forEach((v, i) => {
-            console.log(v)
-            let id = v.id ? v.id : undefined
-            let name = v.name ? ReplaceComa(v.name) : undefined
-            let birthday = v.birthday ? v.birthday.substring(0,10) : 'Sem aniversário'
+        props.list.forEach((element, i) => {
+            console.log(element)
+            let id = element.celebrityId ? element.celebrityId : undefined
+            let assignment = element.assignmentName ? element.assignmentName : undefined
+            let name = element.celebrityName ? ReplaceComa(element.celebrityName) : undefined
+            let birthday = element.birthday ? element.birthday.substring(0,10) : 'Sem aniversário'
             toRender.push(
                 <Carousel.Item key={i}>
                     <br/>
                     <Jumbotron className="info-slider" >
                         <Col>
-                            <Row><a href={`/${props.href}/${id}`}><h5>{name}</h5></a></Row>
+                            <Row><a href={`/${props.href}/${id}`}><h5>{name} | {assignment}</h5></a></Row>
                             <Row><span className="sub-title">{birthday}</span></Row>
                             <Row><h5><Badge variant="secondary">#{i+1}/{props.list.length}</Badge></h5></Row>
                         </Col>

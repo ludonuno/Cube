@@ -44,7 +44,8 @@ class App extends Component {
                     <Route path="/create" render={(props) => <Create {...props}/>}/>
                     <Route path="/update" render={(props) => <Update {...props}/>}/>
                     <Route path="/delete" render={(props) => <Delete {...props}/>}/>
-                    <Route path="/noMatch" render={(props) => <NoMatch {...props}/>}/>                    <Route render={NoMatch}/>
+                    <Route path="/noMatch" render={(props) => <NoMatch {...props}/>}/>
+                    <Route path="/:noMatch" render={(props) => <NoMatch {...props}/>}/>
                 </Switch>
             </Router>
         )

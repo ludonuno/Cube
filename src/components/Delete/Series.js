@@ -3,7 +3,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 class Series extends Component {
     constructor(props) {
         super(props);
@@ -51,7 +51,7 @@ class Series extends Component {
     SetSeriesFieldValues = (series) => {
         if(series) {
             let title = series.title ? ReplaceComa(series.title) : null
-            let releaseDate = series.releasedate ? series.releasedate.substring(0,10) : null
+            let releaseDate = series.releaseDate ? series.releaseDate.substring(0,10) : null
             let synopsis = series.synopsis ? ReplaceComa(series.synopsis) : null
             let parentAdvisoryRate = series.parentAdvisoryRate ? ReplaceComa(series.parentAdvisoryRate) : null
             let sagaName = series.sagaName ? ReplaceComa(series.sagaName) : null
@@ -73,7 +73,7 @@ class Series extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.DeleteSeries} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Series'} list={this.props.seriesList} onChange={this.LoadDataToFields} ref={(input) => this.cbDeleteSeries = input} />
+                    <DropDown header={'Series'} list={this.props.seriesList} onChange={this.LoadDataToFields} ref={(input) => this.cbDeleteSeries = input} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>

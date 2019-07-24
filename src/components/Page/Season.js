@@ -11,9 +11,6 @@ import SliderVideos from '../utils/SliderVideos'
 class Season extends Component {
     constructor(props) {
         super(props);
-        this.GetSeason = this.GetSeason.bind(this)
-        this.SeasonInfo = this.SeasonInfo.bind(this)
-        this.GetRating = this.GetRating.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             season: undefined,
@@ -85,37 +82,50 @@ class Season extends Component {
     }
     // Season
     SeasonInfo = () => {
-        let title = this.state.season ? ReplaceComa(this.state.season.title) : 'Título desconhecido'
-        let releaseDate = (this.state.season && this.state.season.releasedate) ? this.state.season.releasedate.substring(0,10) : 'Data de lançamento desconhecido'
-        let synopsis = (this.state.season && this.state.season.synopsis) ? ReplaceComa(this.state.season.synopsis) : 'Sínopse desconhecida'
-        let rating = this.state.rating ? this.state.rating.avg : null
-        return (
-            <React.Fragment>
-                <Row>
-                    <Col>
-                        <Row><h2>{ title }</h2></Row>
-                        <Row>
-                            <span className="sub-title">Data de lançamento: { releaseDate }</span>
-                        </Row>
-                    </Col>
-                    <Col lg={12} xl={4} >
-                        <Jumbotron className="rating">
-                            Avaliação: { rating ? `${rating}/10` : 'Sem avaliações' }
-                            <br/>
-                        </Jumbotron>
-                    </Col>
-                </Row>
-                <br/>
-                <Row>
-                    <Col>
-                        <Row><h4>Sínopse</h4></Row>
-                        <Row>
-                            <span>{ synopsis }</span>
-                        </Row>
-                    </Col>
-                </Row>
-            </React.Fragment>
-        )
+        if(this.state.season) {
+            console.log(this.state.season)
+            let title = this.state.season.title ? ReplaceComa(this.state.season.title) : 'Título desconhecido'
+            let releaseDate = this.state.season.releaseDate ? this.state.season.releaseDate.substring(0,10) : 'Data de lançamento desconhecido'
+            let synopsis = this.state.season.synopsis ? ReplaceComa(this.state.season.synopsis) : 'Sínopse desconhecida'
+            let rating = this.state.rating ? this.state.rating.avg : null
+
+            let seriesTitle = this.state.season.seriesTitle ? this.state.season.seriesTitle : 'Sem titlo de série'
+            let seriesId = this.state.season.seriesId ? this.state.season.seriesId : 'Sem id de série'
+            let parentAdvisory = this.state.season.parentAdvisoryRate ? this.state.season.parentAdvisoryRate : 'Aconselhamento parental desconhecido'
+            let parentAdvisoryDescription = this.state.season.parentAdvisoryDescription ? this.state.season.parentAdvisoryDescription : 'Descrição do Aconselhamento parental desconhecida'
+            let saga = this.state.season.sagaName ? this.state.season.sagaName : 'Saga desconhecida'
+
+            return (
+                <React.Fragment>
+                    <Row>
+                        <Col>
+                            <Row><h2>{ title }</h2></Row>
+                            <Row>
+                                <span className="sub-title">Data de lançamento: { releaseDate }</span>
+                                <span className="sub-title">| Série: <a href={`/Series/${seriesId}`}>{ seriesTitle }</a></span>
+                                <span className="sub-title" title={parentAdvisoryDescription}>| Aconselhamento parental: { parentAdvisory }</span>
+                                <span className="sub-title">| Saga: { saga }</span>
+                            </Row>
+                        </Col>
+                        <Col lg={12} xl={4} >
+                            <Jumbotron className="rating">
+                                Avaliação: { rating ? `${rating}/10` : 'Sem avaliações' }
+                                <br/>
+                            </Jumbotron>
+                        </Col>
+                    </Row>
+                    <br/>
+                    <Row>
+                        <Col>
+                            <Row><h4>Sínopse</h4></Row>
+                            <Row>
+                                <span>{ synopsis }</span>
+                            </Row>
+                        </Col>
+                    </Row>
+                </React.Fragment>
+            )
+        } else return null
     }
         
     GetRating = (value) => {

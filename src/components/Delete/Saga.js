@@ -3,7 +3,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 
 class Saga extends Component {
     constructor(props) {
@@ -65,7 +65,7 @@ class Saga extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.DeleteSaga} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Saga'} list={this.props.sagaList} onChange={this.LoadDataToFields} ref={(input) => this.cbDelete = input} />
+                    <DropDown header={'Saga'} list={this.props.sagaList} onChange={this.LoadDataToFields} ref={(input) => this.cbDelete = input} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Nome</Form.Label>
                         <Col>

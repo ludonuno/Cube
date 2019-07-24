@@ -3,7 +3,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Update } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 
 class ParentAdvisory extends Component {
     constructor(props) {
@@ -67,7 +67,7 @@ class ParentAdvisory extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.UpdateParentAdvisory} ref={(form) => this.formRef = form}>
-                    <ComboBox list={this.props.parentAdvisoryList} header={'Acom. Parental'} ref={(input) => this.cbParentAdvisory = input} onChange={this.SetParentAdvisoryToEdit}/>
+                    <DropDown list={this.props.parentAdvisoryList} header={'Acom. Parental'} ref={(input) => this.cbParentAdvisory = input} onChange={this.SetParentAdvisoryToEdit}/>
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Avaliação</Form.Label>
                         <Col>

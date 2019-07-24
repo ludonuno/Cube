@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 class Game extends Component {
     constructor(props) {
         super(props);
@@ -73,10 +73,10 @@ class Game extends Component {
                             <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.synopsis = input}}/>
                         </Col>
                     </Form.Group>
-                    <ComboBox list={this.props.engineList} header={'Engine'} ref={(input) => this.cbEngineList = input} />
-                    <ComboBox list={this.props.parentAdvisoryList} header={'Acon. Parental'} ref={(input) => this.cbParentAdvisoryList = input} />
-                    <ComboBox list={this.props.companyList} header={'Empresa'} ref={(input) => this.cbCompanyList = input} />
-                    <ComboBox list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSagaList = input} />
+                    <DropDown list={this.props.engineList} header={'Engine'} ref={(input) => this.cbEngineList = input} />
+                    <DropDown list={this.props.parentAdvisoryList} header={'Acon. Parental'} ref={(input) => this.cbParentAdvisoryList = input} />
+                    <DropDown list={this.props.companyList} header={'Empresa'} ref={(input) => this.cbCompanyList = input} />
+                    <DropDown list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSagaList = input} />
                     <Row>
                         <Col>
                             <Button variant="success" type="submit" block>Adicionar</Button>

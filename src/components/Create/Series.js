@@ -3,7 +3,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 class Series extends Component {
     constructor(props) {
         super(props);
@@ -71,8 +71,8 @@ class Series extends Component {
                             <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.synopsis = input}}/>
                         </Col>
                     </Form.Group>
-                    <ComboBox list={this.props.parentAdvisoryList} header={'Acon. Parental'} ref={(input) => this.cbParentAdvisory = input} />
-                    <ComboBox list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSaga = input} />
+                    <DropDown list={this.props.parentAdvisoryList} header={'Acon. Parental'} ref={(input) => this.cbParentAdvisory = input} />
+                    <DropDown list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSaga = input} />
                     <Row>
                         <Col>
                             <Button variant="success" type="submit" block>Adicionar</Button>

@@ -3,7 +3,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Update } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 class Series extends Component {
     constructor(props) {
         super(props);
@@ -57,10 +57,10 @@ class Series extends Component {
     SetSeriesFieldValues = (series) => {
         if(series && this.cbParentAdvisory && this.cbSaga) {
             let title = series.title ? ReplaceComa(series.title) : null
-            let releaseDate = series.releasedate ? series.releasedate.substring(0,10) : null
+            let releaseDate = series.releaseDate ? series.releaseDate.substring(0,10) : null
             let synopsis = series.synopsis ? ReplaceComa(series.synopsis) : null
-            let parentAdvisoryId = series.parentadvisoryid ? series.parentadvisoryid : null
-            let sagaId = series.sagaid ? series.sagaid : null
+            let parentAdvisoryId = series.parentAdvisoryId ? series.parentAdvisoryId : null
+            let sagaId = series.sagaId ? series.sagaId : null
     
             this.title.value = title
             this.releaseDate.value = releaseDate
@@ -76,7 +76,7 @@ class Series extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.UpdateSeries} ref={(form) => this.formRef = form}>
-                    <ComboBox list={this.props.seriesList} header={'Series'} ref={(input) => this.cbSeries = input} onChange={this.SetSeriesToEdit}/>
+                    <DropDown list={this.props.seriesList} header={'Series'} ref={(input) => this.cbSeries = input} onChange={this.SetSeriesToEdit}/>
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>
@@ -86,7 +86,7 @@ class Series extends Component {
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Data</Form.Label>
                         <Col>
-                            <Form.Control type="date" ref={(input) => {this.releaseDate = input}} required/>
+                            <Form.Control type="date" ref={(input) => {this.releaseDate = input}} />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row}> 
@@ -95,8 +95,8 @@ class Series extends Component {
                             <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.synopsis = input}}/>
                         </Col>
                     </Form.Group>
-                    <ComboBox list={this.props.parentAdvisoryList} header={'Acon. Parental'} ref={(input) => this.cbParentAdvisory = input}/>
-                    <ComboBox list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSaga = input}/>
+                    <DropDown list={this.props.parentAdvisoryList} header={'Acon. Parental'} ref={(input) => this.cbParentAdvisory = input}/>
+                    <DropDown list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSaga = input}/>
                     <Row>
                         <Col>
                             <Button variant="primary" type="submit" block>Atualizar</Button>

@@ -27,20 +27,6 @@ import Developers from './Delete/Developers'
 class Delete extends Component {
     constructor(props) {
         super(props);
-        this.GetPublishingCompanyList = this.GetPublishingCompanyList.bind(this)
-        this.GetEngineList = this.GetEngineList.bind(this)
-        this.GetCompanyList = this.GetCompanyList.bind(this)
-        this.GetParentAdvisoryList = this.GetParentAdvisoryList.bind(this)
-        this.GetSagaList = this.GetSagaList.bind(this)
-        this.GetAssignmentList = this.GetAssignmentList.bind(this)
-        this.GetCelebrityList = this.GetCelebrityList.bind(this)
-        this.GetEpisodeList = this.GetEpisodeList.bind(this)
-        this.GetSeasonList = this.GetSeasonList.bind(this)
-        this.GetSeriesList = this.GetSeriesList.bind(this)
-        this.GetBookList = this.GetBookList.bind(this)
-        this.GetGameList = this.GetGameList.bind(this)
-        this.GetMovieList = this.GetMovieList.bind(this)
-        this.GetGenresList = this.GetGenresList.bind(this)
         this.state = { 
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             key: 'book',
@@ -76,28 +62,10 @@ class Delete extends Component {
         }
     }
 
-    componentDidMount() {
-        this.LoadData()
-    }
-    LoadData() {
-        this.GetPublishingCompanyList()
-        this.GetEngineList()
-        this.GetCompanyList()
-        this.GetParentAdvisoryList()
-        this.GetSagaList()
-        this.GetAssignmentList()
-        this.GetCelebrityList()
-        this.GetEpisodeList()
-        this.GetSeasonList()
-        this.GetSeriesList()
+    componentDidMount() {   
         this.GetBookList()
-        this.GetGameList()
-        this.GetMovieList()
-        this.GetGenresList()
-        this.GetRelateAssignmentList()
-        this.GetRelateGenresList()
-        this.GetDevelopersList()
-        this.GetVideosList()
+        this.GetPublishingCompanyList()
+        this.GetSagaList()
     }
 
     GetPublishingCompanyList = () => {
@@ -170,7 +138,6 @@ class Delete extends Component {
             else this.setState({ seriesList: [] })
         })
     }
-
     GetBookList = () => {
         let searchData = [ { table: 'Book', fieldData: undefined } ]
         Get(searchData,(res) => { 
@@ -222,7 +189,6 @@ class Delete extends Component {
             else this.setState({ celebrityAssignmentBookList: [] })
         })
     }
-
     GetRelateGenresList = () => {
         let searchDataGame = [ { table: 'GenresGame', fieldData: undefined } ]
         Get(searchDataGame,(res) => {
@@ -245,7 +211,6 @@ class Delete extends Component {
             else this.setState({ genresBookList: [] })
         })
     }
-
     GetDevelopersList = () => {
         let searchData = [ { table: 'Developers', fieldData: undefined } ]
         Get(searchData,(res) => { 
@@ -253,7 +218,6 @@ class Delete extends Component {
             else this.setState({ developersList: [] })
         })
     }
-
     GetVideosList = () => {
         let searchDataGame = [ { table: 'VideoGame', fieldData: undefined } ]
         Get(searchDataGame,(res) => {
@@ -287,6 +251,68 @@ class Delete extends Component {
         })
     }
 
+    ChangeTab = (key) => {
+        this.setState({ key })
+        switch (key) {
+            case 'book':
+                this.GetBookList()
+                break
+            case 'game':
+                this.GetGameList()
+                break
+            case 'movie':
+                this.GetMovieList()
+                break
+            case 'series':
+                this.GetSeriesList()
+                break
+            case 'season':
+                this.GetSeasonList()
+                break
+            case 'episode':
+                this.GetEpisodeList()
+                break
+            case 'parentAdvisory':
+                this.GetParentAdvisoryList()
+                break
+            case 'company':
+                this.GetCompanyList()
+                break
+            case 'engine':
+                this.GetEngineList()
+                break
+            case 'publishingCompany':
+                this.GetPublishingCompanyList()
+                break
+            case 'saga':
+                this.GetSagaList()
+                break
+            case 'celebrity':
+                this.GetCelebrityList()
+                break
+            case 'assignment':
+                this.GetAssignmentList()
+                break
+            case 'relateAssignment':
+                this.GetRelateAssignmentList()
+                break
+            case 'video':
+                this.GetVideosList()
+                break
+            case 'genres':
+                this.GetGenresList()
+                break
+            case 'relateGenres':
+                this.GetRelateGenresList()
+                break
+            case 'developers':
+                this.GetDevelopersList()
+                break
+            default:
+                break;
+        }
+    }
+
     render() { 
         if(!this.state.user || !this.state.user.canedit) {
             return (<Redirect to='/noMatch' />)
@@ -296,14 +322,14 @@ class Delete extends Component {
                 <Navbar props={this.props} />
                 <br/>
                 <Container>
-                    <Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => { this.setState({ key }) } }>
+                    <Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.ChangeTab(key)}>
                         <Tab eventKey="book" title="Livro"><Book bookList={this.state.bookList} publishingCompanyList={this.state.publishingCompanyList} sagaList={this.state.sagaList} onSubmit={this.GetBookList} /></Tab>
                         <Tab eventKey="game" title="Jogo"><Game gameList={this.state.gameList} engineList={this.state.engineList} companyList={this.state.companyList} parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetGameList} /></Tab>
                         <Tab eventKey="movie" title="Filme"><Movie movieList={this.state.movieList} parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetMovieList} /></Tab>
                         
                         <Tab eventKey="series" title="Séries"><Series seriesList={this.state.seriesList} parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetSeriesList} /></Tab>
-                        <Tab eventKey="season" title="Temporada"><Season seriesList={this.state.seriesList} seasonList={this.state.seasonList} onSubmit={this.GetSeasonList}/></Tab>
-                        <Tab eventKey="episode" title="Episódio"><Episode seriesList={this.state.seriesList} seasonList={this.state.seasonList} episodeList={this.state.episodeList} onSubmit={this.GetEpisodeList}/></Tab>
+                        <Tab eventKey="season" title="Temporada"><Season seasonList={this.state.seasonList} onSubmit={this.GetSeasonList}/></Tab>
+                        <Tab eventKey="episode" title="Episódio"><Episode episodeList={this.state.episodeList} onSubmit={this.GetEpisodeList}/></Tab>
                        
                         <Tab eventKey="parentAdvisory" title="Aconselhamento Parental"><ParentAdvisory parentAdvisoryList={this.state.parentAdvisoryList} onSubmit={this.GetParentAdvisoryList} /></Tab>
                         <Tab eventKey="company" title="Empresa"><Company companyList={this.state.companyList} onSubmit={this.GetCompanyList} /></Tab>
@@ -312,12 +338,12 @@ class Delete extends Component {
                         <Tab eventKey="saga" title="Saga"><Saga sagaList={this.state.sagaList} onSubmit={this.GetSagaList} /></Tab>
                         <Tab eventKey="celebrity" title="Celebridade"><Celebrity celebrityList={this.state.celebrityList} onSubmit={this.GetCelebrityList} /></Tab>
                         <Tab eventKey="assignment" title="Função"><Assignment assignmentList={this.state.assignmentList} onSubmit={this.GetAssignmentList} /></Tab>
-                        <Tab eventKey="createRelateAssignment" title="Funções das Celebridades"><RelateAssignment onSubmit={this.GetRelateAssignmentList} assignmentList={this.state.assignmentList} celebrityList={this.state.celebrityList} bookList={this.state.bookList} gameList={this.state.gameList} movieList={this.state.movieList} seriesList={this.state.seriesList} celebrityAssignmentGameList={this.state.celebrityAssignmentGameList} celebrityAssignmentMovieList={this.state.celebrityAssignmentMovieList} celebrityAssignmentSeriesList={this.state.celebrityAssignmentSeriesList} celebrityAssignmentBookList={this.state.celebrityAssignmentBookList}/></Tab>
+                        <Tab eventKey="relateAssignment" title="Funções das Celebridades"><RelateAssignment onSubmit={this.GetRelateAssignmentList} assignmentList={this.state.assignmentList} celebrityList={this.state.celebrityList} bookList={this.state.bookList} gameList={this.state.gameList} movieList={this.state.movieList} seriesList={this.state.seriesList} celebrityAssignmentGameList={this.state.celebrityAssignmentGameList} celebrityAssignmentMovieList={this.state.celebrityAssignmentMovieList} celebrityAssignmentSeriesList={this.state.celebrityAssignmentSeriesList} celebrityAssignmentBookList={this.state.celebrityAssignmentBookList}/></Tab>
 
-                        <Tab eventKey="createVideo" title="Vídeos"><Video videoGameList={this.state.videoGameList} videoMovieList={this.state.videoMovieList} videoBookList={this.state.videoBookList} videoSeriesList={this.state.videoSeriesList} videoSeasonList={this.state.videoSeasonList} videoEpisodeList={this.state.videoEpisodeList} onSubmit={this.GetVideosList} /></Tab>
+                        <Tab eventKey="video" title="Vídeos"><Video videoGameList={this.state.videoGameList} videoMovieList={this.state.videoMovieList} videoBookList={this.state.videoBookList} videoSeriesList={this.state.videoSeriesList} videoSeasonList={this.state.videoSeasonList} videoEpisodeList={this.state.videoEpisodeList} onSubmit={this.GetVideosList} /></Tab>
 
                         <Tab eventKey="genres" title="Géneros"><Genres genresList={this.state.genresList} onSubmit={this.GetGenresList} /></Tab>
-                        <Tab eventKey="createRelateGenres" title="Associar Géneros"><RelateGenres genresGameList={this.state.genresGameList} genresMovieList={this.state.genresMovieList} genresBookList={this.state.genresBookList} genresSeriesList={this.state.genresSeriesList} onSubmit={this.GetRelateGenresList} /></Tab>
+                        <Tab eventKey="relateGenres" title="Associar Géneros"><RelateGenres genresGameList={this.state.genresGameList} genresMovieList={this.state.genresMovieList} genresBookList={this.state.genresBookList} genresSeriesList={this.state.genresSeriesList} onSubmit={this.GetRelateGenresList} /></Tab>
                         <Tab eventKey="developers" title="Desenvolvedores"><Developers developersList={this.state.developersList} onSubmit={this.GetDevelopersList} /></Tab>
                     </Tabs>
                 </Container>

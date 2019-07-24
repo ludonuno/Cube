@@ -14,24 +14,9 @@ import SliderCelebrities from '../utils/SliderCelebrities'
 class Movie extends Component {
     constructor(props) {
         super(props);
-        this.GetMovie = this.GetMovie.bind(this)
-        this.GetSaga = this.GetSaga.bind(this)
-        this.GetSagaRelated = this.GetSagaRelated.bind(this)
-        this.GetGenresMovie = this.GetGenresMovie.bind(this)
-        this.GetComments = this.GetComments.bind(this)
-        this.GetResponseTo = this.GetResponseTo.bind(this)
-        this.GetCelebrities = this.GetCelebrities.bind(this)
-        this.MovieInfo = this.MovieInfo.bind(this)
-        this.OrderGenres = this.OrderGenres.bind(this)
-        this.AddRating = this.AddRating.bind(this)
-        this.GetRating = this.GetRating.bind(this)
-        this.FormRating = this.FormRating.bind(this)
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             movie: undefined,
-            publishingCompany: undefined,
-            parentAdvisory: undefined,
-            saga: undefined,
             sagaMovie: undefined,
             sagaGame: undefined,
             sagaSeries: undefined,
@@ -54,31 +39,15 @@ class Movie extends Component {
         ] } ]
         Get(searchData,(res) => {
             if(res.result) {
-                console.log(res.result[0])
                 this.setState({ movie: res.result[0] })
-                this.GetSaga(res.result[0].sagaid) //TODO: Deve ser devolvido atraves do GetMovie
                 this.GetGenresMovie(res.result[0].id)
-                this.GetRating(res.result[0].id) //TODO: Deve ser devolvido atraves do GetMovie
-                this.GetParentAdvisory(res.result[0].parentadvisoryid) //TODO: Deve ser devolvido atraves do GetMovie
+                this.GetSagaRelated(res.result[0].sagaId)
+                this.GetRating(res.result[0].id) 
                 this.GetComments(res.result[0].id)
                 this.GetCelebrities(res.result[0].id)
                 this.GetVideos(res.result[0].id)
             } else {
-                this.setState({ movie: undefined })
                 this.props.history.push('/noMatch')
-            }
-        })
-    }
-    GetSaga = (value) => {
-        let searchData = [ { table: 'Saga', fieldData: [
-            {field: 'id', data: value},
-        ] } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                this.setState({ saga: res.result[0] })
-                this.GetSagaRelated(value) //TODO: Passar para o GetSeries com o id da saga devolvido
-            } else {
-                this.setState({ saga: undefined })
             }
         })
     }
@@ -131,9 +100,7 @@ class Movie extends Component {
                     v.responseTo = this.GetResponseTo(v.id)
                 })
                 this.setState({ comments: res.result })
-            } else {
-                this.setState({ comments: undefined })
-            }
+            } else  this.setState({ comments: undefined })
         })
     }
     GetResponseTo = (value) => {
@@ -147,7 +114,7 @@ class Movie extends Component {
                     if(v.id === value) v.responseto = res.result
                 })
                 this.setState({ comments: comments })
-            }
+            } else this.setState({ comments: [] })
         })
     }
     GetCelebrities = (value) => {
@@ -155,11 +122,8 @@ class Movie extends Component {
             {field: 'movieId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) {
-                this.setState({ celebritiesAssignment: res.result })
-            } else {
-                this.setState({ celebritiesAssignment: undefined })
-            }
+            if(res.result) this.setState({ celebritiesAssignment: res.result })
+            else this.setState({ celebritiesAssignment: undefined })
         })
     }
     GetVideos = (value) => {
@@ -167,69 +131,57 @@ class Movie extends Component {
             {field: 'movieId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) {
-                this.setState({ videos: res.result })
-            } else {
-                this.setState({ videos: undefined })
-            }
-        })
-    }
-    GetParentAdvisory = (value) => {
-        let searchData = [ { table: 'ParentAdvisory', fieldData: [
-            {field: 'id', data: value},
-        ] } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                this.setState({ parentAdvisory: res.result[0] })
-            } else {
-                this.setState({ parentAdvisory: undefined })
-            }
+            if(res.result) this.setState({ videos: res.result })
+            else this.setState({ videos: [] })
         })
     }
 
     // Movie
     MovieInfo = () => {
-        let title = this.state.movie ? ReplaceComa(this.state.movie.title) : 'Título desconhecido'
-        let releaseDate = (this.state.movie && this.state.movie.releasedate) ? this.state.movie.releasedate.substring(0,10) : 'Data de lançamento desconhecida'
-        let duration = this.state.movie ? this.state.movie.duration : 'Duração desconhecida'
-        let parentAdvisory = this.state.parentAdvisory ? this.state.parentAdvisory.rate : 'Aconselhamento parental desconhecido'
-        let parentAdvisoryTitle = this.state.parentAdvisory ? this.state.parentAdvisory.description : 'Descrição do Aconselhamento parental desconhecida'
-        let synopsis = (this.state.movie && this.state.movie.synopsis) ? ReplaceComa(this.state.movie.synopsis) : 'Sínopse desconhecida'
-        let saga = this.state.saga ? ReplaceComa(this.state.saga.name) : 'Saga desconhecida'
-        let genres = this.state.genresMovie ? this.OrderGenres() : 'Sem géneros associados'
-        let rating = this.state.rating ? this.state.rating.avg : null
-        return (
-            <React.Fragment>
-                <Row>
-                    <Col>
-                        <Row><h2>{ title }</h2></Row>
-                        <Row>
-                            <span className="sub-title">Data de lançamento: { releaseDate }</span>
-                            <span className="sub-title">| Duração: {duration} minutos</span>
-                            <span className="sub-title" title={parentAdvisoryTitle}>| Aconselhamento parental: { parentAdvisory }</span>
-                            <span className="sub-title">| Saga: { saga }</span>
-                        </Row>
-                        <Row><span className="sub-title">Géneros: { genres } </span></Row>
-                    </Col>
-                    <Col lg={12} xl={4} >
-                        <Jumbotron className="rating">
-                            Avaliação: { rating ? `${rating}/10` : 'Sem avaliações' }
-                            <br/>
-                            <this.FormRating />
-                        </Jumbotron>
-                    </Col>
-                </Row>
-                <br/>
-                <Row>
-                    <Col>
-                        <Row><h4>Sínopse</h4></Row>
-                        <Row>
-                            <span>{ synopsis }</span>
-                        </Row>
-                    </Col>
-                </Row>
-            </React.Fragment>
-        )
+        if(this.state.movie) {
+            let title = this.state.movie.title ? ReplaceComa(this.state.movie.title) : 'Título desconhecido'
+            let releaseDate = this.state.movie.releaseDate ? this.state.movie.releaseDate.substring(0,10) : 'Data de lançamento desconhecida'
+            let duration = this.state.movie.duration ? this.state.movie.duration : 'Duração desconhecida'
+            let parentAdvisory = this.state.movie.parentAdvisoryRate ? this.state.movie.parentAdvisoryRate : 'Aconselhamento parental desconhecido'
+            let parentAdvisoryTitle = this.state.movie.parentAdvisoryDescription ? this.state.movie.parentAdvisoryDescription : 'Descrição do Aconselhamento parental desconhecida'
+            let synopsis = this.state.movie.synopsis ? ReplaceComa(this.state.movie.synopsis) : 'Sínopse desconhecida'
+            let saga = this.state.movie.sagaName ? ReplaceComa(this.state.movie.sagaName) : 'Saga desconhecida'
+            let genres = this.state.genresMovie ? this.OrderGenres() : 'Sem géneros associados'
+            let rating = this.state.rating ? this.state.rating.avg : null
+            return (
+                <React.Fragment>
+                    <Row>
+                        <Col>
+                            <Row><h2>{ title }</h2></Row>
+                            <Row>
+                                <span className="sub-title">Data de lançamento: { releaseDate }</span>
+                                <span className="sub-title">| Duração: {duration} {Number(duration) ? 'minutos' : null}</span>
+                                <span className="sub-title" title={parentAdvisoryTitle}>| Aconselhamento parental: { parentAdvisory }</span>
+                                <span className="sub-title">| Saga: { saga }</span>
+                            </Row>
+                            <Row><span className="sub-title">Géneros: { genres } </span></Row>
+                        </Col>
+                        <Col lg={12} xl={4} >
+                            <Jumbotron className="rating">
+                                Avaliação: { rating ? `${rating}/10` : 'Sem avaliações' }
+                                <br/>
+                                <this.FormRating />
+                            </Jumbotron>
+                        </Col>
+                    </Row>
+                    <br/>
+                    <Row>
+                        <Col>
+                            <Row><h4>Sínopse</h4></Row>
+                            <Row>
+                                <span>{ synopsis }</span>
+                            </Row>
+                        </Col>
+                    </Row>
+                </React.Fragment>
+            )
+        } else return null
+        
     }
     OrderGenres = () => {
         let genresMovie = []

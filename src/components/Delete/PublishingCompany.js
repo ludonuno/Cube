@@ -3,7 +3,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 
 class PublishingCompany extends Component {
     constructor(props) {
@@ -62,7 +62,7 @@ class PublishingCompany extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.DeletePublishingCompany} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Editoras'} list={this.props.publishingCompanyList} onChange={this.LoadDataToFields} ref={(input) => this.cbDelete = input} />
+                    <DropDown header={'Editoras'} list={this.props.publishingCompanyList} onChange={this.LoadDataToFields} ref={(input) => this.cbDelete = input} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Nome</Form.Label>
                         <Col>

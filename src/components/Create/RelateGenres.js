@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Form, Button, Accordion, Card } from 'react-bootstrap'
 import { Create } from '../../scripts/api'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 
 class RelateGenres extends Component {
     constructor(props) {
@@ -138,8 +138,8 @@ class RelateGenres extends Component {
                         <Accordion.Collapse eventKey="0">
                             <Card.Body>
                                 <Form onSubmit={this.AddGenresBook} ref={(form) => this.formRefBook = form}>
-                                    <ComboBox list={this.props.genresList} header={'Género'} ref={(input) => this.cbBookGenres = input} />
-                                    <ComboBox list={this.props.bookList} header={'Livro'} ref={(input) => this.cbBook = input} />
+                                    <DropDown list={this.props.genresList} header={'Género'} ref={(input) => this.cbBookGenres = input} />
+                                    <DropDown list={this.props.bookList} header={'Livro'} ref={(input) => this.cbBook = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="success" type="submit" block>Adicionar</Button>
@@ -156,8 +156,8 @@ class RelateGenres extends Component {
                         <Accordion.Collapse eventKey="1">
                             <Card.Body>
                                 <Form onSubmit={this.AddGenresGame} ref={(form) => this.formRefGame = form}>
-                                    <ComboBox list={this.props.genresList} header={'Género'} ref={(input) => this.cbGameGenres = input} />
-                                    <ComboBox list={this.props.gameList} header={'Jogo'} ref={(input) => this.cbGame = input} />
+                                    <DropDown list={this.props.genresList} header={'Género'} ref={(input) => this.cbGameGenres = input} />
+                                    <DropDown list={this.props.gameList} header={'Jogo'} ref={(input) => this.cbGame = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="success" type="submit" block>Adicionar</Button>
@@ -174,8 +174,8 @@ class RelateGenres extends Component {
                         <Accordion.Collapse eventKey="2">
                             <Card.Body>
                                 <Form onSubmit={this.AddGenresMovie} ref={(form) => this.formRefMovie = form}>
-                                    <ComboBox list={this.props.genresList} header={'Género'} ref={(input) => this.cbMovieGenres = input} />
-                                    <ComboBox list={this.props.movieList} header={'Filme'} ref={(input) => this.cbMovie = input} />
+                                    <DropDown list={this.props.genresList} header={'Género'} ref={(input) => this.cbMovieGenres = input} />
+                                    <DropDown list={this.props.movieList} header={'Filme'} ref={(input) => this.cbMovie = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="success" type="submit" block>Adicionar</Button>
@@ -192,8 +192,8 @@ class RelateGenres extends Component {
                         <Accordion.Collapse eventKey="3">
                             <Card.Body>
                                 <Form onSubmit={this.AddGenresSeries} ref={(form) => this.formRefSeries = form}>
-                                    <ComboBox list={this.props.genresList} header={'Género'} ref={(input) => this.cbSeriesGenres = input} />
-                                    <ComboBox list={this.props.seriesList} header={'Séries'} ref={(input) => this.cbSeries = input} />
+                                    <DropDown list={this.props.genresList} header={'Género'} ref={(input) => this.cbSeriesGenres = input} />
+                                    <DropDown list={this.props.seriesList} header={'Séries'} ref={(input) => this.cbSeries = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="success" type="submit" block>Adicionar</Button>

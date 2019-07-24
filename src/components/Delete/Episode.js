@@ -4,7 +4,7 @@ import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DPEpisode'
 
 class Episode extends Component {
     constructor(props) {
@@ -16,12 +16,9 @@ class Episode extends Component {
     }
 
     componentDidUpdate() {
-        if(this.props.seriesList[0]) {
-            if(this.props.seasonList[0]) {
-                if(this.props.episodeList[0]) this.SetEpisodeFieldValues(this.props.episodeList[0])
-                else this.SetEpisodeFieldValues({}) 
-            } else this.SetEpisodeFieldValues({})
-        } else this.SetEpisodeFieldValues({})
+        this.formRef.reset()
+        if(this.props.episodeList[0]) this.SetEpisodeFieldValues(this.props.episodeList[0])
+        else this.SetEpisodeFieldValues({})
     }
 
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
@@ -33,7 +30,7 @@ class Episode extends Component {
                 { table: 'Episode', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'id', data: JSON.parse(this.cbDeleteEpisode.value).id}
+                    {field: 'id', data: JSON.parse(this.cbDelete.value).id}
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -51,23 +48,18 @@ class Episode extends Component {
     }
     
     SetEpisodeFieldValues = (episode) => {
-        let title = (episode.title) ? ReplaceComa(episode.title) : null
-        let releaseDate = (episode && episode.releasedate) ? episode.releasedate.substring(0,10) : null
-        let synopsis = (episode && episode.synopsis) ? ReplaceComa(episode.synopsis) : null
-        this.title.value = title
-        this.releaseDate.value = releaseDate
-        this.synopsis.value = synopsis
-    }
-
-    LoadSeasonData = () => {
-        this.props.GetSeasonList(JSON.parse(this.cbDeleteSeries.value).id)
-    }
-    LoadEpisodeData = () => {
-        this.props.GetEpisodeList(JSON.parse(this.cbDeleteSeason.value).id)
+        if(episode) {
+            let title = episode.title ? ReplaceComa(episode.title) : null
+            let releaseDate = episode.releaseDate ? episode.releaseDate.substring(0,10) : null
+            let synopsis = episode.synopsis ? ReplaceComa(episode.synopsis) : null
+            this.title.value = title
+            this.releaseDate.value = releaseDate
+            this.synopsis.value = synopsis
+        }
     }
 
     LoadDataToFields = () => {
-        this.SetEpisodeFieldValues(JSON.parse(this.cbDeleteEpisode.value))
+        this.SetEpisodeFieldValues(JSON.parse(this.cbDelete.value))
     }
 
     render() {
@@ -76,9 +68,7 @@ class Episode extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.DeleteEpisode} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Série'} list={this.props.seriesList} onChange={this.LoadSeasonData} ref={(input) => this.cbDeleteSeries = input} />
-                    <ComboBox header={'Temporada'} list={this.props.seasonList} onChange={this.LoadEpisodeData} ref={(input) => this.cbDeleteSeason = input} />
-                    <ComboBox header={'Episódio'} list={this.props.episodeList} onChange={this.LoadDataToFields} ref={(input) => this.cbDeleteEpisode = input} />
+                    <DropDown header={'Episódio'} list={this.props.episodeList} onChange={this.LoadDataToFields} ref={(input) => this.cbDelete = input} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>

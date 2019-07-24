@@ -41,7 +41,8 @@ class Book extends Component {
             if(res.result) {
                 this.setState({ book: res.result[0] })
                 this.GetGenresBook(res.result[0].id)
-                this.GetRating(res.result[0].id) //TODO: Deve ser devolvido atraves do GetBook
+                this.GetSagaRelated(res.result[0].sagaId)
+                this.GetRating(res.result[0].id)
                 this.GetComments(res.result[0].id)
                 this.GetCelebrities(res.result[0].id)
                 this.GetVideos(res.result[0].id)
@@ -125,7 +126,6 @@ class Book extends Component {
         ] } ]
         Get(searchData,(res) => {
             if(res.result) {
-                console.log(res.result)
                 this.setState({ celebritiesAssignment: res.result })
             } else {
                 this.setState({ celebritiesAssignment: undefined })
@@ -149,7 +149,7 @@ class Book extends Component {
     BookInfo = () => {
         if(this.state.book) {
             let title = this.state.book.title ? ReplaceComa(this.state.book.title) : 'Título desconhecido'
-            let releaseDate = this.state.book.releasedate ? this.state.book.releasedate.substring(0,10) : 'Data de lançamento desconhecida'
+            let releaseDate = this.state.book.releaseDate ? this.state.book.releaseDate.substring(0,10) : 'Data de lançamento desconhecida'
             let synopsis = this.state.book.synopsis ? ReplaceComa(this.state.book.synopsis) : 'Sínopse desconhecida'
             let sagaName = this.state.book.sagaName ? ReplaceComa(this.state.book.sagaName) : 'Saga desconhecida'
             let publishingCompanyName = this.state.book.publishingCompanyName ? ReplaceComa(this.state.book.publishingCompanyName) : 'Publicadora desconhecida'

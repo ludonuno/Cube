@@ -4,7 +4,7 @@ import { Update } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 
 class Game extends Component {
     constructor(props) {
@@ -61,12 +61,12 @@ class Game extends Component {
     SetGameFieldValues = (game) => {
         if(game && this.cbEngineList && this.cbParentAdvisoryList && this.cbCompanyList && this.cbSagaList) {
             let title = game.title ? ReplaceComa(game.title) : null
-            let releaseDate = game.releasedate ? game.releasedate.substring(0,10) : null
+            let releaseDate = game.releaseDate ? game.releaseDate.substring(0,10) : null
             let synopsis = game.synopsis ? ReplaceComa(game.synopsis) : null
-            let engineId = game.engineid ? game.engineid : null
-            let parentAdvisoryId = game.parentadvisoryid ? game.parentadvisoryid : null
-            let companyId = game.publicadorid ? game.publicadorid : null
-            let sagaId = game.sagaid ? game.sagaid : null
+            let engineId = game.engineId ? game.engineId : null
+            let parentAdvisoryId = game.parentAdvisoryId ? game.parentAdvisoryId : null
+            let companyId = game.companyId ? game.companyId : null
+            let sagaId = game.sagaId ? game.sagaId : null
 
             this.title.value = title
             this.releaseDate.value = releaseDate
@@ -84,7 +84,7 @@ class Game extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.UpdateGame} ref={(form) => this.formRef = form}>
-                    <ComboBox list={this.props.gameList} header={'Jogos'} ref={(input) => this.cbGame = input} onChange={this.SetGameToEdit}/>
+                    <DropDown list={this.props.gameList} header={'Jogos'} ref={(input) => this.cbGame = input} onChange={this.SetGameToEdit}/>
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>
@@ -103,10 +103,10 @@ class Game extends Component {
                             <Form.Control as="textarea" rows="4" className="noresize" ref={(input) => {this.synopsis = input}}/>
                         </Col>
                     </Form.Group>
-                    <ComboBox list={this.props.engineList} header={'Engine'} ref={(input) => this.cbEngineList = input} />
-                    <ComboBox list={this.props.parentAdvisoryList} header={'Acon. Parental'} ref={(input) => this.cbParentAdvisoryList = input} />
-                    <ComboBox list={this.props.companyList} header={'Empresa'} ref={(input) => this.cbCompanyList = input} />
-                    <ComboBox list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSagaList = input} />
+                    <DropDown list={this.props.engineList} header={'Engine'} ref={(input) => this.cbEngineList = input} />
+                    <DropDown list={this.props.parentAdvisoryList} header={'Acon. Parental'} ref={(input) => this.cbParentAdvisoryList = input} />
+                    <DropDown list={this.props.companyList} header={'Empresa'} ref={(input) => this.cbCompanyList = input} />
+                    <DropDown list={this.props.sagaList} header={'Saga'} ref={(input) => this.cbSagaList = input} />
                     <Row>
                         <Col>
                             <Button variant="primary" type="submit" block>Atualizar</Button>

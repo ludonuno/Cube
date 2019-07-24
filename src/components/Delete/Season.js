@@ -4,44 +4,32 @@ import { Delete } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DPSeason'
 class Season extends Component {
     constructor(props) {
         super(props);
-        this.ola = 'ola'
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
-            alert: { visible: false, message: '', variant: '' },
-            seasonList: [],
-            selectedSeries: undefined
+            alert: { visible: false, message: '', variant: '' }
         }
     }
-    componentWillReceiveProps() {
-        if(this.props.seriesList[0]) {
-            this.formRef.reset()
-            this.SelectSeason(this.props.seriesList[0])
-        }
-    }
+    
     componentDidUpdate() {
-        if(this.props.seriesList[0]) {
-            if(this.props.seasonList[0]) {
-                if(this.state.selectedSeries) this.SelectSeasonUpdate(this.state.selectedSeries)
-                else this.SelectSeasonUpdate(this.props.seriesList[0])
-            } 
-            else this.SelectSeasonUpdate({}) 
-        } else this.SelectSeasonUpdate({})
+        this.formRef.reset()
+        if(this.props.seasonList[0]) this.SetSeasonFieldValues(this.props.seasonList[0])
+        else this.SetSeasonFieldValues({})
     }
-
+    
     ChangeAlert = (visible, message, variant) => this.setState({ alert: { visible: visible, message: message, variant: variant} })
 
     DeleteSeason = (event) => {
         event.preventDefault()
-        if(this.props.seasonList[0] && this.cbDeleteSeason) {
+        if(this.props.seasonList[0]) {
             let deleteData = [
                 { table: 'Season', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},
                     {field: 'userPassword', data: this.state.user.password},
-                    {field: 'id', data: JSON.parse(this.cbDeleteSeason.value).id},
+                    {field: 'id', data: JSON.parse(this.cbDelete.value).id},
                 ] }
             ]
             this.ChangeAlert(true, 'A ligar ao Servidor...', 'info')
@@ -57,45 +45,20 @@ class Season extends Component {
             })
         } else this.ChangeAlert(true, `Não pode apagar registos se a lista estiver vazia, adiceone um registo no respectivo formulário.`, 'warning')
     }
-    
+
     SetSeasonFieldValues = (season) => {
-        let title = (season && season.title) ? ReplaceComa(season.title) : null
-        let releaseDate = (season && season.releasedate) ? season.releasedate.substring(0,10) : null
-        let synopsis = (season && season.synopsis) ? ReplaceComa(season.synopsis) : null
-        this.title.value = title
-        this.releaseDate.value = releaseDate
-        this.synopsis.value = synopsis
-    }
-
-    SelectSeason = (selectedSeries) => {
-        let seasonList = [...this.props.seasonList]
-        let newSeason = []
-        seasonList.forEach((season) => {
-            if(season.seriesid === selectedSeries.id){
-                newSeason.push(season)
-            }
-        })
-        this.SetSeasonFieldValues(newSeason[0])
-        this.setState({selectedSeries})
-        this.setState({seasonList: newSeason})
-    }
-    SelectSeasonUpdate = (selectedSeries) => {
-        let seasonList = [...this.props.seasonList]
-        let newSeason = []
-        seasonList.forEach((season) => {
-            if(season.seriesid === selectedSeries.id){
-                newSeason.push(season)
-            }
-        })
-        this.SetSeasonFieldValues(newSeason[0])
-    }
-
-    LoadSeasonData = () => {
-        this.SelectSeason(JSON.parse(this.cbDeleteSeries.value))
+        if(season) {
+            let title = season.title ? ReplaceComa(season.title) : null
+            let releaseDate = season.releaseDate ? season.releaseDate.substring(0,10) : null
+            let synopsis = season.synopsis ? ReplaceComa(season.synopsis) : null
+            this.title.value = title
+            this.releaseDate.value = releaseDate
+            this.synopsis.value = synopsis
+        }
     }
 
     LoadDataToFields = () => {
-        this.SetSeasonFieldValues(JSON.parse(this.cbDeleteSeason.value))
+        this.SetSeasonFieldValues(JSON.parse(this.cbDelete.value))
     }
     
     render() {
@@ -104,8 +67,7 @@ class Season extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.DeleteSeason} ref={(form) => this.formRef = form}>
-                    <ComboBox header={'Série'} list={this.props.seriesList} onChange={this.LoadSeasonData} ref={(input) => this.cbDeleteSeries = input} />
-                    <ComboBox header={'Temporada'} list={this.state.seasonList} onChange={this.LoadDataToFields} ref={(input) => this.cbDeleteSeason = input} />
+                    <DropDown header={'Temporada'} list={this.props.seasonList} onChange={this.LoadDataToFields} ref={(input) => this.cbDelete = input} />
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Título</Form.Label>
                         <Col>

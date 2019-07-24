@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Form, Button, Accordion, Card } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CBVideo'
+import DropDown from '../utils/DPVideo'
 import InfoVideo from '../utils/InfoVideo'
 import { GetVideoId } from '../../scripts/utils'
 
@@ -238,7 +238,7 @@ class Video extends Component {
                         <Accordion.Collapse eventKey="0">
                             <Card.Body>
                                 <Form onSubmit={this.DeleteVideoBook} ref={(form) => this.formRefBook = form}>
-                                    <ComboBox header={'Videos livros'} list={this.props.videoBookList} onChange={this.SetVideoBook} ref={(input) => this.cbDeleteVideoBook = input} />
+                                    <DropDown header={'Videos livros'} list={this.props.videoBookList} onChange={this.SetVideoBook} ref={(input) => this.cbDeleteVideoBook = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="danger" type="submit" block>Apagar</Button>
@@ -256,7 +256,7 @@ class Video extends Component {
                         <Accordion.Collapse eventKey="1">
                             <Card.Body>
                                 <Form onSubmit={this.DeleteVideoGame} ref={(form) => this.formRefGame = form}>
-                                    <ComboBox header={'Videos jogos'} list={this.props.videoGameList} onChange={this.SetVideoGame} ref={(input) => this.cbDeleteVideoGame = input} />
+                                    <DropDown header={'Videos jogos'} list={this.props.videoGameList} onChange={this.SetVideoGame} ref={(input) => this.cbDeleteVideoGame = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="danger" type="submit" block>Apagar</Button>
@@ -274,7 +274,7 @@ class Video extends Component {
                         <Accordion.Collapse eventKey="2">
                             <Card.Body>
                                 <Form onSubmit={this.DeleteVideoMovie} ref={(form) => this.formRefMovie = form}>
-                                    <ComboBox header={'Videos filmes'} list={this.props.videoMovieList} onChange={this.SetVideoMovie} ref={(input) => this.cbDeleteVideoMovie = input} />
+                                    <DropDown header={'Videos filmes'} list={this.props.videoMovieList} onChange={this.SetVideoMovie} ref={(input) => this.cbDeleteVideoMovie = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="danger" type="submit" block>Apagar</Button>
@@ -292,7 +292,7 @@ class Video extends Component {
                         <Accordion.Collapse eventKey="3">
                             <Card.Body>
                                 <Form onSubmit={this.DeleteVideoSeries} ref={(form) => this.formRefSeries = form}>
-                                    <ComboBox header={'Videos séries'} list={this.props.videoSeriesList} onChange={this.SetVideoSeries} ref={(input) => this.cbDeleteVideoSeries = input} />
+                                    <DropDown header={'Videos séries'} list={this.props.videoSeriesList} onChange={this.SetVideoSeries} ref={(input) => this.cbDeleteVideoSeries = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="danger" type="submit" block>Apagar</Button>
@@ -310,7 +310,7 @@ class Video extends Component {
                         <Accordion.Collapse eventKey="4">
                             <Card.Body>
                                 <Form onSubmit={this.DeleteVideoSeason} ref={(form) => this.formRefSeason = form}>
-                                    <ComboBox header={'Videos temporada'} list={this.props.videoSeasonList} onChange={this.SetVideoSeason} ref={(input) => this.cbDeleteVideoSeason = input} />
+                                    <DropDown header={'Videos temporada'} list={this.props.videoSeasonList} onChange={this.SetVideoSeason} ref={(input) => this.cbDeleteVideoSeason = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="danger" type="submit" block>Apagar</Button>
@@ -328,7 +328,7 @@ class Video extends Component {
                         <Accordion.Collapse eventKey="5">
                             <Card.Body>
                                 <Form onSubmit={this.DeleteVideoEpisode} ref={(form) => this.formRefEpisode = form}>
-                                    <ComboBox header={'Videos episódios'} list={this.props.videoEpisodeList} onChange={this.SetVideoEpisode} ref={(input) => this.cbDeleteVideoEpisode = input} />
+                                    <DropDown header={'Videos episódios'} list={this.props.videoEpisodeList} onChange={this.SetVideoEpisode} ref={(input) => this.cbDeleteVideoEpisode = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="danger" type="submit" block>Apagar</Button>

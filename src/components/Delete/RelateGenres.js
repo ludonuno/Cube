@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Form, Button, Accordion, Card } from 'react-bootstrap'
 import { Delete } from '../../scripts/api'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CBRelateGenres'
+import DropDown from '../utils/DPRelateGenres'
 
 class RelateGenres extends Component {
     constructor(props) {
@@ -129,7 +129,7 @@ class RelateGenres extends Component {
                         <Accordion.Collapse eventKey="0">
                             <Card.Body>
                                 <Form onSubmit={this.DeleteGenresBook} ref={(form) => this.formRefBook = form}>
-                                    <ComboBox header={'Género e livro'} list={this.props.genresBookList} ref={(input) => this.cbDeleteBook = input} />
+                                    <DropDown header={'Género e livro'} list={this.props.genresBookList} ref={(input) => this.cbDeleteBook = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="danger" type="submit" block>Apagar</Button>
@@ -146,7 +146,7 @@ class RelateGenres extends Component {
                         <Accordion.Collapse eventKey="1">
                             <Card.Body>
                                 <Form onSubmit={this.DeleteGenresGame} ref={(form) => this.formRefGame = form}>
-                                    <ComboBox header={'Género e jogo'} list={this.props.genresGameList} ref={(input) => this.cbDeleteGame = input} />
+                                    <DropDown header={'Género e jogo'} list={this.props.genresGameList} ref={(input) => this.cbDeleteGame = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="danger" type="submit" block>Apagar</Button>
@@ -163,7 +163,7 @@ class RelateGenres extends Component {
                         <Accordion.Collapse eventKey="2">
                             <Card.Body>
                                 <Form onSubmit={this.DeleteGenresMovie} ref={(form) => this.formRefMovie = form}>
-                                    <ComboBox header={'Género e filme'} list={this.props.genresMovieList} ref={(input) => this.cbDeleteMovie = input} />
+                                    <DropDown header={'Género e filme'} list={this.props.genresMovieList} ref={(input) => this.cbDeleteMovie = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="danger" type="submit" block>Apagar</Button>
@@ -180,7 +180,7 @@ class RelateGenres extends Component {
                         <Accordion.Collapse eventKey="3">
                             <Card.Body>
                                 <Form onSubmit={this.DeleteGenresSeries} ref={(form) => this.formRefSeries = form}>
-                                    <ComboBox header={'Género e séries'} list={this.props.genresSeriesList} ref={(input) => this.cbDeleteSeries = input} />
+                                    <DropDown header={'Género e séries'} list={this.props.genresSeriesList} ref={(input) => this.cbDeleteSeries = input} />
                                     <Row>
                                         <Col>
                                             <Button variant="danger" type="submit" block>Apagar</Button>

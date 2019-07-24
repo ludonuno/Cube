@@ -16,26 +16,9 @@ import SliderCelebrities from '../utils/SliderCelebrities'
 class Game extends Component {
     constructor(props) {
         super(props);
-        this.GetGame = this.GetGame.bind(this)
-
-        this.GetSaga = this.GetSaga.bind(this)
-        this.GetSagaRelated = this.GetSagaRelated.bind(this)
-        this.GetGenresGame = this.GetGenresGame.bind(this)
-        this.GetComments = this.GetComments.bind(this)
-        this.GetResponseTo = this.GetResponseTo.bind(this)
-        this.GetCelebrities = this.GetCelebrities.bind(this)
-        this.GameInfo = this.GameInfo.bind(this)
-        this.OrderGenres = this.OrderGenres.bind(this)
-        this.AddRating = this.AddRating.bind(this)
-        this.GetRating = this.GetRating.bind(this)
-        this.FormRating = this.FormRating.bind(this)
-
-
         this.state = {
             user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))[0] : undefined,
             game: undefined,
-            publishier: undefined,
-            saga: undefined,
             sagaMovie: undefined,
             sagaGame: undefined,
             sagaSeries: undefined,
@@ -60,11 +43,9 @@ class Game extends Component {
         Get(searchData,(res) => {
             if(res.result) {
                 this.setState({ game: res.result[0] })
-                this.GetSaga(res.result[0].sagaid) //TODO: Deve ser devolvido atraves do GetGame
-                this.GetPublisher(res.result[0].publicadorid) //TODO: Deve ser devolvido atraves do GetGame
-                this.GetEngine(res.result[0].engineid) //TODO: Deve ser devolvido atraves do GetGame
                 this.GetGenresGame(res.result[0].id)
-                this.GetRating(res.result[0].id) //TODO: Deve ser devolvido atraves do GetGame
+                this.GetSagaRelated(res.result[0].sagaId)
+                this.GetRating(res.result[0].id) 
                 this.GetComments(res.result[0].id)
                 this.GetCelebrities(res.result[0].id)
                 this.GetVideos(res.result[0].id)
@@ -72,43 +53,6 @@ class Game extends Component {
             } else {
                 this.setState({ game: undefined })
                 this.props.history.push('/noMatch')
-            }
-        })
-    }
-    GetSaga = (value) => {
-        let searchData = [ { table: 'Saga', fieldData: [
-            {field: 'id', data: value},
-        ] } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                this.setState({ saga: res.result[0] })
-                this.GetSagaRelated(value) //TODO: Passar para o GetSeries com o id da saga devolvido
-            } else {
-                this.setState({ saga: undefined })
-            }
-        })
-    }
-    GetPublisher = (value) => {
-        let searchData = [ { table: 'Company', fieldData: [
-            {field: 'id', data: value},
-        ] } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                this.setState({ company: res.result[0] })
-            } else {
-                this.setState({ company: undefined })
-            }
-        })
-    }
-    GetEngine = (value) => {
-        let searchData = [ { table: 'Engine', fieldData: [
-            {field: 'id', data: value},
-        ] } ]
-        Get(searchData,(res) => {
-            if(res.result) {
-                this.setState({ engine: res.result[0] })
-            } else {
-                this.setState({ engine: undefined })
             }
         })
     }
@@ -225,50 +169,54 @@ class Game extends Component {
         toReturn.pop()
         return toReturn
     }
+    
     // Game
     GameInfo = () => {
-        let title = this.state.game ? ReplaceComa(this.state.game.title) :  'Título desconhecido'
-        let releaseDate = (this.state.game && this.state.game.releasedate) ? this.state.game.releasedate.substring(0,10) : 'Data de lançamento desconhecida'
-        let company = this.state.company ? this.state.company.name : 'Publicadora desconhecida'
-        let engine = this.state.engine ? this.state.engine.name : 'Engine desconhecido'
-        let synopsis = (this.state.game && this.state.game.synopsis) ? ReplaceComa(this.state.game.synopsis) : 'Sínopse desconhecida'
-        let saga = this.state.saga ? this.state.saga.name : 'Saga desconhecida'
-        let genres = this.state.genresGame ? this.OrderGenres() : 'Sem géneros associados'
-        let rating = this.state.rating ? this.state.rating.avg : null
-        let developers = this.state.developers ? this.OrderDevelopers() : 'Desenvolvedores desconhecidos'
-        return (
-            <React.Fragment>
-                <Row>
-                    <Col>
-                        <Row><h2>{ title }</h2></Row>
-                        <Row>
-                            <span className="sub-title">Data de lançamento: { releaseDate }</span>
-                            <span className="sub-title">| Publicador: { company }</span>
-                            <span className="sub-title">| Engine: { engine }</span>
-                            <span className="sub-title">| Saga: { saga }</span>
-                        </Row>
-                        <Row><span className="sub-title">Desenvolvedores: { developers }</span></Row>
-                        <Row><span className="sub-title">Géneros: { genres }</span></Row>
-                    </Col>
-                    <Col lg={12} xl={4} >
-                        <Jumbotron className="rating">
-                            Avaliação: { rating ? `${rating}/10` : 'Sem avaliações' }
-                            <br/>
-                            <this.FormRating />
-                        </Jumbotron>
-                    </Col>
-                </Row>
-                <br/>
-                <Row>
-                    <Col>
-                        <Row><h4>Sínopse</h4></Row>
-                        <Row>
-                            <span>{ synopsis }</span>
-                        </Row>
-                    </Col>
-                </Row>
-            </React.Fragment>
-        )
+        if(this.state.game) {
+            let title = this.state.game.title ? ReplaceComa(this.state.game.title) :  'Título desconhecido'
+            let releaseDate = this.state.game.releaseDate ? this.state.game.releaseDate.substring(0,10) : 'Data de lançamento desconhecida'
+            let company =  this.state.game.companyName ? this.state.game.companyName : 'Publicadora desconhecida'
+            let engine =  this.state.game.engineName ? this.state.game.engineName : 'Engine desconhecido'
+            let synopsis = this.state.game.synopsis ? ReplaceComa(this.state.game.synopsis) : 'Sínopse desconhecida'
+            let saga =  this.state.game.sagaName ? this.state.game.sagaName : 'Saga desconhecida'
+            let genres = this.state.genresGame ? this.OrderGenres() : 'Sem géneros associados'
+            let rating = this.state.rating ? this.state.rating.avg : null
+            let developers = this.state.developers ? this.OrderDevelopers() : 'Desenvolvedores desconhecidos'
+            return (
+                <React.Fragment>
+                    <Row>
+                        <Col>
+                            <Row><h2>{ title }</h2></Row>
+                            <Row>
+                                <span className="sub-title">Data de lançamento: { releaseDate }</span>
+                                <span className="sub-title">| Publicador: { company }</span>
+                                <span className="sub-title">| Engine: { engine }</span>
+                                <span className="sub-title">| Saga: { saga }</span>
+                            </Row>
+                            <Row><span className="sub-title">Desenvolvedores: { developers }</span></Row>
+                            <Row><span className="sub-title">Géneros: { genres }</span></Row>
+                        </Col>
+                        <Col lg={12} xl={4} >
+                            <Jumbotron className="rating">
+                                Avaliação: { rating ? `${rating}/10` : 'Sem avaliações' }
+                                <br/>
+                                <this.FormRating />
+                            </Jumbotron>
+                        </Col>
+                    </Row>
+                    <br/>
+                    <Row>
+                        <Col>
+                            <Row><h4>Sínopse</h4></Row>
+                            <Row>
+                                <span>{ synopsis }</span>
+                            </Row>
+                        </Col>
+                    </Row>
+                </React.Fragment>
+            )
+        } else return null
+        
     }
     OrderGenres = () => {
         let genresGame = []

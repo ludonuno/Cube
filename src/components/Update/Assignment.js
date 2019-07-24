@@ -3,7 +3,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { Update } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
 import Alert from '../utils/Alert'
-import ComboBox from '../utils/CB'
+import DropDown from '../utils/DP'
 
 class Assignment extends Component {
     constructor(props) {
@@ -67,7 +67,7 @@ class Assignment extends Component {
                 <br/>
                 <Alert variant={this.state.alert.variant} message={this.state.alert.message} visible={this.state.alert.visible} />
                 <Form onSubmit={this.UpdateAssignment} ref={(form) => this.formRef = form}>
-                    <ComboBox list={this.props.assignmentList} header={'Função'} ref={(input) => this.cbAssignment = input} onChange={this.SetAssignmentToEdit}/>
+                    <DropDown list={this.props.assignmentList} header={'Função'} ref={(input) => this.cbAssignment = input} onChange={this.SetAssignmentToEdit}/>
                     <Form.Group as={Row}> 
                         <Form.Label column lg={12} xl={2}>Função</Form.Label>
                         <Col>

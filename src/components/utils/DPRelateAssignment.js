@@ -3,14 +3,17 @@ import { Row, Col, Form } from 'react-bootstrap'
 import Alert from './Alert'
 import { ReplaceComa } from '../../scripts/utils'
 
-const CBRelateAssignment = React.forwardRef((props, ref) => {
+const DPRelateAssignment = React.forwardRef((props, ref) => {
     if (props.list[0]) {
         let options = []
         props.list.forEach((element, i) => {
-            let name  = undefined, title  = undefined, assignment = undefined
-            name = element.name ? ReplaceComa(element.name) : name
-            title = element.title ? ReplaceComa(element.title) : title
-            assignment = element.assignment ? ReplaceComa(element.assignment) : assignment
+            let name = element.celebrityName ? ReplaceComa(element.celebrityName) : undefined
+            let title = undefined
+            title = element.bookTitle ? ReplaceComa(element.bookTitle) : title
+            title = element.movieTitle ? ReplaceComa(element.movieTitle) : title
+            title = element.gameTitle ? ReplaceComa(element.gameTitle) : title
+            title = element.seriesTitle ? ReplaceComa(element.seriesTitle) : title
+            let assignment = element.assignmentName ? ReplaceComa(element.assignmentName) : undefined
             let show = `Nome: ${name} | Título: ${title} | Função: ${assignment}`
             options.push(<option key={i} value={JSON.stringify(element)} >{show}</option>)
         })
@@ -24,4 +27,4 @@ const CBRelateAssignment = React.forwardRef((props, ref) => {
         )
     } else return (<Alert visible={true} variant={'danger'} message={`Não existem ${props.header}, adicione uma.`} />)
 })
-export default CBRelateAssignment;
+export default DPRelateAssignment;
