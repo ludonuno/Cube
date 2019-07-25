@@ -31,7 +31,7 @@ class Celebrity extends Component {
             {field: 'id', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 this.setState({ celebrity: res.result[0] })
                 this.GetCelebrityWork(res.result[0].id)
             } else {
@@ -46,28 +46,28 @@ class Celebrity extends Component {
             {field: 'celebrityId', data: value},
         ] } ]
         Get(searchDataMovie,(res) => {
-            if(res.result) this.setState({ celebrityWorkMovie: res.result })
+            if(res && res.result) this.setState({ celebrityWorkMovie: res.result })
             else this.setState({ celebrityWorkMovie: undefined })
         })
         let searchDataGame = [ { table: 'CelebrityAssignmentGame', fieldData: [
             {field: 'celebrityId', data: value},
         ] } ]
         Get(searchDataGame,(res) => {
-            if(res.result) this.setState({ celebrityWorkGame: res.result })
+            if(res && res.result) this.setState({ celebrityWorkGame: res.result })
             else this.setState({ celebrityWorkGame: undefined })
         })
         let searchDataSeries = [ { table: 'CelebrityAssignmentSeries', fieldData: [
             {field: 'celebrityId', data: value},
         ] } ]
         Get(searchDataSeries,(res) => {
-            if(res.result) this.setState({ celebrityWorkSeries: res.result })
+            if(res && res.result) this.setState({ celebrityWorkSeries: res.result })
             else this.setState({ celebrityWorkSeries: undefined })
         })
         let searchDataBook = [ { table: 'CelebrityAssignmentBook', fieldData: [
             {field: 'celebrityId', data: value},
         ] } ]
         Get(searchDataBook,(res) => {
-            if(res.result) this.setState({ celebrityWorkBook: res.result })
+            if(res && res.result) this.setState({ celebrityWorkBook: res.result })
             else this.setState({ celebrityWorkBook: undefined })
         })
     }

@@ -38,7 +38,7 @@ class Book extends Component {
             {field: 'id', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 this.setState({ book: res.result[0] })
                 this.GetGenresBook(res.result[0].id)
                 this.GetSagaRelated(res.result[0].sagaId)
@@ -66,19 +66,19 @@ class Book extends Component {
             {field: 'sagaId', data: value},
         ] } ]
         Get(searchDataMovie,(res) => {
-            if(res.result) this.setState({ sagaMovie: res.result })
+            if(res && res.result) this.setState({ sagaMovie: res.result })
             else this.setState({ sagaMovie: undefined })
         })
         Get(searchDataGame,(res) => {
-            if(res.result) this.setState({ sagaGame: res.result })
+            if(res && res.result) this.setState({ sagaGame: res.result })
             else this.setState({ sagaGame: undefined })
         })
         Get(searchDataSeries,(res) => {
-            if(res.result) this.setState({ sagaSeries: res.result })
+            if(res && res.result) this.setState({ sagaSeries: res.result })
             else this.setState({ sagaSeries: undefined })
         })
         Get(searchDataBook,(res) => {
-            if(res.result) this.setState({ sagaBook: res.result })
+            if(res && res.result) this.setState({ sagaBook: res.result })
             else this.setState({ sagaBook: undefined })
         })
     }
@@ -87,7 +87,7 @@ class Book extends Component {
             {field: 'bookId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ genresBook: res.result })
+            if(res && res.result) this.setState({ genresBook: res.result })
             else this.setState({ genresBook: undefined })
         })
     }
@@ -96,7 +96,7 @@ class Book extends Component {
             {field: 'bookId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 res.result.forEach((v, i) => {
                     v.responseTo = this.GetResponseTo(v.id)
                 })
@@ -111,7 +111,7 @@ class Book extends Component {
             {field: 'responseTo', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 let comments = [...this.state.comments]
                 comments.forEach((v, i) => {
                     if(v.id === value) v.responseto = res.result
@@ -125,7 +125,7 @@ class Book extends Component {
             {field: 'bookId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 this.setState({ celebritiesAssignment: res.result })
             } else {
                 this.setState({ celebritiesAssignment: undefined })
@@ -137,7 +137,7 @@ class Book extends Component {
             {field: 'bookId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 this.setState({ videos: res.result })
             } else {
                 this.setState({ videos: undefined })
@@ -209,7 +209,7 @@ class Book extends Component {
             {field: 'rate', data: this.rate.value},
         ] } ]
         Create(searchData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 this.GetRating(this.state.book.id)
             } 
             else this.setState({ rating: undefined })
@@ -220,7 +220,7 @@ class Book extends Component {
             {field: 'bookId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ rating: res.result[0] })
+            if(res && res.result) this.setState({ rating: res.result[0] })
             else this.setState({ rating: undefined })
         })
     }

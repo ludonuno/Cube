@@ -28,7 +28,7 @@ class Season extends Component {
             {field: 'id', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 this.setState({ season: res.result[0] })
                 this.GetRating(res.result[0].id) //TODO: Deve ser devolvido atraves do GetSeason
                 this.GetVideos(res.result[0].id)
@@ -45,7 +45,7 @@ class Season extends Component {
             {field: 'seasonId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ videos: res.result })
+            if(res && res.result) this.setState({ videos: res.result })
             else this.setState({ videos: undefined })
         })
     }
@@ -55,7 +55,7 @@ class Season extends Component {
             {field: 'seasonId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ episodeList: res.result })
+            if(res && res.result) this.setState({ episodeList: res.result })
             else this.setState({ episodeList: undefined })
         })
     }
@@ -133,7 +133,7 @@ class Season extends Component {
             {field: 'seasonId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ rating: res.result[0] })
+            if(res && res.result) this.setState({ rating: res.result[0] })
             else this.setState({ rating: undefined })
         })
     }

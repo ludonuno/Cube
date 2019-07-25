@@ -27,7 +27,7 @@ class Episode extends Component {
             {field: 'id', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 this.setState({ episode: res.result[0] })
                 this.GetRating(res.result[0].id) //TODO: Deve ser devolvido atraves do GetEpisode
                 this.GetVideos(res.result[0].id)
@@ -43,7 +43,7 @@ class Episode extends Component {
             {field: 'episodeId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ videos: res.result })
+            if(res && res.result) this.setState({ videos: res.result })
             else this.setState({ videos: undefined })
         })
     }
@@ -58,7 +58,7 @@ class Episode extends Component {
             {field: 'rate', data: this.rate.value},
         ] } ]
         Create(searchData,(res) => {
-            if(res.result) this.GetRating(this.state.episode.id)
+            if(res && res.result) this.GetRating(this.state.episode.id)
             else this.setState({ rating: undefined })
         })
     }
@@ -67,7 +67,7 @@ class Episode extends Component {
             {field: 'episodeId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ rating: res.result[0] })
+            if(res && res.result) this.setState({ rating: res.result[0] })
             else this.setState({ rating: undefined })
         })
     }
@@ -144,7 +144,7 @@ class Episode extends Component {
             {field: 'episodeId', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) this.setState({ rating: res.result[0] })
+            if(res && res.result) this.setState({ rating: res.result[0] })
             else this.setState({ rating: undefined })
         })
     }

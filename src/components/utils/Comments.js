@@ -30,7 +30,7 @@ class Comments extends Component {
             {field: 'comment', data: this.comment.value},
         ] } ]
         Create(addData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 this.form.reset()
                 this.setState({ responseTo: undefined })
                 this.props.GetComments(this.props.id)
@@ -47,7 +47,7 @@ class Comments extends Component {
             {field: 'id', data: id}
         ] } ]
         Delete(deleteData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 this.props.GetComments(this.props.id)
             } else {
                 this.setState({ celebritiesAssignment: undefined })

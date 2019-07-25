@@ -29,7 +29,7 @@ class Home extends Component {
             {field: 'title', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 this.ChangeAlert(false, `Não foram encontrados registos de : ${value}`, 'danger')
                 this.setState({ searchList: res.result })
             }
@@ -45,7 +45,7 @@ class Home extends Component {
             {field: 'title', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 this.ChangeAlert(false, `Não foram encontrados registos de : ${value}`, 'danger')
                 this.setState({ searchList: res.result })
             }
@@ -61,7 +61,7 @@ class Home extends Component {
             {field: 'title', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 this.ChangeAlert(false, `Não foram encontrados registos de : ${value}`, 'danger')
                 this.setState({ searchList: res.result })
             }
@@ -93,7 +93,7 @@ class Home extends Component {
             {field: 'name', data: value},
         ] } ]
         Get(searchData,(res) => {
-            if(res.result) {
+            if(res && res.result) {
                 this.ChangeAlert(false, `Não foram encontrados registos de : ${value}`, 'danger')
                 this.setState({ searchList: res.result })
             }
