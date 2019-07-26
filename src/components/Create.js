@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom'
 import { Get } from '../scripts/api'
 
 import Navbar from './CustomNavbar'
+import Footer from './Footer';
 
 import Book from './Create/Book'
 import Celebrity from './Create/Celebrity'
@@ -218,7 +219,7 @@ class Create extends Component {
             <React.Fragment>
                 <Navbar props={this.props} />
                 <br/>
-                <Container>
+                <Container className="fullpage">
                     <Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.ChangeTab(key)}>
                         <Tab eventKey="book" title="Livro"><Book publishingCompanyList={this.state.publishingCompanyList} sagaList={this.state.sagaList} onSubmit={this.GetBookList} /></Tab>
                         <Tab eventKey="game" title="Jogo"><Game engineList={this.state.engineList} companyList={this.state.companyList} parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetGameList} /></Tab>
@@ -241,6 +242,8 @@ class Create extends Component {
                         <Tab eventKey="developers" title="Desenvolvedores"><Developers gameList={this.state.gameList} companyList={this.state.companyList} /></Tab>
                     </Tabs>
                 </Container>
+                <br/>
+                <Footer />
             </React.Fragment>
         )
     }

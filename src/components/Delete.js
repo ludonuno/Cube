@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom'
 import { Get } from '../scripts/api'
 
 import Navbar from './CustomNavbar'
+import Footer from './Footer';
 
 import Book from './Delete/Book'
 import Celebrity from './Delete/Celebrity'
@@ -321,7 +322,7 @@ class Delete extends Component {
             <React.Fragment>
                 <Navbar props={this.props} />
                 <br/>
-                <Container>
+                <Container  className="fullpage">
                     <Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.ChangeTab(key)}>
                         <Tab eventKey="book" title="Livro"><Book bookList={this.state.bookList} publishingCompanyList={this.state.publishingCompanyList} sagaList={this.state.sagaList} onSubmit={this.GetBookList} /></Tab>
                         <Tab eventKey="game" title="Jogo"><Game gameList={this.state.gameList} engineList={this.state.engineList} companyList={this.state.companyList} parentAdvisoryList={this.state.parentAdvisoryList} sagaList={this.state.sagaList} onSubmit={this.GetGameList} /></Tab>
@@ -347,6 +348,8 @@ class Delete extends Component {
                         <Tab eventKey="developers" title="Desenvolvedores"><Developers developersList={this.state.developersList} onSubmit={this.GetDevelopersList} /></Tab>
                     </Tabs>
                 </Container>
+                <br/>
+                <Footer />
             </React.Fragment>
         )
     }

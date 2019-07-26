@@ -8,9 +8,10 @@ const SliderSagaRelated = (props) => {
         let toRender = []
         let howMany = undefined
         props.list.forEach((v, i) => {
+            console.log(v)
             let id = v.id ? v.id : undefined
             let title = v.title ? ReplaceComa(v.title) : undefined
-            let releaseDate = v.releasedate ? v.releasedate.substring(0,10) : 'Sem data de lançamento'
+            let releaseDate = v.releaseDate ? v.releaseDate.substring(0,10) : 'Sem data de lançamento'
             toRender.push(
                 <Carousel.Item key={i}>
                     <br/>

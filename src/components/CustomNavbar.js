@@ -22,7 +22,7 @@ class CustomNavbar extends Component {
         if(this.state.user) {
             return (
                 <NavDropdown title={this.state.user.name} id="basic-nav-dropdown" > 
-                    <NavDropdown.Item><Link to="/user/page">Perfil</Link></NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/user/page">Perfil</NavDropdown.Item>
                     <this.CanUserEdit />
                     <NavDropdown.Divider />
                     <NavDropdown.Item onClick={this.logOut}>Sair</NavDropdown.Item>
@@ -43,9 +43,9 @@ class CustomNavbar extends Component {
             return (
                 <React.Fragment>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item><Link to="/create">Adicionar</Link></NavDropdown.Item>
-                    <NavDropdown.Item><Link to="/update">Atualizar</Link></NavDropdown.Item>
-                    <NavDropdown.Item><Link to="/delete">Apagar</Link></NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/create">Adicionar</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/update">Atualizar</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/delete">Apagar</NavDropdown.Item>
                 </React.Fragment>
             )
         } else {

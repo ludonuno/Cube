@@ -68,7 +68,7 @@ class Season extends Component {
                     <Row key={i}>
                         <Col lg={12}>
                             <Link to={`/Episode/${v.id}`}><h4>{v.title ? ReplaceComa(v.title) : 'Título desconhecido'} </h4></Link>
-                            <span className="sub-title">{v.releasedate ? v.releasedate.substring(0,10) : 'Data de lançamento desconhecida'} </span>
+                            <span className="sub-title">{v.releaseDate ? v.releaseDate.substring(0,10) : 'Data de lançamento desconhecida'} </span>
                         </Col>
                         <Col lg={12}>
                             <p>{v.synopsis ? ReplaceComa(v.synopsis) : 'Sinópse desconhecida' }</p>
