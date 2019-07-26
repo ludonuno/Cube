@@ -68,7 +68,6 @@ class RelateGenres extends Component {
     DeleteGenresMovie = (event) => {
         event.preventDefault()
         if(this.props.genresMovieList[0]) {
-            console.log(JSON.parse(this.cbDeleteMovie.value))
             let deleteData = [
                 { table: 'GenresMovie', fieldData: [ 
                     {field: 'userEmail', data: this.state.user.email},

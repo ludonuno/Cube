@@ -114,7 +114,7 @@ class Movie extends Component {
                     if(v.id === value) v.responseto = res.result
                 })
                 this.setState({ comments: comments })
-            } else this.setState({ comments: [] })
+            }
         })
     }
     GetCelebrities = (value) => {
