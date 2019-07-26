@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Col, Row, Jumbotron, Tabs, Tab, Form } from 'react-bootstrap'
-
+import { Link } from 'react-router-dom'
 import Navbar from '../CustomNavbar'
 import { Get, Create } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
@@ -111,8 +111,8 @@ class Episode extends Component {
                             <Row><h2>{ title }</h2></Row>
                             <Row>
                                 <span className="sub-title">Data de lançamento: { releaseDate }</span>
-                                <span className="sub-title">| Série: <a href={`/Series/${serieId}`}>{ serieTitle }</a></span>
-                                <span className="sub-title">| Temporada: <a href={`/Season/${seasonId}`}>{ seasonTitle }</a></span>
+                                <span className="sub-title">| Série: <Link to={`/Series/${serieId}`}>{ serieTitle }</Link></span>
+                                <span className="sub-title">| Temporada: <Link to={`/Season/${seasonId}`}>{ seasonTitle }</Link></span>
                                 <span className="sub-title" title={parentAdvisoryDescription}>| Aconselhamento parental: { parentAdvisory }</span>
                                 <span className="sub-title">| Saga: { saga }</span>
                             </Row>

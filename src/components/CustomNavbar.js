@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, NavDropdown } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 class CustomNavbar extends Component {
     constructor(props) {
@@ -21,7 +22,7 @@ class CustomNavbar extends Component {
         if(this.state.user) {
             return (
                 <NavDropdown title={this.state.user.name} id="basic-nav-dropdown" > 
-                    <NavDropdown.Item href="/user/page">Perfil</NavDropdown.Item>
+                    <NavDropdown.Item><Link to="/user/page">Perfil</Link></NavDropdown.Item>
                     <this.CanUserEdit />
                     <NavDropdown.Divider />
                     <NavDropdown.Item onClick={this.logOut}>Sair</NavDropdown.Item>
@@ -30,7 +31,8 @@ class CustomNavbar extends Component {
         } else {
             return (
                 <div>
-                    <a href="/user/login" className="btn btn-outline-primary">Login</a> <a href="/user/create" className="btn btn-outline-success">Registar</a>
+                    <Link to="/user/login"><div className="btn btn-outline-primary">Login</div></Link>
+                    <Link to="/user/create"><div className="btn btn-outline-success">Registar</div></Link>
                 </div>
             )
         }
@@ -41,9 +43,9 @@ class CustomNavbar extends Component {
             return (
                 <React.Fragment>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item href="/create">Adicionar</NavDropdown.Item>
-                    <NavDropdown.Item href="/update">Atualizar</NavDropdown.Item>
-                    <NavDropdown.Item href="/delete">Apagar</NavDropdown.Item>
+                    <NavDropdown.Item><Link to="/create">Adicionar</Link></NavDropdown.Item>
+                    <NavDropdown.Item><Link to="/update">Atualizar</Link></NavDropdown.Item>
+                    <NavDropdown.Item><Link to="/delete">Apagar</Link></NavDropdown.Item>
                 </React.Fragment>
             )
         } else {
@@ -54,7 +56,7 @@ class CustomNavbar extends Component {
     render() {
         return ( 
             <Navbar bg="dark" expand="lg">
-                <Navbar.Brand href="/">Cube</Navbar.Brand>
+                <Navbar.Brand><Link to="/">Cube</Link></Navbar.Brand>
                 <div className="align-right">
                     <this.UserFields />
                 </div>

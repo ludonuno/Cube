@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Col, Row, Jumbotron, Tabs, Tab } from 'react-bootstrap'
-
+import { Link } from 'react-router-dom'
 import Navbar from '../CustomNavbar'
 import { Get } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
@@ -67,7 +67,7 @@ class Season extends Component {
                 episodes.push(
                     <Row key={i}>
                         <Col lg={12}>
-                            <a href={`/Episode/${v.id}`}><h4>{v.title ? ReplaceComa(v.title) : 'Título desconhecido'} </h4></a>
+                            <Link to={`/Episode/${v.id}`}><h4>{v.title ? ReplaceComa(v.title) : 'Título desconhecido'} </h4></Link>
                             <span className="sub-title">{v.releasedate ? v.releasedate.substring(0,10) : 'Data de lançamento desconhecida'} </span>
                         </Col>
                         <Col lg={12}>
@@ -83,7 +83,6 @@ class Season extends Component {
     // Season
     SeasonInfo = () => {
         if(this.state.season) {
-            console.log(this.state.season)
             let title = this.state.season.title ? ReplaceComa(this.state.season.title) : 'Título desconhecido'
             let releaseDate = this.state.season.releaseDate ? this.state.season.releaseDate.substring(0,10) : 'Data de lançamento desconhecido'
             let synopsis = this.state.season.synopsis ? ReplaceComa(this.state.season.synopsis) : 'Sínopse desconhecida'
@@ -102,7 +101,7 @@ class Season extends Component {
                             <Row><h2>{ title }</h2></Row>
                             <Row>
                                 <span className="sub-title">Data de lançamento: { releaseDate }</span>
-                                <span className="sub-title">| Série: <a href={`/Series/${seriesId}`}>{ seriesTitle }</a></span>
+                                <span className="sub-title">| Série: <Link to={`/Series/${seriesId}`}>{ seriesTitle }</Link></span>
                                 <span className="sub-title" title={parentAdvisoryDescription}>| Aconselhamento parental: { parentAdvisory }</span>
                                 <span className="sub-title">| Saga: { saga }</span>
                             </Row>

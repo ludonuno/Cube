@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Form, Row, Col, Dropdown, InputGroup, DropdownButton, Carousel, Pagination, Jumbotron} from 'react-bootstrap'
-
+import { Link } from 'react-router-dom'
 import Navbar from '../CustomNavbar'
 import Footer from '../Footer'
 import Alert from '../utils/Alert'
@@ -120,7 +120,7 @@ class Home extends Component {
                     toRender.push(
                         <Row key={n}>
                             <Col>
-                                <Row><a href={`/${this.state.tableToSearch}/${element.id}`}><h3>{ header }</h3></a></Row>
+                                <Link to={`/${this.state.tableToSearch}/${element.id}`}><h3>{ header }</h3></Link>
                                 <Row><span className="sub-title-h3">{ subTitle }</span></Row>
                                 <Row><span className="body-h3">{ body }</span></Row>
                             </Col>

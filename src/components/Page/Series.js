@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Col, Row, Jumbotron, Tabs, Tab, Card, Accordion } from 'react-bootstrap'
-
+import { Link } from 'react-router-dom'
 import Navbar from '../CustomNavbar'
 import { Get } from '../../scripts/api'
 import { ReplaceComa } from '../../scripts/utils'
@@ -192,7 +192,7 @@ class Series extends Component {
                         episodes.push(
                             <Row key={i}>
                                 <Col lg={12}>
-                                    <a href={`/Episode/${v.id}`}><h4>{v.title ? ReplaceComa(v.title) : 'Sem título'} </h4></a>
+                                    <Link to={`/Episode/${v.id}`}><h4>{v.title ? ReplaceComa(v.title) : 'Título desconhecido'} </h4></Link>
                                     <span className="sub-title">{v.releaseDate ? v.releaseDate.substring(0,10) : 'Sem data de lançamento'} </span>
                                 </Col>
                                 <Col lg={12}>
@@ -211,7 +211,7 @@ class Series extends Component {
                             <Card.Body>
                                 <Row>
                                     <Col lg={12}>
-                                        <a href={`/Season/${v.id}`}><h4>{v.title ? ReplaceComa(v.title) : 'Sem título'} </h4></a>
+                                        <Link to={`/Season/${v.id}`}><h4>{v.title ? ReplaceComa(v.title) : 'Título desconhecido'} </h4></Link>
                                         <span className="sub-title">{v.releaseDate ? v.releaseDate.substring(0,10) : 'Sem data de lançamento'} </span>
                                     </Col>
                                     <Col lg={12}>{v.synopsis ? ReplaceComa(v.synopsis) : 'Sem sinópse' } </Col>

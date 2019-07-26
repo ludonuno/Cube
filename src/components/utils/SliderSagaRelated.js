@@ -1,6 +1,6 @@
 import React from 'react';
 import { Carousel, Jumbotron, Col, Row, Badge } from 'react-bootstrap'
-
+import { Link } from 'react-router-dom'
 import { ReplaceComa } from '../../scripts/utils'
 
 const SliderSagaRelated = (props) => {
@@ -16,7 +16,7 @@ const SliderSagaRelated = (props) => {
                     <br/>
                     <Jumbotron className="info-slider" >
                         <Col >
-                            <Row><a href={`/${props.href}/${id}`}><h5>{title}</h5></a></Row>
+                            <Row><Link to={`/${props.href}/${id}`}><h5>{title}</h5></Link></Row>
                             <Row><span className="sub-title">{releaseDate}</span></Row>
                             <Row><h5><Badge variant="secondary">#{i+1}/{props.list.length}</Badge></h5></Row>
                         </Col>

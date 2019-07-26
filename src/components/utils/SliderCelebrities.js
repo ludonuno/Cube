@@ -1,13 +1,13 @@
 import React from 'react';
 import { Carousel, Jumbotron, Col, Row, Badge } from 'react-bootstrap'
 import { ReplaceComa } from '../../scripts/utils'
+import { Link } from 'react-router-dom'
 
 const SliderCelebrities = (props) => {
     if(props.list) {
         let toRender = []
         let howMany = undefined
         props.list.forEach((element, i) => {
-            console.log(element)
             let id = element.celebrityId ? element.celebrityId : undefined
             let assignment = element.assignmentName ? element.assignmentName : undefined
             let name = element.celebrityName ? ReplaceComa(element.celebrityName) : undefined
@@ -17,7 +17,7 @@ const SliderCelebrities = (props) => {
                     <br/>
                     <Jumbotron className="info-slider" >
                         <Col>
-                            <Row><a href={`/${props.href}/${id}`}><h5>{name} | {assignment}</h5></a></Row>
+                            <Row><Link to={`/${props.href}/${id}`}><h5>{name} | {assignment}</h5></Link></Row>
                             <Row><span className="sub-title">{birthday}</span></Row>
                             <Row><h5><Badge variant="secondary">#{i+1}/{props.list.length}</Badge></h5></Row>
                         </Col>
